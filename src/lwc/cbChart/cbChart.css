@@ -1,0 +1,76 @@
+@import 'c/cbStyle';
+
+.shadow {
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+}
+
+.lvl0 {
+    background-color: rgb(235, 234, 234);
+    border-radius: 5px;
+}
+
+.lvl1 {
+    background-color: rgb(225, 224, 224);
+    border-radius: 5px;
+}
+
+.lvl2 {
+    background-color: rgb(215, 214, 214);
+    border-radius: 5px;
+}
+
+.lvl3 {
+    background-color: rgb(206, 204, 204);
+    border-radius: 5px;
+}
+
+.slds-accordion__summary-content {
+    font-weight: bold !important;
+}
+
+/* PADDING */
+.paddingLeft10 {
+    margin-left: 10px;
+    padding-left: 15px;
+}
+
+.paddingLeft11 {
+    margin-left: 0;
+    padding-left: 8px;
+}
+
+.paddingLeft20 {
+    margin-left: 15px;
+    padding-left: 15px;
+}
+
+.paddingLeft21 {
+    margin-left: 8px;
+    padding-left: 8px;
+}
+
+.paddingLeft22 {
+    margin-left: 0;
+    padding-left: 8px;
+}
+
+/** RIGHT **/
+.paddingRight10 {
+    padding-right: 25px;
+}
+
+.paddingRight11 {
+    padding-right: 1px;
+}
+
+.paddingRight20 {
+    padding-right: 40px;
+}
+
+.paddingRight21 {
+    padding-right: 20px;
+}
+
+.paddingRight22 {
+    padding-right: 0;
+}

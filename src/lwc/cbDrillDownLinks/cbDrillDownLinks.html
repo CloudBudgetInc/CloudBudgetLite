@@ -1,0 +1,12 @@
+<!-- DEPRECATED !!! -->
+<template>
+    <template if:true={showTable}>
+        <!-- MAIN TABLE -->
+        <template for:each={links} for:item='line'>
+            <div class="slds-truncate" title="Link to source record" key={line.Id}>
+                <a href={line.link} tabindex="-1" target="_blank">{line.Name}</a>
+            </div>
+        </template>
+        <!-- MAIN TABLE -->
+    </template>
+</template>

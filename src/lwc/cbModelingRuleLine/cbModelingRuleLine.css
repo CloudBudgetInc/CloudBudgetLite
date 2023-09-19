@@ -1,0 +1,9 @@
+@import 'c/cbStyle';
+
+.THIS .slds-form-element__control {
+    height: 2rem !important;
+}
+
+.slds-modal__content {
+    overflow: overlay;
+}

@@ -1,0 +1,27 @@
+<template>
+	<div class="homePage">
+		<div style="position: absolute; left: 20px; top: 20px; border-radius: 5px; height: 100px; width: 200px; z-index: 2; overflow: hidden;">
+			<img src={cblogo}>
+		</div>
+
+		<div style="position: absolute; left: 350px; top: 20px; z-index: 2;">
+			<c-cb-home-control-panel></c-cb-home-control-panel>
+		</div>
+
+		<div style="position: absolute; right: 45px; top: 20px; z-index: 2; overflow: hidden; color:#295eab !important; font-family: cursive;">
+			<div class="slds-text-heading_medium">
+				<lightning-icon icon-name="utility:salesforce1" class="slds-m-right_medium"></lightning-icon>
+				RELEASE : V1.{packageVersion}
+			</div>
+		</div>
+
+		<div class="clouds">
+			<div class="cloud x1"></div>
+			<div class="cloud x2"></div>
+			<div class="cloud x3"></div>
+			<div class="cloud x4"></div>
+			<div class="cloud x5"></div>
+		</div>
+
+	</div>
+</template>

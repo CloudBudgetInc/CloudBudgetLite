@@ -1,0 +1,100 @@
+<template>
+
+
+	<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+			 class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container">
+			<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+				<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+					<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+				</svg>
+				<span class="slds-assistive-text">Cancel and close</span>
+			</button>
+			<div class="slds-modal__header">
+				<h1 class="slds-modal__title slds-hyphenate">Budget Line Global Search</h1>
+			</div>
+			<div class="slds-modal__content">
+				<!-- SPINNER -->
+				<c-cb-spinner show={showSpinner}></c-cb-spinner>
+				<!-- SPINNER -->
+				<div style="max-height: 300px; overflow-y: scroll;">
+					<template for:each={budgetLines} for:item="line">
+						<div key={line.Id} class="slds-border_top">
+							<lightning-layout>
+								<lightning-layout-item padding="around-none" size="3">
+									<lightning-layout>
+										<lightning-layout-item padding="around-none" size="4">
+											<div style="color: darkblue; text-decoration: underline; cursor: pointer;"
+												 data-id={line.Id}
+												 class={line.titleClass}
+												 onclick={openBudgetLine}>{line.idx}.{line.Name}
+											</div>
+											<div class={line.descrClass}>{line.cblight__Description__c}</div>
+										</lightning-layout-item>
+										<lightning-layout-item padding="around-none" size="4">
+											<template for:each={line.analyticsFirstColumn} for:item="a">
+												<div key={a} class={a.class}>{a.label}</div>
+											</template>
+										</lightning-layout-item>
+										<lightning-layout-item padding="around-none" size="4">
+											<template for:each={line.analyticsSecondColumn} for:item="a">
+												<div key={a} class={a.class}>{a.label}</div>
+											</template>
+										</lightning-layout-item>
+									</lightning-layout>
+
+								</lightning-layout-item>
+
+								<lightning-layout-item padding="around-none" size="8">
+									<lightning-layout>
+										<template for:each={line.cblight__CBAmounts__r} for:item="a">
+											<lightning-layout-item padding="around-none" key={a.Id}
+																   flexibility="auto">
+												<c-cb-input-currency name={a.Id} disabled='true'
+																	 currency-code={line.CurrencyIsoCode}
+																	 val={a.cblight__Value__c}></c-cb-input-currency>
+												<div class={a.class}></div>
+											</lightning-layout-item>
+										</template>
+									</lightning-layout>
+								</lightning-layout-item>
+
+								<lightning-layout-item padding="around-none" size="1" class="inputBold">
+									<c-cb-input-currency disabled='true'
+														 currency-code={line.CurrencyIsoCode}
+														 is-bold="true"
+														 val={line.total}></c-cb-input-currency>
+									<div class={line.totalClass}></div>
+								</lightning-layout-item>
+							</lightning-layout>
+						</div>
+					</template>
+				</div>
+
+
+			</div>
+
+			<div class="slds-modal__footer">
+				<lightning-layout class="slds-grid_align-center">
+					<lightning-layout size="1" class="right-align">
+						<lightning-input variant="label-hidden" value={searchString} onchange={handleChange}
+										 name="searchString"></lightning-input>
+					</lightning-layout>
+					<lightning-layout size="1" class="right-align">
+						<lightning-button label="Search" onclick={getBudgetLinesBySearch}
+										  variant="success"></lightning-button>
+					</lightning-layout>
+					<lightning-layout size="1" class="right-align">
+						<lightning-button label="Close" onclick={closeModal}></lightning-button>
+					</lightning-layout>
+				</lightning-layout>
+			</div>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+
+
+
+
+</template>

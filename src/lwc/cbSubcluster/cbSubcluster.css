@@ -1,0 +1,12 @@
+@import 'c/cbStyle';
+
+.shadow {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px;
+  border-radius: 5px;
+}
+
+.titleStyle {
+  padding-left: 2%;
+  font-style: italic;
+  text-decoration: underline
+}

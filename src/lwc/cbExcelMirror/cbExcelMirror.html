@@ -1,0 +1,113 @@
+<template>
+	<!-- EXCEL MODAL WINDOW -->
+	<section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_small">
+		<div class="slds-modal__container">
+			<div class="slds-modal__header">
+				<h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Excel Import and Export</h1>
+			</div>
+			<!-- SPINNER -->
+				<c-cb-spinner show={showSpinner}></c-cb-spinner>
+			<!-- SPINNER -->
+			<template lwc:if={showExcelLog}>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+					<lightning-formatted-rich-text value={textLog}>  </lightning-formatted-rich-text>
+				</div>
+			</template>
+			<template lwc:if={showDownloadPanel}>
+				<div class="slds-modal__footer excel_mirror_footer">
+					<lightning-button-group slot="actions">
+						<lightning-button title="Download all BL from specified Configuration"
+								disabled={disabledButtons}
+								label="Download File"
+								variant="brand"
+								style="margin-top: 23px; "
+								icon-name="utility:download"
+								onclick={downloadToExcelFromConfig}>
+						</lightning-button>
+						<lightning-input type="file"
+								disabled={disabledButtons}
+								title="Update from Excel"
+								accept=".xlsx"
+								onchange={uploadFromConfigInFile} >
+						</lightning-input>
+						<lightning-button variant="brand-outline" label="Close"
+								title="Close window"
+								icon-name="utility:close"
+								style="margin-top:23px;"
+								onclick={closeExcelWindow}>
+						</lightning-button>
+					</lightning-button-group>
+				</div>
+			</template>
+		</div>
+	</section>
+	<template lwc:if={showPreviewer}>
+		<section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_large">
+			<div class="slds-modal__container">
+				<div class="slds-modal__header">
+					<lightning-formatted-rich-text value={headerLog}  class="custom-rich-text-output-header">  </lightning-formatted-rich-text>
+					<h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Excel Preview</h1>
+				</div>
+				<div class="table-container">
+					<table class="slds-table slds-table_bordered slds-table_col-bordered slds-table--header-fixed" data-id="previewerTable">
+					  <thead>
+						<tr class="slds-text-title_caps sticky-header"> 
+						  <template for:each={previewerData.previewerColumns} for:item="column">
+							<th key={column.label} scope="col" data-id={column.label} class={column.class}>
+							  <div class="slds-no-wrap title-margin" title={column.label}>{column.label}</div>
+							</th>
+						  </template>
+						</tr>
+					  </thead>
+					  <tbody>
+						<template for:each={previewerData.previewerRows} for:item="row">
+						  <tr key={row.id}  >
+							<template for:each={row.values} for:item="value"  for:index="index">
+							  <td key={value.key} class={value.class}  style={value.style}>
+								<div class="slds-no-wrap" title={value.title}>
+								  {value.data}
+								</div>
+							  </td>
+							</template>
+						  </tr>
+						</template>
+					  </tbody>
+					</table>
+				  </div>
+								  
+				<div class="slds-modal__footer" >
+					<lightning-formatted-rich-text value={filterLog}  class="custom-rich-text-output">  </lightning-formatted-rich-text>
+					<lightning-button-group slot="actions" >
+						<template lwc:if={isPreviewerImportMode} >
+							<template lwc:if={updateBudgetLinesFromPreviewer} >
+								<lightning-button title="Confirm update"
+									label="Confirm update"
+									variant="brand"
+									style="margin-right:5px;"
+									icon-name="utility:document_preview"
+									onclick={uploadFromConfigInFileAfterPreviewer}>
+								</lightning-button>	
+							</template>
+						</template>
+						<template lwc:else >
+							<lightning-button title="Write to file"
+								label="Write to file"
+								variant="brand"
+								style="margin-right:5px;"
+								icon-name="utility:document_preview"
+								onclick={writeAfterPreviewer}>
+							</lightning-button>
+						</template>
+						<lightning-button variant="brand-outline" label="Cancel"
+								title="Cancel"
+								icon-name="utility:close"
+								onclick={closePreviewer}>
+						</lightning-button>
+					</lightning-button-group>
+				</div>
+			</div>
+		</section>
+	</template>
+	<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+	<!-- EXCEL MODAL WINDOW -->
+</template>

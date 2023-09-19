@@ -1,0 +1,90 @@
+<template>
+	<!-- THE DIALOG WINDOW -->
+	<section aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container ">
+			<header class="slds-modal__header">
+				<h2 class="slds-text-heading_small">Drill Down</h2>
+				<lightning-icon class="slds-modal__close" icon-name="utility:close" variant="inverse" size="small"
+								onclick={closeModalWindow}></lightning-icon>
+				<template for:each={parameters.headerDetails} for:item="label">
+					<div key={label} style="font-weight: bolder; color:blue;">
+						{label}
+					</div>
+				</template>
+			</header>
+			<div class="slds-modal__content">
+
+				<!-- SPINNER -->
+				<c-cb-spinner show={showSpinner}></c-cb-spinner>
+				<!-- SPINNER -->
+
+				<template if:true={showContent}>
+
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered table-header-frozen slds-table_col-bordered">
+						<thead>
+						<tr class="slds-line-height_reset">
+							<th>
+								<div class="slds-truncate" title="Name">Name</div>
+							</th>
+							<th>
+								<div class="dec" title="Budget">Budget</div>
+							</th>
+							<th>
+								<div class="dec" title="Actual">Actual</div>
+							</th>
+							<th>
+								<div title="Source">Source records</div>
+							</th>
+						</tr>
+						</thead>
+
+						<tbody>
+
+						<template for:each={drillDownList} for:item="line">
+							<tr class="slds-hint-parent slds-align-top" key={line.Id}>
+								<template if:true={line.Id}>
+									<th data-label="Name" title="Redirect to CB Cube">
+										<a href={line.link} tabindex="-1" target="_blank">{line.Name}</a>
+									</th>
+								</template>
+								<template if:false={line.Id}>
+									<th data-label="Name">
+										<div class="slds-text-title_bold">{line.Name}</div>
+									</th>
+								</template>
+								<td data-label="Budget">
+									<div class={line.class}>{line.cblight__Budget__c}</div>
+								</td>
+								<td data-label="Actual">
+									<div class={line.class}>{line.cblight__Actual__c}</div>
+								</td>
+								<td data-label="Links to source" style="padding: 0; border-left: #c9c9c9 1px solid">
+									<template if:true={showLinks}>
+										<!--<c-cb-drill-down-links ids={line.ddSourceIds}></c-cb-drill-down-links>-->
+										<c-cb-budget-line-drill-down
+												parameters={line.ddSourceIds}></c-cb-budget-line-drill-down>
+									</template>
+								</td>
+							</tr>
+						</template>
+
+						</tbody>
+
+					</table>
+
+				</template>
+
+
+			</div>
+			<footer class="slds-modal__footer">
+				<template if:true={showContent}>
+					<lightning-button variant="bare" label="Cancel" onclick={closeModalWindow}>
+					</lightning-button>
+				</template>
+			</footer>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open"></div>
+	<!-- THE DIALOG WINDOW -->
+
+</template>

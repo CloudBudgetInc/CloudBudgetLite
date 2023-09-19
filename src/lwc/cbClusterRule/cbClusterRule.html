@@ -1,0 +1,60 @@
+<template>
+
+	<lightning-card title={clusterRule.Name} icon-name="custom:custom108">
+		<template if:true={showContent}>
+		<div class="slds-grid slds-m-top_small">
+			<div class="slds-col slds-p-horizontal_x-small slds-size_1-of-8">
+				<lightning-input type="text" name="Name" max-length="80" id="Name" label="Cluster Rule Name" value={clusterRule.Name}
+				 onchange={handleChange} required></lightning-input>
+			</div>
+			<div class="slds-col slds-p-right_x-small slds-size_1-of-8">
+				<lightning-combobox name="cblight__Level1__c" label="Level1" value={clusterRule.cblight__Level1__c} placeholder="Level is not in use"
+					options={BLFieldsSO} onchange={handleChange} required></lightning-combobox>
+			</div>
+			<div class="slds-col slds-p-right_x-small slds-size_1-of-8">
+				<div if:true={showLevel.cblight__Level1__c}>
+					<lightning-combobox name="cblight__Level2__c" label="Level2" value={clusterRule.cblight__Level2__c} placeholder="Level is not in use"
+						options={BLFieldsSO} onchange={handleChange}>
+					</lightning-combobox>
+				</div>
+			</div>
+			<div class="slds-col slds-p-right_x-small slds-size_1-of-8">
+				<div if:true={showLevel.cblight__Level2__c}>
+					<lightning-combobox name="cblight__Level3__c" label="Level3" value={clusterRule.cblight__Level3__c} placeholder="Level is not in use"
+						options={BLFieldsSO} onchange={handleChange}></lightning-combobox>
+				</div>
+			</div>
+			<div class="slds-col slds-p-right_x-small slds-size_1-of-8">
+				<div if:true={showLevel.cblight__Level3__c}>
+					<lightning-combobox name="cblight__Level4__c" label="Level4" value={clusterRule.cblight__Level4__c}   placeholder="Level is not in use"
+						options={BLFieldsSO} onchange={handleChange}>
+					</lightning-combobox>
+				</div>
+			</div>
+			<div class="slds-col slds-size_1-of-8">
+				<div if:true={showLevel.cblight__Level4__c}>
+					<lightning-combobox name="cblight__Level5__c" label="Level5" value={clusterRule.cblight__Level5__c} placeholder="Level is not in use"
+						options={BLFieldsSO} onchange={handleChange}>
+					</lightning-combobox>
+				</div>
+			</div>
+		</div>
+		<div slot="footer">
+			<div class="slds-grid slds-m-top_small">
+				<div class="slds-col slds-text-align_left">
+					<lightning-button variant="destructive"  icon-name="utility:delete" title="Delete action" label="Delete"
+						onclick={deleteClusterRuleFromServer}>
+					</lightning-button>
+				</div>
+				<div class="slds-col slds-text-align_right">
+					<lightning-button variant="brand" label="Save" class="slds-m-right_medium"
+						onclick={saveClusterRulesToServer}>
+					</lightning-button>
+					<lightning-button variant="destructive" label="Back" onclick={openClusterRuleList}>
+					</lightning-button>
+				</div>
+			</div>
+		</div>
+		</template>
+	</lightning-card>
+</template>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Org Variable</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Org Variables</value>
+    </caseValues>
+    <fields>
+        <help><!-- True is budget lines can be allocated --></help>
+        <label><!-- Allocation Is Using --></label>
+        <name>AllocationIsUsing__c</name>
+    </fields>
+    <fields>
+        <label><!-- Approval Is Using --></label>
+        <name>ApprovalIsUsing__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bottom Up Mode Is Using --></label>
+        <name>BottomUpMode__c</name>
+    </fields>
+    <fields>
+        <label><!-- Budget Line Is Multi Year --></label>
+        <name>BudgetLineIsMultiYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Budget Line Lvl1 Style --></label>
+        <name>BudgetLineLvl1Style__c</name>
+        <relationshipLabel><!-- CB Org Variables --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Budget Line Lvl2 Style --></label>
+        <name>BudgetLineLvl2Style__c</name>
+        <relationshipLabel><!-- CB Org Variables (Budget Line Lvl2 Style) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Budget Line Lvl3 Style --></label>
+        <name>BudgetLineLvl3Style__c</name>
+        <relationshipLabel><!-- CB Org Variables (Budget Line Lvl3 Style) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Budget Line Lvl4 Style --></label>
+        <name>BudgetLineLvl4Style__c</name>
+        <relationshipLabel><!-- CB Org Variables (Budget Line Lvl4 Style) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Budget Line Lvl5 Style --></label>
+        <name>BudgetLineLvl5Style__c</name>
+        <relationshipLabel><!-- CB Org Variables (Budget Line Lvl5 Style) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Budget Lines Order --></label>
+        <name>BudgetLinesOrder__c</name>
+        <picklistValues>
+            <masterLabel>CreatedDate</masterLabel>
+            <translation><!-- CreatedDate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Name</masterLabel>
+            <translation><!-- Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__CBAccount__r.Name</masterLabel>
+            <translation><!-- cblight__CBAccount__r.Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__CBVariable1__r.Name</masterLabel>
+            <translation><!-- cblight__CBVariable1__r.Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__CBVariable2__r.Name</masterLabel>
+            <translation><!-- cblight__CBVariable2__r.Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__CBVariable3__r.Name</masterLabel>
+            <translation><!-- cblight__CBVariable3__r.Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__CBVariable4__r.Name</masterLabel>
+            <translation><!-- cblight__CBVariable4__r.Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__CBVariable5__r.Name</masterLabel>
+            <translation><!-- cblight__CBVariable5__r.Name --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__Status__c</masterLabel>
+            <translation><!-- cblight__Status__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__Value__c</masterLabel>
+            <translation><!-- cblight__Value__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>cblight__Value__c DESC</masterLabel>
+            <translation><!-- cblight__Value__c DESC --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- CB Account Label --></label>
+        <name>CBAccountLabel__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Budget Year Label --></label>
+        <name>CBBudgetYearLabel__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Division Label --></label>
+        <name>CBDivisionLabel__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Period Label --></label>
+        <name>CBPeriodLabel__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 1 Label --></label>
+        <name>CBVariable1Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 2 Label --></label>
+        <name>CBVariable2Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 3 Label --></label>
+        <name>CBVariable3Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 4 Label --></label>
+        <name>CBVariable4Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 5 Label --></label>
+        <name>CBVariable5Label__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Display BLM Navigation --></label>
+        <name>DisplayBLMNavigation__c</name>
+    </fields>
+    <fields>
+        <label><!-- Formula Is Using --></label>
+        <name>FormulaIsUsing__c</name>
+    </fields>
+    <fields>
+        <label><!-- Init Wizard Job Threshold --></label>
+        <name>InitWizardJobThreshold__c</name>
+    </fields>
+    <fields>
+        <label><!-- Max Number Of Displayed Lines --></label>
+        <name>MaxNumberOfDisplayedLines__c</name>
+    </fields>
+    <fields>
+        <label><!-- Modeling Rule Job Size --></label>
+        <name>ModelingRuleJobSize__c</name>
+    </fields>
+    <fields>
+        <label><!-- Amount of latest NFL to load --></label>
+        <name>NFLDefaultListSize__c</name>
+    </fields>
+    <fields>
+        <label><!-- Non Financial Libraries Is Using --></label>
+        <name>NonFinancialLibIsUsing__c</name>
+    </fields>
+    <fields>
+        <label><!-- Only Formula Analytics Is Applicable --></label>
+        <name>OnlyFormulaAnalytics__c</name>
+    </fields>
+    <fields>
+        <label><!-- Period Validation Enabled --></label>
+        <name>PeriodValidationEnabled__c</name>
+    </fields>
+    <fields>
+        <label><!-- Scenario Is Using --></label>
+        <name>ScenarioIsUsing__c</name>
+    </fields>
+    <fields>
+        <label><!-- Topdown Mode Is Using --></label>
+        <name>TopdownModeIsUsing__c</name>
+    </fields>
+    <fields>
+        <help><!-- Accuracy tolerance for topdown approach --></help>
+        <label><!-- Topdown Tolerance --></label>
+        <name>TopdownTolerance__c</name>
+    </fields>
+    <layouts>
+        <layout>CB Org Variable Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Labeling --></label>
+            <section>Labeling</section>
+        </sections>
+        <sections>
+            <label><!-- Styles --></label>
+            <section>Styles</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

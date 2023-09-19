@@ -1,0 +1,88 @@
+<template>
+
+	<template if:true={showWelcome}>
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small" aria-modal="true">
+			<div class="slds-modal__container">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+					<lightning-icon icon-name='utility:close' onclick={closeWelcome}
+									title='Close'></lightning-icon>
+					<span class="slds-assistive-text">Cancel and close</span>
+				</button>
+				<div class="slds-modal__header slds-modal__header_empty"></div>
+				<template lwc:if={showStartMode}>
+					<div class="slds-modal__content">
+						<div class="slds-welcome-mat">
+							<div class="slds-welcome-mat__content slds-grid">
+								<div class="slds-welcome-mat__info slds-size_1-of-2">
+									<div class="slds-welcome-mat__info-content">
+										<h2 class="slds-welcome-mat__info-title">
+											{welcome.cblight__Header__c}
+										</h2>
+										<div class="slds-welcome-mat__info-description slds-text-longform">
+											<p>{welcome.cblight__Description__c}</p>
+										</div>
+										<div class="mainContent">mainContent</div>
+									</div>
+								</div>
+								<ul class="slds-welcome-mat__tiles slds-size_1-of-2">
+									<template for:each={welcome.cblight__CBWelcomes__r} for:item="line">
+										<li class="slds-welcome-mat__tile" key={line.Id}>
+											<a class="slds-box slds-box_link slds-media">
+												<div class="slds-media__figure slds-media__figure_fixed-width slds-align_absolute-center">
+													<div class="slds-welcome-mat__tile-figure">
+														<div class="slds-welcome-mat__tile-icon-container">
+                                                      <span class="slds-icon_container slds-icon-utility-call">
+                                                        <lightning-icon icon-name={line.cblight__Icon__c}
+																		title={line.Name}></lightning-icon>
+                                                  </span>
+														</div>
+													</div>
+												</div>
+												<div class="slds-media__body">
+													<div class="slds-welcome-mat__tile-body" onclick={showMessage}
+														 data-id={line.Id}>
+														<h3 class="slds-welcome-mat__tile-title">
+															{line.cblight__Header__c}</h3>
+														<p class="slds-welcome-mat__tile-description">
+															{line.cblight__Description__c}</p>
+													</div>
+												</div>
+											</a>
+										</li>
+									</template>
+
+								</ul>
+							</div>
+						</div>
+					</div>
+				</template>
+				<template lwc:else>
+
+					<div class="slds-modal__content" id="welcome-mat-113-content">
+						<div class="slds-welcome-mat slds-welcome-mat_splash">
+							<div class="slds-welcome-mat__content slds-grid">
+								<div class="slds-welcome-mat__info slds-size_1-of-1">
+									<div class="slds-welcome-mat__info-content">
+										<h2 class="slds-welcome-mat__info-title" id="welcome-mat-113-label">
+											{selectedLine.cblight__Header__c}</h2>
+										<div class="slds-welcome-mat__info-description slds-text-longform">
+											<div class="custom">custom</div>
+										</div>
+										<div class="slds-welcome-mat__info-actions">
+											<lightning-button variant="brand" label="Learn More"
+															  onclick={redirectToCB}></lightning-button>
+											<lightning-button onclick={backToStartMode} label="Back"></lightning-button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</template>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+	</template>
+
+</template>

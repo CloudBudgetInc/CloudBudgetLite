@@ -1,0 +1,47 @@
+@import 'c/cbStyle';
+
+.shadow {
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.lvl0 {
+	background-color: rgb(97, 96, 96);
+}
+
+.lvl1 {
+	background-color: rgb(138, 137, 137);
+}
+
+.lvl2 {
+	background-color: rgb(201, 200, 200);
+}
+
+.lvl3 {
+	background-color: rgb(233, 231, 231);
+}
+
+.input-text-align_right input {
+	text-align: right !important;
+}
+
+.titleStyle {
+	padding-left: 2%;
+	font-style: italic;
+}
+
+table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+table tr th {
+	width: 20%;
+}
+
+table tr th:first-child {
+	width: 35%;
+}
+
+table tr th:last-child.narrow-column {
+	width: 5%;
+}

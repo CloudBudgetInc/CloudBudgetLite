@@ -1,0 +1,180 @@
+<template>
+	<lightning-card>
+		<div style="height: 680px; overflow: scroll;">
+			<h3 slot="title">
+				<lightning-icon
+						icon-name="utility:connected_apps"
+						size="small"
+				></lightning-icon>
+				CB Logs
+			</h3>
+			<lightning-button slot="actions" label="Refresh" icon-name="utility:refresh"
+							  onclick={connectedCallback}></lightning-button>
+
+			<div>
+				<c-cb-filter-manager
+						base-request-string={resultRequestString}
+						fields-available={logFieldsSO}
+						filter-title="Advanced Filter"
+						sobject-type="cblight__CBLog__c"
+						users-and-queues={usersAndQueues}
+						onresultrequeststringchanged={setNewFilterString}>
+				</c-cb-filter-manager>
+			</div>
+
+			<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered slds-table_striped slds-m-top_x-small">
+				<thead>
+				<tr class="slds-text-title_caps">
+					<th>
+						<div>Log Name</div>
+					</th>
+					<th>
+						<div>Log Number</div>
+					</th>
+					<th>
+						<div>Date</div>
+					</th>
+					<th>
+						<div>User</div>
+					</th>
+					<th>
+						<div>Status</div>
+					</th>
+					<th>
+						<div>Type</div>
+					</th>
+					<th>
+						<div>Description</div>
+					</th>
+				</tr>
+				</thead>
+
+				<tbody>
+				<template for:each={filteredLogs} for:index="index" for:item="log">
+					<tr key={log.id}>
+						<td>
+							<div>{log.Name}</div>
+						</td>
+						<td>
+							<lightning-button
+									variant="base"
+									data-id={log.Id}
+									label={log.cblight__LogNumber__c}
+									title="Log name"
+									onclick={handleRowAction}></lightning-button>
+						</td>
+						<td>
+							<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+														   hour="2-digit"
+														   minute="2-digit"
+														   value={log.CreatedDate}></lightning-formatted-date-time>
+						</td>
+						<td>
+							<div>{log.Owner.Name}</div>
+						</td>
+						<td>
+							<div>{log.cblight__Status__c}</div>
+						</td>
+						<td>
+							<div>{log.cblight__Type__c}</div>
+						</td>
+						<td>
+							<div class="descriptionSpace">{log.cblight__Description__c}</div>
+						</td>
+					</tr>
+				</template>
+				</tbody>
+			</table>
+		</div>
+	</lightning-card>
+
+	<template if:true={isModalOpen}>
+		<section
+				role="dialog"
+				tabindex="-1"
+				aria-labelledby="modal-heading-01"
+				aria-modal="true"
+				aria-describedby="modal-content-id-1"
+				class="slds-modal slds-fade-in-open slds-modal_large"
+		>
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button
+							class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							title="Close"
+							onclick={closeModal}
+					>
+						<lightning-icon
+								icon-name="utility:close"
+								alternative-text="close"
+								variant="inverse"
+								size="small"
+						></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h3 slot="title">
+						<lightning-icon
+								icon-name="utility:connected_apps"
+								size="small"
+						></lightning-icon>
+						Log Details
+					</h3>
+				</header>
+				<div class="slds-modal__content" id="modal-content-id-1">
+					<div slot="footer"></div>
+					<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered slds-table_striped">
+						<thead>
+						<tr class="slds-text-title_caps">
+							<th>
+								<div>Name</div>
+							</th>
+							<th>
+								<div>Description</div>
+							</th>
+							<th>
+								<div>Parent</div>
+							</th>
+							<th>
+								<div>Created Date</div>
+							</th>
+						</tr>
+						</thead>
+
+						<tbody>
+						<template for:each={logDetail} for:index="index" for:item="log">
+							<tr key={log.id}>
+								<td>
+									<div>{log.Name}</div>
+								</td>
+								<td>
+									<div class="descriptionSpace">{log.cblight__Description__c}</div>
+								</td>
+								<td>
+									<div>{log.cblight__Parent__c}</div>
+								</td>
+								<td>
+									<div>
+										<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+																	   hour="2-digit"
+																	   minute="2-digit"
+																	   value={log.CreatedDate}></lightning-formatted-date-time>
+									</div>
+								</td>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+				</div>
+				<footer class="slds-modal__footer">
+					<button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">
+						Cancel
+					</button>
+					<button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">
+						OK
+					</button>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+</template>

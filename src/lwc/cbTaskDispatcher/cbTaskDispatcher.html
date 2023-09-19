@@ -1,0 +1,77 @@
+<template>
+
+	<lightning-card title="Task Dispatcher">
+
+		<div>
+			<div class="slds-m-top_medium slds-m-left_medium">
+				<lightning-button label="Validate" onclick={validateQueue} title="Validate fullness of data">
+				</lightning-button>
+				<lightning-button label="Run" onclick={runQueue} title="Run" variant="brand"></lightning-button>
+				<lightning-button label="" onclick={getStatisticQueue} icon-name="utility:refresh" title="Update logs">
+				</lightning-button>
+				<lightning-button label="Jobs" onclick={redirectToApexJobs} icon-name="utility:settings" title="Jobs">
+				</lightning-button>
+				<lightning-button label="Reset Queue" onclick={resetTaskQueue} title="Set the padding status to all queue tasks">
+				</lightning-button>
+			</div>
+			<div class="slds-m-top_medium slds-m-left_medium">
+				<template for:each={messages} for:item="line">
+					<div key={line} style="color: red;">
+						{line}
+					</div>
+				</template>
+			</div>
+
+			<c-cb-event-monitor></c-cb-event-monitor>
+
+			<div class="slds-m-top_medium slds-m-left_medium">
+				<table aria-labelledby="element-with-table-label other-element-with-table-label"
+					   class="slds-table slds-table_cell-buffer slds-table_bordered">
+					<thead>
+					<tr class="slds-line-height_reset">
+						<th>
+							<div class="slds-truncate" title="Log">Log</div>
+						</th>
+						<th>
+							<div class="slds-truncate" title="Data">Data</div>
+						</th>
+						<th>
+							<div class="slds-truncate" title="User">User</div>
+						</th>
+
+					</tr>
+					</thead>
+					<tbody>
+					<template for:each={logs} for:item="log">
+						<tr class="slds-hint-parent" key={log}>
+							<td data-label="Event">
+								<div class="slds-truncate" title="Event">{log.cblight__Description__c}</div>
+							</td>
+							<td data-label="Date">
+								<div class="slds-truncate" title="Date">
+									<lightning-formatted-date-time value={log.CreatedDate} year="numeric"
+																   month="numeric" day="numeric" hour="2-digit"
+																   minute="2-digit"
+																   time-zone="UTC" time-zone-name="short"
+																   hour12="false">
+									</lightning-formatted-date-time>
+								</div>
+							</td>
+							<td data-label="User">
+								<template if:true={log.CreatedBy}>
+									<div class="slds-truncate" title="User">{log.CreatedBy.Name}</div>
+								</template>
+							</td>
+						</tr>
+					</template>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+
+
+	</lightning-card>
+
+
+</template>

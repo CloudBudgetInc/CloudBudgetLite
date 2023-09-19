@@ -1,0 +1,464 @@
+<template>
+	<div class="wrapper-height">
+
+		<!-- Budget Line Header -->
+		<lightning-card title="Budget Manager" icon-name="custom:custom14">
+			<div class="relativeContainer">
+				<div class="slds-p-horizontal_medium">
+					<lightning-tabset active-tab-value={activeTabValue}>
+						<lightning-tab label="Lines" value="simple" onactive={setSimpleFilter}>
+							<template lwc:if={showMainFilters}>
+								<template lwc:if={complexFilterString}>
+									<lightning-badge class="slds-badge_inverse"
+													 label="None! Complex filter enabled. To disable complex filter apply simple filter"></lightning-badge>
+								</template>
+								<lightning-layout>
+									<lightning-layout-item size="1">
+										<label>{orgVariable.cblight__CBBudgetYearLabel__c}</label>
+										<lightning-combobox
+												name="cblight__CBBudgetYear__c"
+												variant="label-hidden"
+												value={cblight__CBBudgetYear__c}
+												options={selectOptionMap.budgetYearSO}
+												onchange={handleChangeSimpleFilter}
+										></lightning-combobox>
+									</lightning-layout-item>
+									<lightning-layout-item size="1">
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>{orgVariable.cblight__CBAccountLabel__c}</label>
+											<lightning-input-field
+													variant="label-hidden"
+													field-name="cblight__CBAccount__c"
+													value={cblight__CBAccount__c}
+													name="cblight__CBAccount__c"
+													onchange={handleChangeSimpleFilter}>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</lightning-layout-item>
+									<lightning-layout-item size="1">
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>{orgVariable.cblight__CBDivisionLabel__c}</label>
+											<lightning-input-field variant="label-hidden"
+																   field-name="cblight__CBDivision__c"
+																   name="cblight__CBDivision__c"
+																   value={cblight__CBDivision__c}
+																   onchange={handleChangeSimpleFilter}
+											>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</lightning-layout-item>
+
+									<!-- VARIABLES -->
+									<template lwc:if={selectOptionMap.variable1SO}>
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>{orgVariable.cblight__CBVariable1Label__c}</label>
+											<lightning-input-field
+													variant="label-hidden"
+													field-name="cblight__CBVariable1__c"
+													name="cblight__CBVariable1__c"
+													value={cblight__CBVariable1__c}
+													onchange={handleChangeSimpleFilter}
+											>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</template>
+									<template lwc:if={selectOptionMap.variable2SO}>
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>{orgVariable.cblight__CBVariable2Label__c}</label>
+											<lightning-input-field
+													variant="label-hidden"
+													field-name="cblight__CBVariable2__c"
+													name="cblight__CBVariable2__c"
+													value={cblight__CBVariable2__c}
+													onchange={handleChangeSimpleFilter}
+											>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</template>
+									<template lwc:if={selectOptionMap.variable3SO}>
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>{orgVariable.cblight__CBVariable3Label__c}</label>
+											<lightning-input-field
+													variant="label-hidden"
+													field-name="cblight__CBVariable3__c"
+													name="cblight__CBVariable3__c"
+													value={cblight__CBVariable3__c}
+													onchange={handleChangeSimpleFilter}
+											>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</template>
+									<template lwc:if={selectOptionMap.variable4SO}>
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>{orgVariable.cblight__CBVariable4Label__c}</label>
+											<lightning-input-field
+													variant="label-hidden"
+													field-name="cblight__CBVariable4__c"
+													name="cblight__CBVariable4__c"
+													value={cblight__CBVariable4__c}
+													onchange={handleChangeSimpleFilter}
+											>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</template>
+									<template lwc:if={selectOptionMap.variable5SO}>
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>{orgVariable.cblight__CBVariable5Label__c}</label>
+											<lightning-input-field
+													variant="label-hidden"
+													field-name="cblight__CBVariable5__c"
+													name="cblight__CBVariable5__c"
+													value={cblight__CBVariable5__c}
+													onchange={handleChangeSimpleFilter}
+											>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</template>
+									<!-- VARIABLES -->
+									<!--<lightning-layout-item size="1">
+										<lightning-record-edit-form object-api-name="cblight__CBBudgetLine__c">
+											<label>Owner</label>
+											<lightning-input-field variant="label-hidden"
+																   field-name="cblight__User__c"
+																   name="OwnerId"
+																   value={OwnerId}
+																   onchange={handleChangeSimpleFilter}
+											>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</lightning-layout-item>
+									<lightning-layout-item size="1">
+										<label>Text Filter</label>
+										<lightning-input variant="label-hidden"
+														 name="textFilter"
+														 value={textFilter}
+														 onchange={handleChangeSimpleFilter}
+										>
+										</lightning-input>
+									</lightning-layout-item>-->
+									<lightning-layout-item size="1" class="slds-m-top_medium headerVariableIconPadding">
+										<lightning-button label="Apply Filter" variant="brand"
+														  title="Apply Filter"
+														  onclick={applySimpleFilter}></lightning-button>
+									</lightning-layout-item>
+									<!--<lightning-layout-item size="1"
+														   class="slds-m-top_medium headerVariableIconPadding">
+										<lightning-button label="Reset Filter" variant="brand"
+														  title="Reset Filter"
+														  onclick={resetSimpleFilter}></lightning-button>
+									</lightning-layout-item>-->
+								</lightning-layout>
+							</template>
+						</lightning-tab>
+						<lightning-tab label="View" onactive={setComplexFilter}>
+							<lightning-layout>
+								<template lwc:if={orgVariable.cblight__ScenarioIsUsing__c}>
+									<lightning-layout-item size="1-12">
+										<label>Scenario</label>
+										<lightning-combobox
+												name="cblight__CBScenario__c"
+												variant="label-hidden"
+												value={cblight__CBScenario__c}
+												options={selectOptionMap.scenarioSO}
+												onchange={applySimpleFilter}
+										></lightning-combobox>
+									</lightning-layout-item>
+								</template>
+								<lightning-layout-item size="2-12">
+									<label>Cluster Rule</label>
+									<lightning-combobox
+											name="cblight__CBClusterRule__c"
+											variant="label-hidden"
+											value={cblight__CBClusterRule__c}
+											options={selectOptionMap.clusterRuleSO}
+											onchange={applySimpleFilter}
+									></lightning-combobox>
+								</lightning-layout-item>
+								<template lwc:if={orgVariable.cblight__AllocationIsUsing__c}>
+									<lightning-layout-item size="1-12">
+										<label>Allocation Mode</label>
+										<lightning-combobox
+												name="selectedAllocationMode"
+												variant="label-hidden"
+												value={selectedAllocationMode}
+												options={allocationModeOptions}
+												onchange={applySimpleFilter}
+										></lightning-combobox>
+									</lightning-layout-item>
+								</template>
+								<template lwc:if={orgVariable.cblight__TopdownModeIsUsing__c}>
+									<lightning-layout-item size="1-12">
+										<label>Approach</label>
+										<lightning-combobox
+												name="selectedApproach"
+												variant="label-hidden"
+												value={selectedApproach}
+												options={approachOptions}
+												onchange={applySimpleFilter}
+										></lightning-combobox>
+									</lightning-layout-item>
+								</template>
+								<!--<lightning-layout-item>
+									<template lwc:if={showComplexFilter}>
+										<div style="margin-top: -5px; width:600px;">
+											<c-cb-filter-manager
+													base-request-string={complexFilterString}
+													fields-available={selectOptionMap.budgetLineFieldSO}
+													filter-title="Advanced Filter"
+													onresultrequeststringchanged={applyComplexFilter}
+													sobject-type="cblight__CBBudgetLine__c"
+											></c-cb-filter-manager>
+										</div>
+									</template>
+								</lightning-layout-item>-->
+							</lightning-layout>
+						</lightning-tab>
+						<!--<template for:each={dynamicTabs} for:item="tab">
+							<lightning-tab icon-name="utility:note" key={tab.value} label={tab.label}
+										   value={tab.value} onactive={setConfiguration}></lightning-tab>
+						</template>-->
+					</lightning-tabset>
+				</div>
+				<!--<template if:false={showExcelWindow}>
+					<lightning-button-group class="absolutePosition">
+						<template if:false={disabledAddConfigurationButton}>
+							<lightning-button-icon title="Save the current combination of analytics as a function"
+												   variant="brand"
+												   icon-name="utility:add"
+												   onclick={saveCombination}>
+							</lightning-button-icon>
+						</template>
+						<template if:false={disabledExcelButton}>
+							<lightning-button-icon
+									icon-name="utility:budget_period"
+									title="Excel Mirror"
+									alternative-text="Excel Mirror"
+									onclick={openExcelWindow}>
+							</lightning-button-icon>
+						</template>
+					</lightning-button-group>
+				</template>-->
+			</div>
+			<lightning-button-group slot="actions" class="slds-p-top_xxx-small">
+				<!--<lightning-button label="Refresh Page" variant="brand" title="Refresh Page"
+								  onclick={doInit}></lightning-button>-->
+				<lightning-button
+						label="CloudBudget3.0"
+						title="CloudBudget3.0 is a full version of CloudBudget Lite. Get the full version to feel the power of cloud budgeting"
+						onclick={openWelcome} variant="success"
+						icon-name="utility:offline_cached"
+				></lightning-button>
+				<lightning-button
+						label="Add"
+						title="Add a new budget line"
+						onclick={addNewBudgetLine}
+						icon-name="utility:add"
+				></lightning-button>
+				<lightning-button-menu alternative-text="Section Manager" title="Section Setup" menu-alignment="center"
+									   class="headerButtonsStyle"
+									   icon-name="utility:center_align_text" onselect={toggleSections}>
+					<!--<lightning-menu-item prefix-icon-name="utility:display_rich_text" value="showAll" label="Show All"
+										 onclick={doInit}></lightning-menu-item>
+					<lightning-menu-item prefix-icon-name="utility:justify_text" value="hideAll" label="Hide All"
+										 onclick={doInit}></lightning-menu-item>
+					<lightning-menu-item prefix-icon-name="utility:list" value="openFunctionList"
+										 label="BL Sheet List"></lightning-menu-item>-->
+					<lightning-menu-item prefix-icon-name="utility:cases" value="toggleMode" onclick={toggleDetailMode}
+										 title="Toggle Detail Mode"
+										 label="Toggle Mode"></lightning-menu-item>
+
+					<lightning-menu-item prefix-icon-name="utility:search" value="openGlobalSearch"
+										 label="Global Search"
+										 onclick={openGlobalSearchList}></lightning-menu-item>
+					<template if:false={disabledExcelButton}>
+						<lightning-menu-item prefix-icon-name="utility:delete" value="deleteCurrentFunction"
+											 label="Delete Current Function"></lightning-menu-item>
+					</template>
+					<template lwc:if={tableIsReadyToRender}>
+						<c-cb-recent-records open-record={openBudgetLineExternal}></c-cb-recent-records>
+					</template>
+				</lightning-button-menu>
+				<!--<lightning-button-icon icon-name="utility:cases" title="Toggle Detail Mode"
+									   alternative-text="Toggle Detail Mode"
+									   onclick={toggleDetailMode}></lightning-button-icon>-->
+
+			</lightning-button-group>
+		</lightning-card>
+		<!-- Budget Line Header -->
+
+		<!-- Page Info -->
+		<div class="headerPageInfoLine">
+			<c-cb-page-info page-object={pageParameters}></c-cb-page-info>
+		</div>
+		<!-- Page Info -->
+
+		<!-- FIXED PERIODS -->
+		<div class="headerPeriodLine slds-p-around_none">
+			<lightning-layout>
+				<lightning-layout-item size="3" class={headerPeriodLineLeftPadding}></lightning-layout-item>
+				<lightning-layout-item padding="around-none" size="8">
+					<lightning-layout>
+						<template for:each={BYPeriods} for:item="a">
+							<lightning-layout-item padding="around-none" key={a.Id} flexibility="auto"
+												   class="headerPeriodLineElement">
+								<div class="headerPeriodLineText">{a.Name}</div>
+							</lightning-layout-item>
+						</template>
+					</lightning-layout>
+				</lightning-layout-item>
+				<lightning-layout-item padding="around-none" size="1" class="headerPeriodLineElement">
+					<div class="headerPeriodLineText">BY TOTAL</div>
+				</lightning-layout-item>
+			</lightning-layout>
+		</div>
+		<!-- FIXED PERIODS -->
+
+		<!-- PLACEHOLDER -->
+		<template if:false={tableIsReadyToRender}>
+			<lightning-card>
+				<template for:each={PLACE_HOLDER} for:item="a">
+					<lightning-layout key={a} class="slds-p-top_small">
+						<lightning-layout-item size="3">
+							<lightning-input disabled value="" label="" variant="label-hidden"></lightning-input>
+						</lightning-layout-item>
+						<lightning-layout-item size="8">
+							<lightning-input disabled value="" label="" variant="label-hidden"></lightning-input>
+						</lightning-layout-item>
+						<lightning-layout-item size="1">
+							<lightning-input disabled value="" label="" variant="label-hidden"></lightning-input>
+						</lightning-layout-item>
+					</lightning-layout>
+				</template>
+			</lightning-card>
+		</template>
+		<!-- PLACEHOLDER -->
+
+		<template lwc:if={tableIsReadyToRender}>
+
+			<template lwc:if={globalCluster}>
+				<div class="slds-m-bottom_medium">
+					<lightning-card>
+						<!-- SUMMARY -->
+						<template lwc:if={showSummary}>
+							<c-cb-budget-line-summary global-cluster={globalCluster} cluster-rule={clusterRule}
+													  topdown-budget-lines={topdownBudgetLines}></c-cb-budget-line-summary>
+						</template>
+						<!-- SUMMARY -->
+					</lightning-card>
+				</div>
+
+				<lightning-card>
+					<!-- BUDGET LINES -->
+					<template lwc:if={overSizeMode}>
+						<div style="color: orange;" class="slds-align_absolute-center">
+							Budget details not available due to large amount of data. The maximum number of lines on the
+							screen is 2000
+						</div>
+					</template>
+
+					<template if:false={overSizeMode}>
+						<lightning-layout>
+							<lightning-layout-item size="1">
+
+							</lightning-layout-item>
+							<lightning-layout-item size="3">
+								<div class="moduleTitle">BUDGET DETAILS</div>
+							</lightning-layout-item>
+						</lightning-layout>
+						<c-cb-cluster level="0" cluster-key={globalCluster.name}
+									  global-cluster={globalCluster}></c-cb-cluster>
+					</template>
+
+
+					<!-- BUDGET LINES -->
+
+					<!-- SAVE BL BUTTON -->
+					<template lwc:if={saveButton}>
+						<div class="saveButton slds-is-fixed slds-p-around_x-small">
+							<lightning-button label="Save" variant="success" title="Save a budget line amount changes"
+											  onclick={saveBudgetLines}></lightning-button>
+							<lightning-button label="Cancel" variant="brand" title="Cancel" onclick={doInit}
+											  class="slds-p-left_xxx-small"></lightning-button>
+						</div>
+					</template>
+					<!-- SAVE BL BUTTON -->
+				</lightning-card>
+
+			</template>
+
+		</template>
+
+
+		<!-- Clusters -->
+		<!-- EXCEL IMPORT AND EXPORT MODAL WINDOW -->
+		<template lwc:if={showExcelWindow}>
+			<c-cb-excel-mirror
+					budget-lines={budgetLines}
+					configuration-mirror={configurationMirror}></c-cb-excel-mirror>
+		</template>
+		<!-- EXCEL IMPORT AND EXPORT MODAL WINDOW -->
+
+		<!--APPROVAL MODAL WINDOW -->
+		<template lwc:if={showApprovalWindow}>
+			<section role="dialog" tabindex="-1" aria-modal="true"
+					 aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-2"
+					 class="slds-modal slds-fade-in-open slds-modal_medium" data-id="approvalModal">
+				<div class="slds-modal__container">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							title="Close" onclick={closeApprovalWindow}>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+										size="small"></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<div class="slds-modal__header">
+
+						<h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">
+							Approval
+						</h1>
+					</div>
+					<div class="slds-modal__content slds-p-around_xxx-small" id="modal-content-id-2">
+						<c-cb-budget-line-approval
+								budget-line-ids={budgetLineIdsToApproval}></c-cb-budget-line-approval>
+					</div>
+					<footer class="slds-modal__footer">
+						<button class="slds-button slds-button_neutral" onclick={closeApprovalWindow}
+								title="Close">
+							Close
+						</button>
+					</footer>
+				</div>
+			</section>
+			<div class="slds-backdrop slds-backdrop_open"></div>
+		</template>
+		<!--APPROVAL MODAL WINDOW -->
+
+		<!-- Budget Line Modal -->
+		<template lwc:if={showBudgetLineModal}>
+			<c-cb-budget-line-modal record-id={selectedBudgetLineId} is-formula=""></c-cb-budget-line-modal>
+		</template>
+		<!-- Budget Line Modal -->
+
+		<!-- Calculation Rule Dialog -->
+		<template lwc:if={showBudgetLineCalculationRuleModal}>
+			<c-cb-calculation-rule-dialog cr-id={selectedBudgetLineCalculationRuleId}></c-cb-calculation-rule-dialog>
+		</template>
+		<!-- Calculation Rule Dialog -->
+
+		<!-- Global Search Dialog -->
+		<template lwc:if={showGlobalSearchModal}>
+			<c-cb-budget-line-global-search open-record={openBudgetLineExternal}
+											close-modal={closeGlobalSearchList}></c-cb-budget-line-global-search>
+		</template>
+		<!-- Global Search Dialog -->
+
+		<!-- SPINNER -->
+		<c-cb-spinner show={showSpinner}></c-cb-spinner>
+		<!-- SPINNER -->
+
+		<template lwc:if={showWelcomeMat}>
+			<c-cb-welcome name='main'></c-cb-welcome>
+		</template>
+	</div>
+
+
+</template>

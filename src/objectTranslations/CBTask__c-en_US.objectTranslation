@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Task</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Tasks</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Task Queue --></label>
+        <name>CBTaskQueue__c</name>
+        <relationshipLabel><!-- CB Tasks --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Class Name --></label>
+        <name>ClassName__c</name>
+    </fields>
+    <fields>
+        <label><!-- OrderNumber --></label>
+        <name>OrderNumber__c</name>
+    </fields>
+    <fields>
+        <label><!-- Parameter 1 --></label>
+        <name>Parameter1__c</name>
+    </fields>
+    <fields>
+        <label><!-- Parameter 2 --></label>
+        <name>Parameter2__c</name>
+    </fields>
+    <fields>
+        <label><!-- Queue Name --></label>
+        <name>QueueName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Done</masterLabel>
+            <translation><!-- Done --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Idle</masterLabel>
+            <translation><!-- Idle --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending</masterLabel>
+            <translation><!-- Pending --></translation>
+        </picklistValues>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

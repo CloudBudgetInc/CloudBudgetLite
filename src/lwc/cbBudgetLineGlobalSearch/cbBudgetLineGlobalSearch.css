@@ -1,0 +1,20 @@
+.simple {
+    font-size: smaller;
+    padding: 0;
+}
+
+.highLight {
+    font-size: smaller;
+    padding: 0;
+    color: mediumvioletred;
+}
+
+.underLine {
+    width: 100%;
+    height: 2px;
+    background-color: mediumvioletred;
+}
+
+.right-align {
+    text-align: right;
+}

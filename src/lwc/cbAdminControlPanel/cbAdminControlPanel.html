@@ -1,0 +1,383 @@
+<template>
+
+
+	<!-- THE MAIN CONTROL PANEL -->
+	<lightning-card title="CloudBudget 3.0 Control Panel">
+		<!-- SPINNER -->
+		<c-cb-spinner show={showSpinner}></c-cb-spinner>
+		<!-- SPINNER -->
+		<lightning-tabset>
+			<lightning-tab label="Status" onactive={getStatistic}>
+				<lightning-layout>
+					<lightning-layout-item size="10">
+						<lightning-card title="Mapped Analytics">
+							<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+								<thead>
+								<tr class="slds-line-height_reset">
+									<th>
+										Source
+									</th>
+									<th>
+										Source Number
+									</th>
+									<th>
+										Source Total Number
+									</th>
+									<th>
+
+									</th>
+									<th>
+										Result
+									</th>
+									<th>
+										Result Number
+									</th>
+									<th>
+										Details
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<template for:each={statisticRows} for:item="row">
+									<tr class="slds-hint-parent" key={row}>
+										<th>
+											<lightning-button variant="base" value={row.sourceObjectAPIName}
+															  onclick={redirectToListView}
+															  label={row.sourceObjectName}></lightning-button>
+											<template lwc:if={row.filter}>
+												<lightning-helptext content={row.filter}></lightning-helptext>
+											</template>
+										</th>
+										<td>
+											{row.sourceNumber}
+										</td>
+										<td>
+											{row.sourceNumberTotal}
+										</td>
+										<td>
+											<template lwc:if={row.sourceNumber}>
+												<lightning-icon icon-name="utility:jump_to_right"
+																alternative-text="Mapped"
+																title="Mapped"></lightning-icon>
+											</template>
+											<template lwc:if={row.warning}>
+												<lightning-icon icon-name="utility:warning"
+																alternative-text={row.warning}
+																class="warning-icon"
+																title={row.warning}></lightning-icon>
+											</template>
+										</td>
+										<td>
+											<lightning-button variant="base" value={row.resultObjectAPIName}
+															  onclick={redirectToListView}
+															  label={row.resultObjectName}></lightning-button>
+										</td>
+										<td>
+											{row.resultNumber}
+										</td>
+										<td>
+											<lightning-button label="Report" variant="base" onclick={renderMappingReport}
+															  value={row.type}></lightning-button>
+										</td>
+									</tr>
+								</template>
+								</tbody>
+							</table>
+						</lightning-card>
+						<template lwc:if={showMappingReport}>
+							<c-cb-init-wizard-report mapping-type={reportType}></c-cb-init-wizard-report>
+						</template>
+					</lightning-layout-item>
+					<lightning-layout-item size="2">
+						<template lwc:if={showChart}>
+							<lightning-card title="Organization Storage" icon-name="utility:chart">
+								<c-cb-chart chart-config={chartConfig}></c-cb-chart>
+							</lightning-card>
+						</template>
+					</lightning-layout-item>
+				</lightning-layout>
+
+
+			</lightning-tab>
+			<lightning-tab label="Jobs" onactive={updateScheduledJobsPanel}>
+				<c-cb-event-monitor></c-cb-event-monitor>
+				<lightning-accordion allow-multiple-sections-open
+									 active-section-name={openedSections}>
+					<lightning-accordion-section name="queues" label="Task Queue">
+						<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+							<thead>
+							<tr class="slds-line-height_reset">
+								<th>
+									Name
+								</th>
+								<th style="width: 100px">
+									Task Queue Updated
+								</th>
+								<th style="width: 100px">
+									Last Run Date
+								</th>
+								<th style="width: 100px">
+									Description
+								</th>
+								<th style="width: 50px">
+									Action
+								</th>
+							</tr>
+							</thead>
+							<tbody>
+							<template for:each={taskQueues} for:item="tq">
+								<tr class="slds-hint-parent" key={tq.Id}>
+									<th>
+										{tq.Name}
+									</th>
+									<td>
+										<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+																	   hour="2-digit"
+																	   minute="2-digit"
+																	   value={tq.CreatedDate}></lightning-formatted-date-time>
+									</td>
+									<td>
+										<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+																	   hour="2-digit"
+																	   minute="2-digit"
+																	   value={tq.LastModifiedDate}></lightning-formatted-date-time>
+									</td>
+									<td>
+										<lightning-formatted-date-time
+												value={tq.cblight__Description__c}></lightning-formatted-date-time>
+									</td>
+									<td style="display: flex; align-items: center">
+										<div>
+											<lightning-button-icon icon-name="utility:reminder" onclick={setNewScheduledJob}
+																   value={tq.Name}
+																   title="Add Scheduled Job"></lightning-button-icon>
+										</div>
+										<div>
+											<lightning-button icon-name="utility:right" onclick={runTaskQueueManually}
+															  value={tq.Id} variant="success" label="Run" class=""
+															  title="Run the Job Manually"></lightning-button>
+										</div>
+									</td>
+								</tr>
+							</template>
+							</tbody>
+						</table>
+					</lightning-accordion-section>
+					<lightning-accordion-section name="scheduled" label="Scheduled Jobs">
+						<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+							<thead>
+							<tr class="slds-line-height_reset">
+								<th>
+									Name
+								</th>
+								<th style="width: 100px">
+									Times Triggered
+								</th>
+								<th style="width: 100px">
+									Next Fire Time
+								</th>
+								<th style="width: 100px">
+									State
+								</th>
+								<th style="width: 50px">
+									Action
+								</th>
+							</tr>
+							</thead>
+							<tbody>
+							<template for:each={cronTriggers} for:item="ct">
+								<tr class="slds-hint-parent" key={ct.Name}>
+									<th>
+										<template lwc:if={ct.isCB}>
+											<lightning-badge class="slds-m-right_small" label="CB3.0"></lightning-badge>
+										</template>
+										{ct.CronJobDetail.Name}
+									</th>
+									<td>
+										{ct.TimesTriggered}
+									</td>
+									<td>
+										<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+																	   hour="2-digit"
+																	   minute="2-digit"
+																	   value={ct.NextFireTime}></lightning-formatted-date-time>
+									</td>
+									<td>
+										{ct.State}
+									</td>
+									<td>
+										<template lwc:if={ct.isCB}>
+											<lightning-button icon-name="utility:delete"
+															  value={ct.Id} onclick={deleteScheduledJob}
+															  variant="destructive"></lightning-button>
+										</template>
+									</td>
+								</tr>
+							</template>
+							</tbody>
+						</table>
+					</lightning-accordion-section>
+
+				</lightning-accordion>
+
+			</lightning-tab>
+			<lightning-tab label="CB Logs">
+				<div style="width: 100%">
+					<c-cb-log></c-cb-log>
+				</div>
+			</lightning-tab>
+			<lightning-tab label="SF Logs" onactive={updateAuditTrialsPanel}>
+				<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+					<thead>
+					<tr class="slds-line-height_reset">
+						<th>
+							Action
+						</th>
+						<th>
+							User
+						</th>
+						<th>
+							Date
+						</th>
+						<th>
+							Description
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<template for:each={auditTrails} for:item="at">
+						<tr class="slds-hint-parent" key={at.Action}>
+							<th>
+								{at.Action}
+							</th>
+							<td>
+								{at.CreatedBy.Name}
+							</td>
+							<td>
+								<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+															   hour="2-digit"
+															   minute="2-digit"
+															   value={at.CreatedDate}></lightning-formatted-date-time>
+							</td>
+							<td>
+								{at.Display}
+							</td>
+						</tr>
+					</template>
+					</tbody>
+				</table>
+			</lightning-tab>
+			<lightning-tab label="Trial Data" onactive={updateTrialDataPanel}>
+				<div class="slds-p-around_medium">
+					<lightning-layout>
+						<lightning-layout-item size="2">
+							<lightning-combobox
+									label="Trial Data Profile"
+									placeholder="Select Profile"
+									options={trialDataProfiles}
+									value="default"
+							></lightning-combobox>
+						</lightning-layout-item>
+						<lightning-layout-item class="slds-p-top_large">
+							<lightning-button label="Generate Trial Data" disabled={lockButton}
+											  onclick={generateTrialData}></lightning-button>
+						</lightning-layout-item>
+						<lightning-layout-item class="slds-p-top_large">
+							<lightning-button label="Generate Non Financial Libs" disabled={lockButton}
+											  onclick={generateTrialNonFinLibData}></lightning-button>
+						</lightning-layout-item>
+					</lightning-layout>
+				</div>
+			</lightning-tab>
+			<!--
+			<lightning-tab label="Org Settings" onactive={updateOrgSettingsPanel}>
+				<lightning-button label='Apply' variant="success"></lightning-button>
+				<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+					<thead>
+					<tr class="slds-line-height_reset">
+						<th>
+							Parameter
+						</th>
+						<th>
+							Field
+						</th>
+						<th>
+							Value
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<template for:each={orgSettings} for:item="p">
+						<tr class="slds-hint-parent" key={p.label}>
+							<th>
+								{p.label}
+							</th>
+							<th>
+								{p.field}
+							</th>
+							<td>
+								<template if:true={p.isToggle}>
+									<lightning-input type="toggle" label=""
+													 checked={p.value}/></lightning-input>
+								</template>
+								<template if:true={p.isNumber}>
+									<lightning-input type="number" value={p.value}
+													 variant="label-hidden"></lightning-input>
+								</template>
+								<template if:true={p.isText}>
+									<lightning-input value={p.value} variant="label-hidden"></lightning-input>
+								</template>
+								<template if:true={p.isDate}>
+									<lightning-input type="date" value={p.value}
+													 variant="label-hidden"></lightning-input>
+								</template>
+
+							</td>
+						</tr>
+					</template>
+					</tbody>
+				</table>
+			</lightning-tab>
+			-->
+		</lightning-tabset>
+
+	</lightning-card>
+	<!-- THE MAIN CONTROL PANEL -->
+
+	<!-- NEW SCHEDULED JOB MODAL -->
+	<template lwc:if={showNewJobModal}>
+		<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+				 class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+					<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+						<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+					</svg>
+					<span class="slds-assistive-text">Cancel and close</span>
+				</button>
+				<div class="slds-modal__header">
+					<h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Scheduled Job Setup</h1>
+				</div>
+				<div class="slds-modal__content slds-p-around_medium">
+					<lightning-input type="time" label="Run scheduled job at" name="runTime"
+									 onchange={handleTQSetupChange}
+									 value={selectedTaskQueue.runTime}></lightning-input>
+					<lightning-combobox
+							label="Send the notification to"
+							value={selectedTaskQueue.publicGroupId}
+							name="publicGroupId"
+							placeholder="Select Public Group"
+							options={selectOptions.publicGroupSO}
+							onchange={handleTQSetupChange}></lightning-combobox>
+				</div>
+				<div class="slds-modal__footer slds-modal__footer_directional">
+					<lightning-button label="Set Job" variant="brand" onclick={saveNewScheduledJob}></lightning-button>
+					<lightning-button label="Close" onclick={toggleNewJobModal}></lightning-button>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+	</template>
+	<!-- NEW SCHEDULED JOB MODAL -->
+
+</template>

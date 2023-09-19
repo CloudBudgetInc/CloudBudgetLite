@@ -1,0 +1,186 @@
+<template>
+
+	<!-- Budget Line List -->
+	<lightning-layout>
+		<lightning-layout-item>
+			<div class="clusterEdgeTop">
+				<template lwc:if={isSectionOpen}>
+					<lightning-button-icon icon-name="utility:dash" variant="border-filled"
+										   class="howHideClusterButtons"
+										   onclick={toggleOpenSection}
+										   size="x-small" title="Fold section"></lightning-button-icon>
+				</template>
+				<template if:false={isSectionOpen}>
+					<lightning-button-icon icon-name="utility:add" variant="border-filled" class="howHideClusterButtons"
+										   onclick={toggleOpenSection}
+										   size="x-small" title="Unfold section"></lightning-button-icon>
+				</template>
+			</div>
+			<div class="clusterEdgeLeft"></div>
+			<div class="clusterEdgeBottom"></div>
+		</lightning-layout-item>
+
+		<lightning-layout-item class="fullScreen">
+			<lightning-layout class={clusterSplitLine}>
+				<lightning-layout-item size="3">
+
+					<lightning-layout>
+						<lightning-layout-item size="1">
+						</lightning-layout-item>
+
+						<lightning-layout-item size="1" class="approvalButtonMargin">
+							<!--<template lwc:if={level}>
+								<lightning-button-group>
+									<lightning-button-icon variant="border-filled" title="Approval" size="x-small"
+														   icon-name="utility:approval"
+														   onclick={showStatusWindow}></lightning-button-icon>
+								</lightning-button-group>
+							</template>-->
+						</lightning-layout-item>
+
+
+						<lightning-layout-item size="10" class="clusterHeader headerTextMargin">
+							<div lwc:if={level}
+								 class="slds-text-heading_medium slds-text-title_bold clusterText">
+								{currentCluster.name} Total:
+							</div>
+							<template if:false={level}>
+								<template lwc:if={showClusterTotal}>
+									<div class="slds-text-heading_medium slds-text-title_bold clusterText">CONSOLIDATED
+										TOTAL:
+									</div>
+								</template>
+							</template>
+							<template lwc:if={isAdditionalTotalsNeeded}>
+								<template if:false={isAdditionalTotalsOpen}>
+									<lightning-button-icon icon-name="utility:add" variant="border-filled"
+														   class="howHideClusterButtons"
+														   onclick={generateAdditionalTotals}
+														   size="xx-small"
+														   title="Show total details"></lightning-button-icon>
+								</template>
+								<template lwc:if={isAdditionalTotalsOpen}>
+									<lightning-button-icon icon-name="utility:dash" variant="border-filled"
+														   class="howHideClusterButtons"
+														   onclick={hideAdditionalTotal}
+														   size="xx-small" title="Hide details"></lightning-button-icon>
+								</template>
+							</template>
+
+						</lightning-layout-item>
+					</lightning-layout>
+
+				</lightning-layout-item>
+				<template lwc:if={totalLine}>
+					<template lwc:if={showClusterTotal}>
+						<lightning-layout-item padding="around-none" size="8">
+							<lightning-layout>
+								<template for:each={totalLine.cblight__CBAmounts__r} for:item="a">
+									<lightning-layout-item padding="around-none" flexibility="auto" key={a.Id}>
+										<template lwc:if={totalLine.CurrencyIsoCode}>
+											<c-cb-input-currency disabled="true" is-bold="true"
+																 currency-code={totalLine.CurrencyIsoCode}
+																 val={a.cblight__Value__c}></c-cb-input-currency>
+										</template>
+										<template if:false={totalLine.CurrencyIsoCode}>
+											<lightning-input type="number" label=""
+															 class="dec totalFont input-text-align_right"
+															 disabled="true" name={a.Id} variant="label-hidden"
+															 value={a.cblight__Value__c}
+															 formatter="currency" step="0.01">
+											</lightning-input>
+										</template>
+									</lightning-layout-item>
+								</template>
+							</lightning-layout>
+						</lightning-layout-item>
+						<lightning-layout-item padding="around-none" size="1">
+							<template lwc:if={totalLine.CurrencyIsoCode}>
+								<c-cb-input-currency disabled="disabled" is-bold="true"
+													 currency-code={totalLine.CurrencyIsoCode}
+													 val={totalLine.yearlyTotal}></c-cb-input-currency>
+							</template>
+							<template if:false={totalLine.CurrencyIsoCode}>
+								<lightning-input type="number" value={totalLine.yearlyTotal} variant="label-hidden"
+												 class="dec totalFont" disabled="true" formatter="currency" step="0.01">
+								</lightning-input>
+							</template>
+						</lightning-layout-item>
+					</template>
+				</template>
+			</lightning-layout>
+
+			<template lwc:if={isAdditionalTotalsOpen}>
+				<template lwc:if={additionalTotalLines}>
+					<div class="slds-box slds-p-left_none slds-p-right_none slds-p-bottom_small">
+						<template for:each={additionalTotalLines} for:item="totalLine">
+							<lightning-layout key={totalLine.key}>
+								<lightning-layout-item padding="around-none" size="3">
+									<div class="slds-float_left slds-p-left_small" style="position: absolute">
+										{totalLine.sign}
+									</div>
+									<div class="slds-text-heading_medium slds-text-title_bold clusterText clusterHeader slds-p-top_small"
+										 style="color: grey;">
+										{totalLine.name}:
+									</div>
+
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="8">
+									<lightning-layout>
+										<template for:each={totalLine.cblight__CBAmounts__r} for:item="a">
+											<lightning-layout-item padding="around-none" flexibility="auto" key={a.Id}>
+												<lightning-input type="number" label="" disabled
+																 class="dec input-text-align_right"
+																 variant="label-hidden"
+																 value={a.cblight__Value__c}
+																 formatter={totalLine.formatter} step="0.01">
+												</lightning-input>
+											</lightning-layout-item>
+										</template>
+									</lightning-layout>
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="1">
+									<lightning-input type="number" value={totalLine.yearlyTotal} variant="label-hidden"
+													 disabled
+													 class="dec totalFont" formatter={totalLine.formatter}
+													 step="0.01">
+									</lightning-input>
+								</lightning-layout-item>
+							</lightning-layout>
+						</template>
+					</div>
+				</template>
+			</template>
+
+			<template lwc:if={isSectionOpen}>
+				<div class={styleClass}>
+					<template lwc:if={displayChildrenClusters}>
+
+						<template for:each={currentCluster.childClusters} for:item="cluster">
+							<div key={cluster}>
+								<c-cb-cluster cluster-key={cluster.fullKey} level={next}
+											  global-cluster={globalClusterExternal}
+											  padding="around-none">
+								</c-cb-cluster>
+							</div>
+						</template>
+
+					</template>
+					<template lwc:if={displaySubClusters}>
+						<template for:each={currentCluster.subClusters} for:item="subCluster">
+							<div key={subCluster.key}>
+								<c-cb-subcluster sub-cluster={subCluster}></c-cb-subcluster>
+							</div>
+						</template>
+					</template>
+					<div></div>
+
+				</div>
+			</template>
+		</lightning-layout-item>
+
+	</lightning-layout>
+
+	<!-- Budget Line List -->
+
+</template>

@@ -1,0 +1,21 @@
+@import 'c/cbStyle';
+
+.badge {
+	padding: 5px;
+}
+
+.infoStyle {
+	width: 100%; 
+	background-color: #afd6f3;
+	border-radius: 5px;
+}
+
+.iconStyle {
+	float:left;
+	margin: 2px 0 0 15px;
+	cursor: pointer;
+}
+
+.blockTransparency {
+	opacity: 80%;
+}

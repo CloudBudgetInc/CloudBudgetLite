@@ -1,0 +1,60 @@
+@import 'c/cbStyle';
+
+.gear {
+    transform-origin: 50% 50%;
+    transform-box: fill-box; /* Important, otherwise animation is not centered */
+}
+
+.gear-large {
+    animation: 5s linear rotateR infinite;
+}
+
+.gear-medium {
+    animation: 5s linear rotateL infinite;
+}
+
+.gear-small {
+    animation: 5s linear rotateL infinite;
+}
+
+@keyframes rotateR {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateL {
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+@media (prefers-reduced-motion) {
+    .w-mid,
+    .w-top {
+        animation: none;
+    }
+}
+
+@media (prefers-reduced-motion) {
+    .chain-bottom,
+    .chain-top {
+        animation: none;
+    }
+}
+
+@media (prefers-reduced-motion) {
+    .gear {
+        animation: none;
+    }
+}
+
+.ERROR {
+    color: firebrick;
+}
+.PROGRESS {
+    color: #353536;
+}
+.DONE {
+    color: #0c3b0f;
+}

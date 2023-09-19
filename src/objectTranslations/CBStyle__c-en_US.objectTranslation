@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Style</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Styles</value>
+    </caseValues>
+    <fields>
+        <label><!-- Background Color --></label>
+        <name>BackgroundColor__c</name>
+    </fields>
+    <fields>
+        <label><!-- CSS --></label>
+        <name>CSS__c</name>
+    </fields>
+    <fields>
+        <label><!-- Text Color --></label>
+        <name>Color__c</name>
+    </fields>
+    <fields>
+        <label><!-- Font Weight --></label>
+        <name>FontWeight__c</name>
+    </fields>
+    <fields>
+        <label><!-- Font Family --></label>
+        <name>Font__c</name>
+    </fields>
+    <fields>
+        <label><!-- State --></label>
+        <name>State__c</name>
+    </fields>
+    <layouts>
+        <layout>CB Style Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- The style with this name already exists, please enter a different name --></errorMessage>
+        <name>Unique_Name_field</name>
+    </validationRules>
+</CustomObjectTranslation>

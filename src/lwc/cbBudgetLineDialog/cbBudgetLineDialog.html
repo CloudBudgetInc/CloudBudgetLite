@@ -1,0 +1,178 @@
+<!-- sldsValidatorIgnore -->
+<template>
+
+
+    <section aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container ">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_small">Budget Line: <span
+                        style="font-weight: bold;">Complex Line</span></h2>
+                <lightning-icon class="slds-modal__close" icon-name="utility:close" size="small"
+                                onclick={closeModal}></lightning-icon>
+                <lightning-badge label={budgetLine.cblight__Status__c}></lightning-badge>
+            </header>
+            <div class="slds-modal__content">
+
+                <lightning-tabset active-tab-value={selectedBudgetYear}>
+                    <lightning-tab label="Budget">
+                        <lightning-layout>
+
+                            <lightning-layout-item padding="around-none" size="3">
+
+                            </lightning-layout-item>
+
+                        </lightning-layout>
+
+                        <lightning-layout>
+
+                            <lightning-layout-item padding="around-none" size="2">
+                                <lightning-input label="Name" value={complexLine.Name} name="Name"
+                                                 onblur={handleBudgetLine}>
+                                </lightning-input>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item padding="around-none" size="1">
+                                <div class="slds-p-top_large">
+                                    <template for:each={complexLine.lines} for:item="line">
+                                        <lightning-input label="Name" value={line.title} name="Name" key={line.title}
+                                                         variant="label-hidden" class="dec"
+                                                         disabled="true">
+                                        </lightning-input>
+                                    </template>
+                                </div>
+                            </lightning-layout-item>
+
+
+                            <lightning-layout-item padding="around-none" size="8">
+                                <div class="slds-p-top_large">
+                                    <template for:each={complexLine.lines} for:item="line">
+                                        <lightning-layout key={line.Name} padding="around-none">
+                                            <template for:each={line.cblight__NonFinancialItems__r} for:item="a">
+                                                <lightning-layout-item padding="around-none" size="1" key={a.Id}>
+                                                    <lightning-input type="number" label={a.Name} class="dec"
+                                                                     name={a.Id} disabled="true" variant="label-hidden"
+                                                                     value={a.cblight__Value__c}
+                                                                     formatter="currency" step="0.01">
+                                                    </lightning-input>
+                                                </lightning-layout-item>
+                                            </template>
+                                        </lightning-layout>
+                                    </template>
+                                </div>
+
+                            </lightning-layout-item>
+
+
+                            <lightning-layout-item padding="around-none" size="1">
+                                <lightning-input type="number" value={complexLine.yearlyTotal} label="BY Total"
+                                                 class="dec"
+                                                 disabled="true" formatter="currency" step="0.01">
+                                </lightning-input>
+                            </lightning-layout-item>
+
+
+                        </lightning-layout>
+
+                    </lightning-tab>
+
+                    <lightning-tab label="Setup">
+
+                        <lightning-layout>
+                            <lightning-layout-item size="6">
+
+                                <div class="slds-text-title_caps slds-p-left_large ">Source
+                                    Catalog
+                                </div>
+                                <lightning-accordion class="example-accordion"
+                                                     active-section-name={activeSections}>
+                                    <template for:each={sourceCatalog} for:item="sourceGroup">
+                                        <lightning-accordion-section key={sourceGroup.title} name={sourceGroup.title}
+                                                                     label={sourceGroup.title}>
+                                            <template for:each={sourceGroup.lines} for:item="line">
+                                                <div key={line.Name}>
+                                                    <lightning-button label={line.title} variant="base"
+                                                                      name={sourceGroup.title}
+                                                                      class="slds-p-left_large" onclick={passToLegend}
+                                                                      value={line.Id}></lightning-button>
+                                                </div>
+                                            </template>
+                                        </lightning-accordion-section>
+                                    </template>
+                                </lightning-accordion>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6">
+
+                                <div class="slds-text-title_caps slds-p-left_large slds-p-bottom_medium">Legend</div>
+                                <template for:each={legendList} for:item="line">
+                                    <div key={line.letter} class="slds-p-left_large">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="1" class="slds-float_right">
+                                                <lightning-badge label={line.letter}></lightning-badge>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="5">
+                                                <lightning-input value={line.title} disabled="true"
+                                                                 variant="label-hidden"></lightning-input>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </div>
+                                </template>
+
+                                <div class="slds-text-title_caps slds-p-left_large slds-p-top_medium slds-p-bottom_medium">
+                                    Formula
+                                </div>
+                                <div class="slds-p-left_large" style="width: 250px;">
+                                    <lightning-input value={formula} onchange={changeFormula}
+                                                     variant="label-hidden"></lightning-input>
+                                </div>
+
+                            </lightning-layout-item>
+
+                        </lightning-layout>
+
+                    </lightning-tab>
+
+
+                </lightning-tabset>
+
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning-button variant="brand" label="Apply" onclick={applyFormula}
+                                  class="slds-p-around_x-small">
+                </lightning-button>
+                <lightning-button variant="brand" label="Reset" onclick={resetData}
+                                  class="slds-p-around_x-small">
+                </lightning-button>
+                <lightning-button variant="brand" label="Save" onclick={saveBudgetLine}
+                                  class="slds-p-around_x-small">
+                </lightning-button>
+                <lightning-button variant="destructive" label="Delete" onclick={deleteBudgetLine}
+                                  class="slds-p-around_x-small">
+                </lightning-button>
+                <lightning-button variant="bare" label="Clone" onclick={closeBudgetLineWindow}
+                                  class="slds-p-around_x-small">
+                </lightning-button>
+                <lightning-button variant="bare" label="Close" onclick={closeBudgetLineWindow}
+                                  class="slds-p-around_x-small">
+                </lightning-button>
+            </footer>
+        </div>
+    </section>
+
+
+    <!--     <template for:each={complexLine.lines} for:item="line">
+                                               <div key={line.Id}>
+                                                   **
+                                                   <template for:each={line.cblight__NonFinancialItems__r} for:item="a">
+                                                       <lightning-layout-item padding="around-none" size="1" key={a.Id}>
+                                                           <lightning-input type="number" label={a.period} class="dec"
+                                                                            name={a.Id} disabled="true"
+                                                                            value={a.cblight__Value__c}
+                                                                            formatter="currency" step="0.01">
+                                                           </lightning-input>
+                                                       </lightning-layout-item>
+                                                   </template>
+                                           </div>
+                                       </template>-->
+
+
+</template>

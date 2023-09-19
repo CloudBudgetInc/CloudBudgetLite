@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Layer</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Layers</value>
+    </caseValues>
+    <fields>
+        <label><!-- Unit --></label>
+        <name>Unit__c</name>
+        <picklistValues>
+            <masterLabel>currency</masterLabel>
+            <translation><!-- currency --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>items</masterLabel>
+            <translation><!-- items --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>percent</masterLabel>
+            <translation><!-- percent --></translation>
+        </picklistValues>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

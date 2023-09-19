@@ -1,0 +1,101 @@
+<template>
+
+    <!-- Header -->
+    <lightning-card title="CB Gantt" icon-name="custom:custom14">
+
+        <div class="slds-p-left_medium" slot="actions">
+            <lightning-combobox name="periodMode" label="Mode"
+                                value={periodMode}
+                                options={periodModeSO}
+                                onchange={changePeriodMode}></lightning-combobox>
+        </div>
+
+    </lightning-card>
+    <!-- Header -->
+
+    <!-- SPINNER -->
+    <c-cb-spinner show={showSpinner}></c-cb-spinner>
+    <!-- SPINNER -->
+
+    <!-- TABLE -->
+
+    <template if:true={showTable}>
+        <div class="tableWrapper">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                <tr>
+                    <th style="width: 200px">
+                        <div class="slds-truncate" title="Title">Title</div>
+                    </th>
+                    <th>
+                        <div class="slds-truncate" title="Total">Total</div>
+                    </th>
+                    <template for:each={periods} for:item="period">
+                        <th style="text-align: right;" key={period.Id}>
+                            {period.Name}
+                        </th>
+                    </template>
+                </tr>
+                </thead>
+                <tbody>
+                <template for:each={tableRows} for:item="row">
+                    <tr key={row.title}>
+                        <th class="titleTd">
+                            <div class="slds-truncate titleColumn">
+                                <div class="buttonDiv">
+                                    {row.idx}
+                                    <lightning-button variant="base" value={row.id} onclick={openBudgetLineModal}
+                                                      label={row.title}></lightning-button>
+                                    <template if:true={row.isFormula}>
+                                        <lightning-icon icon-name="utility:formula" alternative-text="Connected"
+                                                        size="xx-small"
+                                                        class="slds-float_right"
+                                                        title="xx-small size"></lightning-icon>
+                                    </template>
+                                </div>
+                                <div class="triangleDiv"></div>
+                            </div>
+                        </th>
+                        <td data-label="Total" class="totalColumn" style="text-align: right;">
+                            <lightning-formatted-number value={row.rowTotal} format-style="currency"
+                                                        currency-code="USD" maximum-fraction-digits="0"
+                                                        currency-display-as="symbol"></lightning-formatted-number>
+                        </td>
+                        <template for:each={row.amounts} for:item="amount">
+                            <td key={amount.Id} class={amount.class}>
+                                <template if:true={amount.cblight__Value__c}>
+                                    <div data-amountid={amount.Id} data-rowid={row.id} draggable="true"
+                                         ondragstart={drag}
+                                         ondragover={allowDrop}
+                                         ondrop={drop}>
+                                        <lightning-formatted-number value={amount.cblight__Value__c} format-style="currency"
+                                                                    currency-code="USD" maximum-fraction-digits="0"
+                                                                    currency-display-as="symbol"></lightning-formatted-number>
+                                    </div>
+                                </template>
+                                <template if:false={amount.cblight__Value__c}>
+                                    <div data-amountid={amount.Id} data-rowid={row.id} draggable="true"
+                                         ondragstart={drag}
+                                         ondragover={allowDrop} class="dropSector"
+                                         ondrop={drop}>
+                                    </div>
+                                </template>
+                            </td>
+                        </template>
+                    </tr>
+                </template>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <!-- TABLE -->
+
+    <!-- Budget Line Modal -->
+    <template if:true={showBudgetLineModal}>
+        <c-cb-budget-line-modal record-id={selectedBudgetLineId}></c-cb-budget-line-modal>
+    </template>
+    <!-- Budget Line Modal -->
+
+
+</template>

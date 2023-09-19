@@ -1,0 +1,23 @@
+@import 'c/cbStyle';
+
+
+.tableColumnHead th {
+	vertical-align: top;
+	height: 30px;
+}
+
+.frozen-col-head {
+	z-index: 12 !important;
+	background: #e6eeff !important;
+}
+
+td, th {
+	width: 20%;
+	max-width: 200px;
+}
+
+th:last-child, td:last-child {
+	width: 8%;
+	padding-right: 5px !important;
+	max-width: 100px !important;
+}

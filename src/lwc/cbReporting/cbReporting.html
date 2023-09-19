@@ -1,0 +1,292 @@
+<template>
+	<!-- HEADER -->
+	<lightning-card variant="narrow">
+		<h3 slot="title">
+			<template if:false={editReportMode}>
+				<div style="font-size: large;">{report.Name}
+					<lightning-icon class="slds-m-left_small edit-report-title" icon-name="utility:edit"
+									onclick={editReport}
+									size="xx-small"></lightning-icon>
+					<lightning-helptext style="position:relative; top:-3px;" class="slds-m-left_small" content={report.cblight__Description__c}></lightning-helptext>
+				</div>
+			</template>
+			<template if:true={editReportMode}>
+				<lightning-layout>
+					<lightning-layout-item>
+						<lightning-input label="Name" value={report.Name} max-length="80"
+										 name="Name"
+										 onchange={handleReportEvents}></lightning-input>
+					</lightning-layout-item>
+					<lightning-layout>
+						<div class="slds-p-top_large">
+							<lightning-icon class="slds-m-left_small" icon-name="utility:save"
+											onclick={saveReport}
+											size="small"></lightning-icon>
+						</div>
+					</lightning-layout>
+				</lightning-layout>
+			</template>
+		</h3>
+
+		<div slot="actions" style="width: 500px;">
+			<lightning-layout horizontal-align="end">
+				<lightning-layout-item class="slds-m-right_x-small">
+					<!-- EXCEL -->
+					<template if:true={showExcelButton}>
+						<div class="slds-m-top_large">
+							<c-cb-reporting-excel excel-data={excelData}></c-cb-reporting-excel>
+						</div>
+					</template>
+					<!-- EXCEL -->
+				</lightning-layout-item>
+
+				<lightning-layout-item class="slds-p-top_large slds-m-right_large">
+					<lightning-button-icon icon-name="utility:refresh" title="Refresh Report"
+										   class="slds-m-right_x-small"
+										   onclick={updateFullReport}>
+					</lightning-button-icon>
+					<lightning-button-icon icon-name="utility:apps" variant="brand" title="Column Setup"
+										   onclick={displayReportColumns}>
+					</lightning-button-icon>
+				</lightning-layout-item>
+
+				<lightning-layout-item size="4">
+					<lightning-combobox name="handleChangeConfigAndUpdateReport" label="Configuration"
+										value={configuration.Id}
+										options={configurationSO} onchange={handleReportEvents} validity="">
+					</lightning-combobox>
+				</lightning-layout-item>
+				<lightning-layout-item class="slds-p-top_large">
+					<lightning-button-icon icon-name="utility:edit" variant="brand" alternative-text="Configuration"
+										   onclick={displayReportConfiguration}
+					></lightning-button-icon>
+				</lightning-layout-item>
+
+			</lightning-layout>
+		</div>
+		<!-- HEADER -->
+
+		<!-- SPINNER -->
+		<c-cb-spinner show={showSpinner}></c-cb-spinner>
+		<!-- SPINNER -->
+
+		<!-- DESCRIPTION -->
+
+		<template if:true={editReportMode}>
+			<div class="descr">
+				<lightning-textarea name="cblight__Description__c" variant="label-hidden" value={report.cblight__Description__c} onchange={handleReportEvents}></lightning-textarea>
+			</div>
+		</template>
+
+		<!-- THE MAIN REPORT TABLE -->
+		<div style={mainTableHeight}>
+
+
+			<div id="containerDiv" onmousemove={handleMouseMove} onmouseup={handleMouseUp}
+				 ondblclick={handleDBClickResizable}
+				 class="slds-table_header-fixed_container slds-border_right slds-border_left tableScroll slds-m-top_xx-small"
+				 onscroll={tableOuterDivScrolled}>
+				<div id="tableViewInnerDiv" class="slds-scrollable_y tableViewInnerDiv">
+
+					<table
+							class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-table_fixed-layout slds-table_bordered slds-table_col-bordered">
+						<thead>
+						<tr>
+							<th class="indexHeader">
+								<div class="slds-cell-fixed ReportFrozenColumnsGradient indexHeader">
+									<a class="slds-th__action slds-text-link--reset">
+										<span class="slds-truncate">#</span>
+									</a>
+								</div>
+							</th>
+							<template lwc:if={report.cblight__oneColumnMode__c}> 
+								<template for:each={reportSingleColumn} for:item="column">
+									<th key={column} class="slds-is-resizable dv-dynamic-width"
+										style={column.colWidth}>
+										<div class={column.class} style={column.colWidth}>
+											<div class="ReportFrozenColumnsGradient analyticHeader draggableLine"
+												 draggable="true"
+												 ondrop={dropElement}
+												 ondragstart={dragStart}
+												 ondragover={dragOver}>
+												<span class="slds-truncate slds-p-around_x-small slds-is-absolute groupColumnBorder">{column.label}</span>
+											</div>
+											<div class="slds-resizable">
+												<span class="slds-resizable__handle" onmousedown={handleMouseDown}>
+													<span class="slds-resizable__divider"></span>
+												</span>
+											</div>
+										</div>
+									</th>
+								</template>
+							</template>
+							<template lwc:else>
+								<template for:each={reportGroupColumns} for:item="column">
+									<th key={column} class="slds-is-resizable dv-dynamic-width"
+										style={column.colWidth}>
+										<div class={column.class} style={column.colWidth}>
+											<div class="ReportFrozenColumnsGradient analyticHeader draggableLine"
+												 draggable="true"
+												 ondrop={dropElement}
+												 ondragstart={dragStart}
+												 ondragover={dragOver}>
+												<span class="slds-truncate slds-p-around_x-small slds-is-absolute groupColumnBorder">{column.label}</span>
+											</div>
+											<div class="slds-resizable">
+												<span class="slds-resizable__handle" onmousedown={handleMouseDown}>
+													<span class="slds-resizable__divider"></span>
+												</span>
+											</div>
+										</div>
+									</th>
+								</template>
+							</template>
+							<template for:each={reportColumns} for:item="column">
+								<th key={column} class="periodHeader">
+									<div class="slds-cell-fixed periodHeader ReportFrozenColumnsGradient slds-border_right">
+										<div class="slds-truncate">{column.title}</div>
+										<div class="periodCol">{column.periodName}</div>
+									</div>
+								</th>
+
+							</template>
+
+						</tr>
+						</thead>
+						<tbody>
+						<template for:each={reportLines} for:item="reportLine">
+							<tr key={reportLine} class={reportLine.class}>
+								<td class="ReportFrozenColumnsGradient">
+									{reportLine.idx}
+								</td>
+								<template for:each={reportLine.analyticsColumns} for:item="column">
+									<td key={column} class={column.class} title={column.label}>
+										{column.label}
+									</td>
+								</template>
+								<template for:each={reportLine.reportCells} for:item="cell">
+									<td key={cell.unit} class={cell.class} data-item={cell.drillDownKey}
+										ondblclick={showCellDrillDown}>
+										<div class="dec">{cell.value}</div>
+									</td>
+								</template>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
+	</lightning-card>
+	<!-- THE MAIN REPORT TABLE -->
+
+	<!-- CONFIG SETUP -->
+	<template if:true={showReportConfiguration}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+				 class="slds-modal slds-fade-in-open slds-modal_medium">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<h2 class="slds-modal__title slds-hyphenate">Configuration</h2>
+				</header>
+				<div class="slds-modal__content slds-p-around_large">
+					<template lwc:if={showConfigContext}>
+						<lightning-layout class="slds-p-left_small slds-m-bottom_small">
+							<lightning-layout-item size="3" class="slds-m-right_small">
+								<lightning-combobox name="handleChangeConfig" label="Configuration"
+													value={configuration.Id}
+													options={configurationSO} onchange={handleConfiguratorEvents}
+													validity="">
+								</lightning-combobox>
+							</lightning-layout-item>
+
+							<lightning-layout-item size="4" class="slds-m-right_small">
+								<lightning-input value={configuration.Name} label="Name" max-length="80"
+												 onchange={handleConfiguratorEvents} name="Name">
+								</lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item size="2">
+								<lightning-combobox label="Subtotal Column" name="cblight__SubtotalNumber__c"
+													value={configuration.cblight__SubtotalNumber__c}
+													options={subtotalsList} onchange={handleConfiguratorEvents}
+													validity="">
+								</lightning-combobox>
+							</lightning-layout-item>
+
+							<lightning-layout-item size="2" class="slds-m-left_small">
+								<lightning-combobox label="Display Units" name="cblight__DisplayUnits__c"
+													value={configuration.cblight__DisplayUnits__c}
+													options={displayUnitSO} onchange={handleConfiguratorEvents}>
+								</lightning-combobox>
+							</lightning-layout-item>
+						</lightning-layout>
+
+						<div class="slds-m-bottom_small slds-m-right_large">
+							<c-cb-filter-manager base-request-string={configuration.cblight__Filter__c}
+												 fields-available={cubeFieldsSO}
+												 filter-title='Data Filter'
+												 users-and-queues={usersAndQueues}
+												 onresultrequeststringchanged={handleConfiguratorEvents}
+												 sobject-type="cblight__CBCube__c">
+							</c-cb-filter-manager>
+						</div>
+
+						<div class="slds-p-left_small slds-p-right_small">
+							<lightning-dual-listbox
+									label="Group Data By"
+									source-label="Available Fields"
+									selected-label="Selected Fields"
+									options={cubeFieldsSO}
+									value={configuration.cblight__Grouping__c}
+									onchange={handleConfiguratorEvents}
+									name="cblight__Grouping__c"
+							></lightning-dual-listbox>
+						</div>
+					</template>
+				</div>
+				<footer class="slds-modal__footer">
+
+					<lightning-button-group class="slds-m-right_x-large">
+						<lightning-button label="Save" variant="brand"
+										  onclick={saveConfiguration}>
+						</lightning-button>
+						<template if:true={report.cblight__CBReportConfigurations__r}>
+							<lightning-button label="Clone"
+											  onclick={cloneConfiguration}>
+							</lightning-button>
+						</template>
+					</lightning-button-group>
+					<button class="slds-button slds-button_neutral" onclick={hideReportConfiguration}>Close
+					</button>
+
+					<template if:true={report.cblight__CBReportConfigurations__r}>
+						<lightning-button label="Delete" title="Delete current configuration" variant="destructive"
+										  class="slds-float_left"
+										  onclick={deleteConfiguration}>
+						</lightning-button>
+					</template>
+					<!-- CLONE -->
+					<lightning-button label="Clone Report" title="Clone CB Report" onclick={cloneReport} class="slds-float_left slds-m-left_medium"></lightning-button>
+					<!-- CLONE -->
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+	<!-- CONFIG SETUP -->
+
+	<!-- COLUMNS SETUP -->
+	<div if:true={showReportColumns}>
+		<c-cb-reporting-columns report={report} styles={staticData.styles}></c-cb-reporting-columns>
+	</div>
+	<!-- COLUMNS SETUP -->
+
+	<!-- DRILL DOWN -->
+	<template if:true={showDrillDown}>
+		<c-cb-reporting-drill-down parameters={DDParams}></c-cb-reporting-drill-down>
+	</template>
+	<!-- DRILL DOWN -->
+
+</template>

@@ -1,0 +1,111 @@
+.excel_mirror_footer {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.slds-table {
+	table-layout: auto;
+}
+  
+.table-container {
+	max-width: 100%;
+	min-width: 800px; 
+	overflow: auto;
+}
+
+.sticky-header {
+	position: sticky;
+	top: 0;
+	background-color: #f2f2f2; 
+	z-index: 20;
+	
+}
+.title-margin {
+	margin: 4px 6px 6px 2px;
+	color: black;
+	text-align: center;
+}
+  
+.slds-table th.sticky-first,
+.slds-table td.sticky-first 
+{
+	position: sticky;
+	background-color: #f2f2f2;
+	z-index: 15;
+	max-width:40px ;
+	min-width:40px ;
+	text-align: center;
+}
+
+.slds-table th.sticky-second,
+.slds-table td.sticky-second {
+	position: sticky;
+	background-color: #f2f2f2;
+	z-index: 10;
+	max-width: 150px;
+	min-width: 150px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+}
+ 
+.slds-table th.sticky-third,
+.slds-table td.sticky-third
+{
+	position: sticky;
+	background-color: #f2f2f2;
+	z-index: 5;
+	max-width: 70px;
+	min-width: 70px;
+	text-align: left;
+}
+
+.custom-rich-text-output {
+	width: 60%;
+	float: left;
+	height: 100%;
+	text-align: left;
+}
+
+.custom-rich-text-output-header {
+	max-width: 130px;
+	float: left;
+	height: 100%;
+	text-align: left;
+}
+
+.errorColumn {
+	background-color: #f2f2f2;
+	z-index: 5;
+	max-width: 400px;
+	min-width: 400px;
+	color: brown;
+	white-space: normal;
+	overflow-wrap: break-word;
+}
+
+.textColumn {
+	max-width: 100px;
+	min-width: 100px;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+}
+
+.slds-modal__header{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.slds-modal__footer{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.slds-table th, .slds-table td {
+	padding-right: 2px;
+	padding-left: 2px;
+}

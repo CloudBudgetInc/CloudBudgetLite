@@ -1,0 +1,144 @@
+<template>
+	<template if:false={renderFilter}>
+		<lightning-layout>
+			<lightning-layout-item padding="around-none" size="12">
+				<div class="slds-grid slds-grid_vertical slds-p-right_small">
+					<div class="slds-grid slds-p-left_small">
+						<div class="slds-size_1-of-2">{filterTitle}</div>
+						<div class="slds-size_1-of-2 slds-text-align_right">
+							<lightning-badge label="Edit" icon-name="utility:edit" icon-position="end" onclick={showFilter}></lightning-badge>
+						</div>
+					</div>
+					<div class="slds-p-left_small">
+						<div class="slds-box">
+							<div class="slds-inline_icon_text slds-grid slds-grid_vertical-align-center bg-color-lg">
+								<lightning-icon class="slds-m-right_small slds-col slds-no-flex" icon-name="utility:filter_criteria_rule"
+												size="small"></lightning-icon>
+								<div class="slds-col slds-align-middle slds-scrollable_y max-height">
+									<p if:true={showFormattedString}>{formattedRequestString}</p>
+									<p if:false={showFormattedString}>No filter criteria selected. Click the "Edit" button to add a criterion.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</lightning-layout-item>
+		</lightning-layout>
+	</template>
+	<template if:true={renderFilter}>
+		<div class="fade-background">
+			<div class="shadow slds-p-around_small slds-p-top_large filter-modal-box">
+				<div class="slds-p-bottom_medium slds-p-top_medium slds-text-align_center slds-text-heading_medium filterTitle">
+					{filterTitle}
+				</div>
+				<div data-id="filterLinesContainer">
+					<template for:each={filterLines} for:item="line">
+						<lightning-layout key={line.key} class="slds-m-right_xx-small">
+							<lightning-layout-item padding="around-none" size="4">
+								<lightning-layout>
+									<lightning-layout-item padding="around-none" size="2">
+										<div class="slds-p-top_large">
+											<lightning-badge label={line.index}
+															 class="slds-badge_inverse"></lightning-badge>
+										</div>
+									</lightning-layout-item>
+									<lightning-layout-item padding="around-none" size="10" class=slds-p-right_xx-small>
+										<lightning-combobox name={line.key} label="Field"
+															value={line.field}
+															options={fieldsAvailable}
+															onchange={handleFilterFieldOrRelationChange}>
+										</lightning-combobox>
+									</lightning-layout-item>
+								</lightning-layout>
+							</lightning-layout-item>
+							<lightning-layout-item padding="around-none" size="2">
+								<template if:false={line.showLookupRelation}>
+									<lightning-combobox name={line.key} label="Relation"
+														value={line.relation}
+														options={relationSO}
+														onchange={handleFilterFieldOrRelationChange}>
+									</lightning-combobox>
+								</template>
+								<template if:true={line.showLookupRelation}>
+									<lightning-combobox name={line.key} label="Relation"
+														value={line.relation}
+														options={lookupRelationSO}
+														onchange={handleFilterFieldOrRelationChange}>
+									</lightning-combobox>
+								</template>
+							</lightning-layout-item>
+							<lightning-layout-item padding="around-none" flexibility="auto">
+
+								<template if:true={line.isFormula}>  <!-- Formula fields -->
+									<lightning-input type={line.inputType} label="Value" name={line.key} value={line.value}
+													 onchange={handleFilterValueChange}></lightning-input>
+								</template>
+								<template if:true={line.recordEditForm}>  <!-- Regular fields dropdown -->
+									<lightning-record-edit-form name={line.key}
+																object-api-name={sobjectType}>
+										<lightning-input-field field-name={line.field} name={line.key}
+															   value={line.value}
+															   onchange={handleFilterValueChange}>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</template>
+								<template if:true={line.usersEditForm}> <!-- Users dropdown -->
+									<lightning-combobox name={line.key} label="User or Queue"
+														value={line.value}
+														options={usersAndQueues}
+														onchange={handleFilterValueChange}>
+									</lightning-combobox>
+								</template>
+
+							</lightning-layout-item>
+							<lightning-layout-item padding="around-none" flexibility="no-grow">
+								<div class="slds-p-top_large">
+									<lightning-button-icon icon-name="utility:delete" variant="border" name={line.key}
+														   onclick={deleteFilterRow} icon-class="slds-text-color_destructive"
+														   alternative-text="Delete Filter"></lightning-button-icon>
+								</div>
+							</lightning-layout-item>
+						</lightning-layout>
+					</template>
+				</div>
+				<div class="slds-grid_vertical slds-grid_vertical-align-end filterControl">
+					<div class="slds-grid">
+						<div class="slds-p-top_large slds-size_1-of-3">
+							<lightning-button-icon icon-name="utility:add" variant="brand"
+												   onclick={addFilterLine}
+												   alternative-text="Add Filter"></lightning-button-icon>
+						</div>
+						<div class="slds-size_1-of-3">
+							<lightning-radio-group name="radioGroup" class="slds-size_1-of-3"
+												   label="Conjunction"
+												   options={radioSO}
+												   onchange={handleRadioChange}
+												   value={radioOption}
+												   type="button"></lightning-radio-group>
+						</div>
+						<div class="slds-size_1-of-3"></div>
+					</div>
+					<div if:true={renderComplexCondition} class="slds-m-top_medium">
+						<span title="Condition" class="slds-m-right_xxx-small">Condition</span>
+						<span class="vert-align-help-text">
+								<lightning-helptext icon-name="utility:info"
+													class="slds-m-left_x_small"
+													content="Example: (1 OR 2) AND 3"></lightning-helptext>
+							</span>
+						<lightning-input label="" variant="label-hidden" value={customCondition} placeholder="(1 OR 2) AND 3"
+										 onchange={handleCustomCondition}></lightning-input>
+
+					</div>
+					<div class="slds-p-top_small slds-align_absolute-center">
+						<lightning-button-group>
+							<lightning-button variant="brand" label="Apply" onclick={applyFilter}>
+							</lightning-button>
+							<lightning-button label="Close" onclick={cancelFilter}>
+							</lightning-button>
+						</lightning-button-group>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+</template>

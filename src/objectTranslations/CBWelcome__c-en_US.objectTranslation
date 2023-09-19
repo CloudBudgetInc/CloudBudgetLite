@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Welcome</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Welcomes</value>
+    </caseValues>
+    <fields>
+        <label><!-- Content --></label>
+        <name>Content__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Header --></label>
+        <name>Header__c</name>
+    </fields>
+    <fields>
+        <label><!-- Icon --></label>
+        <name>Icon__c</name>
+        <picklistValues>
+            <masterLabel>utility:error</masterLabel>
+            <translation><!-- utility:error --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>utility:formula</masterLabel>
+            <translation><!-- utility:formula --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>utility:image</masterLabel>
+            <translation><!-- utility:image --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>utility:macros</masterLabel>
+            <translation><!-- utility:macros --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>utility:warning</masterLabel>
+            <translation><!-- utility:warning --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Index --></label>
+        <name>Index__c</name>
+    </fields>
+    <fields>
+        <label><!-- Parent --></label>
+        <name>Parent__c</name>
+        <relationshipLabel><!-- CB Welcomes --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Lead</masterLabel>
+            <translation><!-- Lead --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Simple</masterLabel>
+            <translation><!-- Simple --></translation>
+        </picklistValues>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

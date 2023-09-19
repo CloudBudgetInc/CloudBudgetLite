@@ -1,0 +1,260 @@
+<template>
+    <lightning-card>
+        <lightning-layout>
+
+            <!--Layout Item for Create-->
+            <lightning-layout-item style="width:33%" padding="horizontal-small">
+                <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title slds-m-left_large">
+                            <span>{customLabel.cb_creating}</span>
+                        </h2>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner slds-grid_vertical slds-m-top_small">
+                        <div class="slds-grid slds-wrap slds-size_large">
+                            <div class="slds-p-right_x-small slds-size_3-of-9 slds-text-align_left">
+                                <lightning-combobox name="Name" label={customLabel.cb_budget_year} value={budgetYearSetting.Name}
+                                    options={BYSO} onchange={handleChange} required>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-size_2-of-5 slds-text-align_left">
+                                <lightning-combobox name="periodNameFormat" label={customLabel.cb_periods_format}
+                                    value={budgetYearSetting.periodNameFormat} options={periodNameFormatList}
+                                    onchange={handleChange} required disabled={budgetYearSetting.quarter}>
+                                </lightning-combobox>
+                            </div>
+                        </div> <br/>
+
+                        <div class="slds-grid slds-wrap slds-size_large slds-m-top_x-small slds-p-bottom_none">
+                            <div class="slds-p-right_x-small slds-size_2-of-7 slds-text-align_left">
+                                <lightning-combobox name="yearStart" label={customLabel.cb_start_year}
+                                    value={budgetYearSetting.yearStart} options={BYSO} onchange={handleChange}
+                                    required>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-p-right_small slds-size_2-of-7 slds-text-align_left">
+                                <lightning-combobox name="monthStart" label={customLabel.cb_start_month}
+                                    value={budgetYearSetting.monthStart} options={monthList}
+                                    onchange={handleChange} required>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-size_max-small">
+                                <lightning-radio-group name="periodTypeOptions" label={customLabel.cb_period_type_options}
+                                    options={periodTypeOptionsList} value={budgetYearSetting.periodTypeOptions} required
+                                    id="periodType" onchange={handleChange} type="radio">
+                                </lightning-radio-group>
+                            </div>
+                        </div><br />
+
+                        <div class="slds-size_large slds-m-top_none slds-text-align_center">
+                            <div class="slds-p-left_large slds-m-top_large slds-size_max-small">
+                                <lightning-button variant="brand" label={customLabel.cb_create} onclick={createBYandPeriods}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </lightning-layout-item>
+
+            <!--Layout Item for BY function-->
+            <lightning-layout-item style="width:33%" padding="horizontal-small">
+                <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
+                    <div class="slds-media__body slds-m-bottom_small">
+                        <h2 class="slds-card__header-title slds-m-left_large">
+                            <span>{customLabel.cb_budget_year}</span>
+                        </h2>
+                    </div>
+                    <div class="slds-table--header-fixed_container" style="height:400px">
+                        <div class="slds-scrollable_y" style="height:100%;">
+                            <table
+                                class="slds-table--header-fixed slds-table_cell-buffer slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="slds-truncate slds-cell-fixed">{customLabel.cb_name}</div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate slds-cell-fixed">{customLabel.cb_start_date}</div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate slds-cell-fixed">{customLabel.cb_end_date}</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={bYList} for:index="index" for:item="bYItem">
+                                        <tr key={bYItem.Id}>
+                                            <td>
+                                                <lightning-button variant="base" data-id={bYItem.Id} label={bYItem.Name}
+                                                    title={customLabel.cb_budget_year_name} onclick={handleBYDetails}>
+                                                </lightning-button>
+                                            </td>
+                                            <td>
+                                                <div>{bYItem.cblight__Start__c}</div>
+                                            </td>
+                                            <td>
+                                                <div>{bYItem.cblight__End__c}</div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </lightning-layout-item>
+
+            <!--Layout Item for Period function-->
+            <lightning-layout-item flexibility="auto" padding="horizontal-small">
+                <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
+                    <div class="slds-media__body slds-m-bottom_small">
+                        <h2 class="slds-card__header-title slds-m-left_large">
+                            <span>{customLabel.cb_periods}</span>
+                        </h2>
+                    </div>
+                    <div class="slds-table--header-fixed_container" style="height:400px">
+
+                        <div class="slds-scrollable_y" style="height: 100%;">
+                            <table
+                                class="slds-table--header-fixed slds-table_cell-buffer slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="slds-truncate slds-cell-fixed">{customLabel.cb_name}</div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate slds-cell-fixed"> {customLabel.cb_by_short} </div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate slds-cell-fixed">{customLabel.cb_start_date}</div>
+                                        </th>
+                                        <th>
+                                            <div class="slds-truncate slds-cell-fixed">{customLabel.cb_end_date}</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={periodList} for:index="index" for:item="periodItem">
+                                        <tr key={periodItem.Id}>
+                                            <td>
+                                                <lightning-button variant="base" data-id={periodItem.Id}
+                                                    label={periodItem.Name} title="Period name"
+                                                    onclick={handlePeriodDetails}></lightning-button>
+                                            </td>
+                                            <td>
+                                                <div>{periodItem.cblight__CBBudgetYear__r.Name}</div>
+                                            </td>
+                                            <td>
+                                                <div>{periodItem.cblight__Start__c}</div>
+                                            </td>
+                                            <td>
+                                                <div>{periodItem.cblight__End__c}</div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <!--Period Modal-->
+        <template if:true={showPeriodDialog}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_small"
+                data-id="periodModal">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title={customLabel.cb_close} onclick={togglePeriodDialog}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                                size="small"></lightning-icon>
+                            <span class="slds-assistive-text">{customLabel.cb_close}</span>
+                        </button>
+                        <h3 slot="title">
+                            <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+                            {customLabel.cb_period_details}
+                        </h3>
+                    </header>
+                    <div class="slds-modal__content">
+                        <lightning-layout>
+
+                            <lightning-layout-item padding="around-small">
+                                <lightning-input type="text" name="Name" id="Name" label={customLabel.cb_period_name}
+                                    value={periodDetail.Name} onchange={handleChange} max-length="80"></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <lightning-input type="date" name="cblight__Start__c" label={customLabel.cb_start_date}
+                                    value={periodDetail.cblight__Start__c} onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <lightning-input type="date" name="cblight__End__c" label={customLabel.cb_end_date}
+                                    value={periodDetail.cblight__End__c} onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                        </lightning-layout>
+
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={togglePeriodDialog} title="Cancel">
+                            {customLabel.cb_cancel}
+                        </button>
+                        <button class="slds-button slds-button_brand" onclick={savePeriodDetails} title="Save">
+                            {customLabel.cb_save}
+                        </button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!--BY Modal-->
+        <template if:true={showBYDialog}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_small">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title={customLabel.cb_close} onclick={toggleBYModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                                size="small"></lightning-icon>
+                            <span class="slds-assistive-text">{customLabel.cb_close}</span>
+                        </button>
+                        <h3 slot="title">
+                            <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+                            {customLabel.cb_by_details}
+                        </h3>
+                    </header>
+                    <div class="slds-modal__content">
+                        <lightning-layout>
+
+                            <lightning-layout-item padding="around-small">
+                                <lightning-input type="text" name="Name" label={customLabel.cb_period_name}
+                                    value={budgetYearSetting.Name} onchange={handleChange} max-length="80"></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <lightning-input type="date" name="cblight__Start__c" label={customLabel.cb_start_date}
+                                    value={budgetYearSetting.cblight__Start__c} onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <lightning-input type="date" name="cblight__End__c" label={customLabel.cb_end_date} readonly
+                                    value={budgetYearSetting.cblight__End__c} onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                        </lightning-layout>
+
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={toggleBYModal} title={customLabel.cb_cancel}>
+                            {customLabel.cb_cancel}
+                        </button>
+                        <button class="slds-button slds-button_brand" onclick={saveBYDetails} title={customLabel.cb_save}>
+                            {customLabel.cb_save}
+                        </button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </lightning-card>
+</template>

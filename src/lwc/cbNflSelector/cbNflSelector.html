@@ -1,0 +1,38 @@
+<!-- sldsValidatorIgnore -->
+<template>
+	<div>
+		<!-- SPINNER -->
+		<c-cb-spinner show={showSpinner}></c-cb-spinner>
+		<!-- SPINNER -->
+		<div class="search">
+			<lightning-input class="search-input" label="Search" value={filterString}
+							 onchange={handleFilterChange}>
+			</lightning-input>
+		</div>
+		<template for:each={listToShow} for:item="line">
+			<div key={line.Id}>
+				<div>
+					<lightning-button-icon
+						alternative-text="Click to redirect"
+						class="slds-m-left_xx-small"
+						icon-name="utility:zoomin"
+						onclick={redirectToNFL}
+						title="Click to redirect"
+						value={line.Id}
+						variant="bare"
+					></lightning-button-icon>
+					<lightning-button
+						class="slds-p-left_large"
+						label={line.Name}
+						name={layer}
+						onclick={passToLegend}
+						value={line}
+						variant="base"
+						draggable="true"
+						ondragstart={drag}
+					></lightning-button>
+				</div>
+			</div>
+		</template>
+	</div>
+</template>

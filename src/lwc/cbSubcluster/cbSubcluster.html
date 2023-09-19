@@ -1,0 +1,60 @@
+<template>
+	<div class={styleClass}>
+		<lightning-layout class="slds-p-top_x-small slds-p-bottom_x-small">
+			<lightning-layout-item size="2">
+				<span class="titleStyle">GLA Type: {name}</span>
+			</lightning-layout-item>
+			<lightning-layout-item size="1">
+				<!--<lightning-button label="Add" title="Add new budget line" icon-name="utility:add"
+								  onclick={addNewBudgetLine}></lightning-button>-->
+			</lightning-layout-item>
+			<template lwc:if={showSubClusterTotalLine}>
+				<lightning-layout-item padding="around-none" size="8">
+					<lightning-layout>
+						<template for:each={totalLine.cblight__CBAmounts__r} for:item="a">
+							<lightning-layout-item padding="around-none" flexibility="auto" key={a.Id}>
+								<lightning-input
+										type="number"
+										label={a.period}
+										class="dec totalFont"
+										disabled="true"
+										name={a.Id}
+										variant="label-hidden"
+										value={a.cblight__Value__c}
+										formatter="currency"
+										step="0.01"
+								></lightning-input>
+							</lightning-layout-item>
+						</template>
+					</lightning-layout>
+				</lightning-layout-item>
+				<lightning-layout-item padding="around-none" size="1">
+					<template lwc:if={totalLine.CurrencyIsoCode}>
+						<c-cb-input-currency disabled="disabled" is-bold="true"
+											 currency-code={totalLine.CurrencyIsoCode}
+											 val={totalLine.yearlyTotal}></c-cb-input-currency>
+					</template>
+					<template lwc:else>
+						<lightning-input
+								type="number"
+								value={totalLine.yearlyTotal}
+								variant="label-hidden"
+								class="dec totalFont"
+								disabled="true"
+								formatter="currency"
+								step="0.01"
+						></lightning-input>
+					</template>
+				</lightning-layout-item>
+			</template>
+		</lightning-layout>
+		<div>
+			<template for:each={lines} for:item="bl">
+				<div key={bl.Id}>
+					<c-cb-budget-line line={bl}></c-cb-budget-line>
+				</div>
+			</template>
+		</div>
+		<div class="slds-p-top_small"></div>
+	</div>
+</template>

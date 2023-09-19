@@ -1,0 +1,77 @@
+<!-- sldsValidatorIgnore -->
+<template>
+	<div class="inline-wrapper">
+		
+		<div class="visible-container">
+			<div class="path">
+				<template for:each={pathList} for:item="pathItem">
+					<div key={pathItem} class="pathItem">
+						<div class="breadcrumb-button" onclick={pathFolderSelected} data-value={pathItem.value}>{pathItem.label}</div>
+					</div>
+				</template>
+			</div>
+			<div class="folder-button">
+				<lightning-button-icon icon-name="utility:open_folder" alternative-text="open folders" onclick={openWindow}
+				size="medium"></lightning-button-icon>
+			</div>
+		</div>
+	</div>
+	<template if:true={showDialog}>
+		<section
+				role="dialog"
+				tabindex="-1"
+				aria-labelledby="modal-heading-01"
+				aria-modal="true"
+				aria-describedby="modal-content-id-1"
+				class="slds-modal slds-fade-in-open slds-modal_small">
+			<div class="slds-modal__container">
+				<!-- SPINNER -->
+				<c-cb-spinner show={showSpinner}></c-cb-spinner>
+				<!-- SPINNER -->
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							title="Close" onclick={closeWindow}>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+										size="small"></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Folder Manager</h2>
+				</header>
+
+				<div class="slds-modal__content slds-p-around_medium">
+					<lightning-layout class="sections">
+						<lightning-layout-item class="tree-section border" size="6">
+							<lightning-tree items={treeList} onselect={handleSelect} selected-item={selected}>
+							</lightning-tree>
+						</lightning-layout-item>
+						<lightning-layout-item class="record-list-section" size="6">
+							<c-cb-folder-record-list folder-type={type} folder-id={selected} onrecordlistsize={handleListSize}></c-cb-folder-record-list>
+						</lightning-layout-item>
+					</lightning-layout>
+
+
+				</div>
+
+
+				<footer class="slds-modal__footer">
+
+					<button class="slds-button slds-button_destructive" onclick={deleteFolder}
+							title="Delete selected folder">
+							Delete Selected Folder
+					</button>
+
+					<c-cb-folder-new class="slds-button" onfolderadded={doInit} parent-folder-id={selected} folder-type={type}></c-cb-folder-new>
+					<button class="slds-button slds-button_neutral" onclick={closeWindow}
+							title="Close">
+						Close
+					</button>
+					<button class="slds-button slds-button_brand" onclick={selectFolder}
+							title="Select Folder">
+							Open Folder
+					</button>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+</template>

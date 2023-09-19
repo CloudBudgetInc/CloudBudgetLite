@@ -1,0 +1,100 @@
+<template>
+	<section aria-describedby="modal-content-id-1" aria-labelledby="modal-heading-01" aria-modal="true"
+		class="slds-modal slds-fade-in-open slds-modal_medium" role="dialog" tabindex="-1">
+		<div class="slds-modal__container">
+			<header class="slds-modal__header">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+					onclick={closeReport} title="Close">
+					<svg aria-hidden="true" class="slds-button__icon slds-button__icon_large">
+						<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+					</svg>
+					<span class="slds-assistive-text">Close</span>
+				</button>
+				<h2 class="slds-modal__title slds-hyphenate" id="modal-heading-01">Mapping Report</h2>
+			</header>
+			<div class="slds-modal__content slds-p-around_none" id="modal-content-id-1">
+
+				<!-- SPINNER -->
+				<c-cb-spinner show={showSpinner}></c-cb-spinner>
+				<!-- SPINNER -->
+
+				<div class="table-header-frozen">
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+						<thead>
+							<tr class="slds-line-height_reset">
+								<th style="width: 1%">
+									#
+								</th>
+								<th>
+									<div class="slds-truncate" title="Source Record">Source Record</div>
+								</th>
+								<th style="width: 8%">
+									Status
+								</th>
+								<th>
+									<div class="slds-truncate" title="CB Record">CB Record</div>
+								</th>
+								<th>
+									<div class="slds-truncate" title="Comment">Comment</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<template for:each={reportLines} for:item="line">
+								<tr class={line.styleClass} key={line.idx}>
+									<td>
+										<div class="slds-truncate" title="Index">{line.idx}</div>
+									</td>
+
+									<th scope="row">
+										<div class="slds-truncate" title="External Source Record">
+											<template if:true={line.extId}>
+												<a href={line.extId} tabindex="-1">{line.extName}</a>
+											</template>
+											<template if:false={line.extId}>
+												{line.extName}
+											</template>
+										</div>
+									</th>
+									<th scope="row">
+										<template if:true={line.isSuccess}>
+											<lightning-badge label="➤➤ Mapped  ➤"
+												class="success-badge"></lightning-badge>
+										</template>
+										<template if:true={line.isWarning}>
+											<lightning-badge label="🚫 Warning 🚫" class="warning-badge"
+												variant="destructive"></lightning-badge>
+										</template>
+									</th>
+									<td>
+										<div class="slds-truncate" title="CloudBudget Record">
+											<template if:true={line.CBId}>
+												<a href={line.CBId} tabindex="-1">{line.CBName}</a>
+											</template>
+											<template if:false={line.CBId}>
+												{line.CBName}
+											</template>
+										</div>
+									</td>
+									<td>
+										<div class="slds-truncate" title="Comment">{line.comment}</div>
+									</td>
+								</tr>
+							</template>
+
+						</tbody>
+					</table>
+				</div>
+
+
+			</div>
+			<footer class="slds-modal__footer">
+				<lightning-input style="position: absolute; float: right" type="toggle" label="Details"
+					onchange={toggleDetails}></lightning-input>
+				<button class="slds-button slds-button_neutral" onclick={closeReport}>Close
+				</button>
+			</footer>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open"></div>
+</template>

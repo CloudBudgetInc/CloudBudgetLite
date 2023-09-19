@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Amount</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Amounts</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Budget Line --></label>
+        <name>CBBudgetLine__c</name>
+        <relationshipLabel><!-- CB Amounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Budget Year Set --></label>
+        <name>CBBudgetYearSet__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Budget Year --></label>
+        <name>CBBudgetYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Key --></label>
+        <name>CBKey__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Period --></label>
+        <name>CBPeriod__c</name>
+        <relationshipLabel><!-- CB Amounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Style Name --></label>
+        <name>CBStyleName__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Style --></label>
+        <name>CBStyle__c</name>
+        <relationshipLabel><!-- CB Amounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Period Name --></label>
+        <name>PeriodName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Scenario Name --></label>
+        <name>ScenarioName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Value --></label>
+        <name>Value__c</name>
+    </fields>
+    <layouts>
+        <layout>CB Amount Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

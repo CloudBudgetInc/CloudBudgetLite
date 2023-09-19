@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Modeling Rule</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Modeling Rules</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Modeling Rule Group --></label>
+        <name>CBModelingRuleGroup__c</name>
+        <relationshipLabel><!-- CB Modeling Rules --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Complex Filter Condition --></label>
+        <name>ComplexFilterCondition__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- KeyFields --></label>
+        <name>KeyFields__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mode --></label>
+        <name>Mode__c</name>
+        <picklistValues>
+            <masterLabel>Deleting</masterLabel>
+            <translation><!-- Deleting --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>General</masterLabel>
+            <translation><!-- General --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mass Update</masterLabel>
+            <translation><!-- Mass Update --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Replacing</masterLabel>
+            <translation><!-- Replacing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Zeroing amounts</masterLabel>
+            <translation><!-- Zeroing amounts --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- MultilevelResult --></label>
+        <name>MultilevelResult__c</name>
+    </fields>
+    <fields>
+        <label><!-- Multilevel Source --></label>
+        <name>MultilevelSource__c</name>
+    </fields>
+    <fields>
+        <label><!-- Period Shift --></label>
+        <name>PeriodShift__c</name>
+    </fields>
+    <fields>
+        <label><!-- Result Child Filter --></label>
+        <name>ResultChildFilter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Result Parent Filter --></label>
+        <name>ResultParentFilter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Result Record Child Type --></label>
+        <name>ResultRecordChildType__c</name>
+    </fields>
+    <fields>
+        <label><!-- Result Record Parent Type --></label>
+        <name>ResultRecordParentType__c</name>
+    </fields>
+    <fields>
+        <label><!-- Source Child Filter --></label>
+        <name>SourceChildFilter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Source Parent Filter --></label>
+        <name>SourceParentFilter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Source Record Child Type --></label>
+        <name>SourceRecordChildType__c</name>
+    </fields>
+    <fields>
+        <label><!-- Source Record Parent Type --></label>
+        <name>SourceRecordParentType__c</name>
+    </fields>
+    <fields>
+        <label><!-- Store Drill Down --></label>
+        <name>StoreDrillDown__c</name>
+    </fields>
+    <layouts>
+        <layout>CB Modeling Rule Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

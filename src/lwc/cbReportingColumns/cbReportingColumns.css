@@ -1,0 +1,29 @@
+@import 'c/cbStyle';
+
+.slds-modal__content {
+	overflow: initial;
+}
+
+.tableFixHead {
+	overflow: auto;
+}
+
+.tableFixHead thead th {
+	position: sticky;
+	top: 0;
+	z-index: 3;
+}
+
+.modal-content-box {
+	height: 100%;
+	padding: 0 16px;
+}
+
+.table-wrapper {
+	height: calc(100% - 80px);
+	overflow-y: scroll;
+}
+
+table.config-report-table tr td{
+	vertical-align: text-top;
+}

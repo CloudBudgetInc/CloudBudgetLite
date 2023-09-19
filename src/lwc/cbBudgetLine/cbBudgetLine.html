@@ -1,0 +1,115 @@
+<!-- Child component for SubCluster component. One object = one line in Budget Line Manager -->
+<template>
+	<div class="slds-border_top">
+
+		<lightning-layout>
+			<lightning-layout-item padding="around-none" size="3">
+				<lightning-layout>
+					<lightning-layout-item padding="around-none" size="12">
+						<!--<div class="slds-m-left_small lineHeight">{line.idx}.{line.Name}</div>-->
+						<a class="slds-m-left_small lineHeight" data-id={line.Id} onclick={openLine} >{line.idx}.{line.Name}</a>
+					</lightning-layout-item>
+					<!--<lightning-layout-item padding="around-none" size="4">
+						<lightning-badge label={line.cblight__Status__c}></lightning-badge>
+
+						<template lwc:if={line.cblight__isAllocation__c}>
+							<lightning-icon icon-name="utility:data_model" alternative-text="Allocation"
+											class="slds-float_right" size="small"
+											title="This budget line is allocated"></lightning-icon>
+						</template>
+						<template lwc:if={line.cblight__ParentBudgetLine__c}>
+							<lightning-icon icon-name="utility:level_up" alternative-text="Allocation"
+											class="slds-float_right " size="x-small"
+											title="This budget line is a part of the parent budget line allocation"></lightning-icon>
+						</template>
+						<template lwc:if={line.cblight__isFormulaBudgetLine__c}>
+							<lightning-icon icon-name="utility:formula" alternative-text="Formula"
+											class="slds-float_right" size="small"
+											title="This budget line has a formula inside"></lightning-icon>
+						</template>
+
+						<template lwc:if={line.cblight__CBCalculationRule__c}>
+							<lightning-icon icon-name="utility:crossfilter" alternative-text="Calculation Rule"
+											class="slds-float_right" size="small"
+											onclick={openLineCalculationRule}
+											title="This budget line has a Calculation Rule"></lightning-icon>
+						</template>
+						<template lwc:if={line.cblight__Lock__c}>
+							<lightning-icon icon-name="utility:lock" alternative-text="Locked"
+											class="slds-float_right" size="small"
+											title="Budget Line is Locked"></lightning-icon>
+						</template>
+					</lightning-layout-item>-->
+					<!--<lightning-layout-item padding="around-none" size="1">
+						<lightning-button-icon icon-name="utility:edit" variant="border-filled" label="Edit"
+											   value={line.Id}
+											   onclick={openLine} title="Edit"></lightning-button-icon>
+					</lightning-layout-item>-->
+				</lightning-layout>
+
+				<template lwc:if={isDetailMode}>
+					<div class="detailsRow">
+						<template for:each={line.details} for:item="item">
+							<div key={item} class="detailsColumn">
+								{item}
+							</div>
+						</template>
+					</div>
+				</template>
+
+			</lightning-layout-item>
+
+			<template lwc:if={line.CurrencyIsoCode}>
+				<lightning-layout-item padding="around-none" size="8">
+					<lightning-layout>
+						<template for:each={line.cblight__CBAmounts__r} for:item="a">
+							<lightning-layout-item padding="around-none" key={a.Id} flexibility="auto">
+								<c-cb-input-currency name={a.Id} disabled={a.disabled}
+													 currency-code={line.CurrencyIsoCode}
+													 inblur={handleBudgetLine}
+													 val={a.cblight__Value__c}></c-cb-input-currency>
+								<template lwc:if={a.cblight__CBStyleName__c}>
+									<div style="width: 100%; height: 2px" class={a.cblight__CBStyleName__c}></div>
+								</template>
+							</lightning-layout-item>
+						</template>
+					</lightning-layout>
+				</lightning-layout-item>
+
+				<lightning-layout-item padding="around-none" size="1" class="inputBold">
+					<c-cb-input-currency disabled='true'
+										 currency-code={line.CurrencyIsoCode}
+										 is-bold="true"
+										 val={line.yearlyTotal}></c-cb-input-currency>
+				</lightning-layout-item>
+			</template>
+
+			<template lwc:else>
+				<lightning-layout-item padding="around-none" size="8">
+					<lightning-layout>
+						<template for:each={line.cblight__CBAmounts__r} for:item="a">
+							<lightning-layout-item padding="around-none" key={a.Id} flexibility="auto">
+								<lightning-input type="number" variant="label-hidden"
+												 class={a.inputStyle} onfocus={selectWhole}
+												 disabled={a.disabled}
+												 name={a.Id}
+												 onblur={handleBudgetLine}
+												 value={a.cblight__Value__c} formatter="currency" max-length="10"
+												 step="0.01"></lightning-input>
+								<template lwc:if={a.cblight__CBStyleName__c}>
+									<div style="width: 100%; height: 2px" class={a.cblight__CBStyleName__c}></div>
+								</template>
+							</lightning-layout-item>
+						</template>
+					</lightning-layout>
+				</lightning-layout-item>
+
+				<lightning-layout-item padding="around-none" size="1" class="inputBold">
+					<lightning-input type="number" value={line.yearlyTotal} variant="label-hidden" class="dec"
+									 disabled="true"
+									 formatter="currency" step="0.01"></lightning-input>
+				</lightning-layout-item>
+			</template>
+		</lightning-layout>
+	</div>
+</template>

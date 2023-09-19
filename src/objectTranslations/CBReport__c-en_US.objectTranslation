@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Report</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Reports</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Folder --></label>
+        <name>CBFolder__c</name>
+        <relationshipLabel><!-- CB Report Folders --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Filter --></label>
+        <name>Filter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Grouping --></label>
+        <name>Grouping__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mode --></label>
+        <name>Mode__c</name>
+        <picklistValues>
+            <masterLabel>Auto</masterLabel>
+            <translation><!-- Auto --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Manual</masterLabel>
+            <translation><!-- Manual --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- need Only Total --></label>
+        <name>needOnlyTotal__c</name>
+    </fields>
+    <fields>
+        <label><!-- Need Quarter Totals --></label>
+        <name>needQuarterTotals__c</name>
+    </fields>
+    <fields>
+        <label><!-- One Column Mode --></label>
+        <name>oneColumnMode__c</name>
+    </fields>
+    <layouts>
+        <layout>CB Report Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

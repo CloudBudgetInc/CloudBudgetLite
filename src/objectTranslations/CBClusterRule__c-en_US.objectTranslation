@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Cluster Rule</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Cluster Rules</value>
+    </caseValues>
+    <fields>
+        <label><!-- Index --></label>
+        <name>Index__c</name>
+    </fields>
+    <fields>
+        <label><!-- Level1 --></label>
+        <name>Level1__c</name>
+    </fields>
+    <fields>
+        <label><!-- Level2 --></label>
+        <name>Level2__c</name>
+    </fields>
+    <fields>
+        <label><!-- Level3 --></label>
+        <name>Level3__c</name>
+    </fields>
+    <fields>
+        <label><!-- Level4 --></label>
+        <name>Level4__c</name>
+    </fields>
+    <fields>
+        <label><!-- Level5 --></label>
+        <name>Level5__c</name>
+    </fields>
+    <layouts>
+        <layout>CB Cluster Rule Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

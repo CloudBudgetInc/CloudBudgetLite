@@ -1,0 +1,1138 @@
+<template>
+	<section class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container bl-modal">
+			<header class="slds-modal__header" style="background: #f3f3f3">
+				<lightning-layout>
+					<lightning-layout-item size="2" style="text-align: left !important">
+						<!--<template lwc:if={showAnalytics}>
+							<c-cb-function type="Variable"></c-cb-function>
+						</template>-->
+					</lightning-layout-item>
+					<lightning-layout-item size="2"></lightning-layout-item>
+					<lightning-layout-item size="3">
+						<!--<div class='dev-door-container' ondblclick={toggleDevDoor}>
+							<template lwc:if={showDevDoor}>
+								<div class='dev-door-content'>
+									<div class='dev-door-label'>ADMIN ONLY TOOL</div>
+									<div class="slds-grid slds-p-around_small">
+										<lightning-input type="toggle" label="Lock Editing" name="Lock Editing"
+														 class='dev-door-toggle' checked={lockEditingValue}
+														 onchange={handleLockEditing}></lightning-input>
+										<lightning-input type="toggle" label="Lock Deleting" name="Lock Deleting"
+														 class='slds-p-left_x-small dev-door-toggle'
+														 checked={lockDeletingValue}
+														 onchange={handleLockDeleting}></lightning-input>
+									</div>
+								</div>
+							</template>
+						</div>-->
+						<h2 class="slds-text-heading_small">Budget Line: <span class="slds-coordinates__title">{budgetLine.Name}</span>
+						</h2>
+						<span class="warning-message">{budgetLine.cblight__WarningMessage__c}</span>
+						<template lwc:if={budgetLine.cblight__ParentBudgetLine__c}>
+							<a class="slds-text-heading_small" onclick={redirectToParent}>Redirect to parent</a>
+						</template>
+					</lightning-layout-item>
+
+					<template lwc:if={showBudgetLineContent}>
+						<lightning-layout-item size="4" class="slds-text-title_bold">
+							<div class="badgeContainer">
+								<lightning-badge class="customBadge" label={budgetLine.Owner.Name}></lightning-badge>
+
+								<template lwc:if={budgetLine.cblight__CBScenario__c}>
+									<lightning-badge class="customBadge"
+													 label={budgetLine.cblight__CBScenario__r.Name}></lightning-badge>
+								</template>
+								<lightning-badge class="customBadge"
+												 label={budgetLine.cblight__Status__c}></lightning-badge>
+								<template lwc:if={budgetLine.cblight__isTopdown__c}>
+									<lightning-badge class="customBadge" label="Topdown"></lightning-badge>
+								</template>
+								<template lwc:if={budgetLine.cblight__Lock__c}>
+									<lightning-badge class="customBadge" title="Budget Line is Locked"
+													 label='🔒'></lightning-badge>
+								</template>
+							</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="1">
+							<div class="headerButtonsStyle">
+								<template lwc:if={showFunctionMenu}>
+									<lightning-button-menu
+											alternative-text="Show menu"
+											menu-alignment="center"
+											variant="border-filled"
+											icon-name="utility:formula"
+									>
+										<template for:each={functions} for:item="f">
+											<lightning-menu-item
+													value={f.Id}
+													key={f.Id}
+													onclick={convertSimpleLineToFormulaLineAndApplyFunction}
+													label={f.cblight__Title__c}
+													class="slds-align_absolute-center"
+											></lightning-menu-item>
+										</template>
+										<li class="slds-has-divider_top-space"></li>
+										<lightning-menu-item
+												value="$FORMULA$"
+												label="Add Custom Formula"
+												icon-name="utility:formula"
+												onclick={convertSimpleLineToFormulaLine}
+										></lightning-menu-item>
+									</lightning-button-menu>
+								</template>
+
+								<template lwc:if={showAllocateBtn}>
+									<lightning-button-icon
+											icon-name="utility:data_model"
+											onclick={convertSimpleLineToAllocationLine}
+											title="Allocate the budget line"
+											class="my-allocate-button"
+									></lightning-button-icon>
+								</template>
+							</div>
+						</lightning-layout-item>
+					</template>
+				</lightning-layout>
+
+				<lightning-icon class="slds-modal__close" icon-name="utility:close" onclick={closeBudgetLineModal}
+								size="small"></lightning-icon>
+				<template lwc:if={showAnalytics}>
+					<hr class="headerHR">
+					<div class="analyticsStyle">
+						<lightning-layout>
+							<lightning-layout-item padding="around-none">
+								<lightning-record-edit-form name="cblight__CBAccount__c"
+															object-api-name="cblight__CBBudgetLine__c">
+									<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBAccountLabel__c}</label>
+									<lightning-input-field
+											field-name="cblight__CBAccount__c"
+											onchange={handleBudgetLine}
+											value={budgetLine.cblight__CBAccount__c}
+											variant="label-hidden"
+									>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+							</lightning-layout-item>
+							<lightning-layout-item padding="around-none">
+								<lightning-record-edit-form name="cblight__CBDivision__c"
+															object-api-name="cblight__CBBudgetLine__c">
+									<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBDivisionLabel__c}</label>
+									<lightning-input-field
+											field-name="cblight__CBDivision__c"
+											onchange={handleBudgetLine}
+											value={budgetLine.cblight__CBDivision__c}
+											variant="label-hidden"
+									>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+							</lightning-layout-item>
+
+							<!-- VARIABLES -->
+							<template lwc:if={selectOptionMap.variable1SO}>
+								<lightning-layout-item padding="around-none">
+									<lightning-record-edit-form name="cblight__CBVariable1__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable1Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable1__c"
+												onchange={handleBudgetLine}
+												value={budgetLine.cblight__CBVariable1__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+							<template lwc:if={selectOptionMap.variable2SO}>
+								<lightning-layout-item padding="around-none">
+									<lightning-record-edit-form name="cblight__CBVariable2__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable2Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable2__c"
+												onchange={handleBudgetLine}
+												value={budgetLine.cblight__CBVariable2__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+							<template lwc:if={selectOptionMap.variable3SO}>
+								<lightning-layout-item padding="around-none">
+									<lightning-record-edit-form name="cblight__CBVariable3__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable3Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable3__c"
+												onchange={handleBudgetLine}
+												value={budgetLine.cblight__CBVariable3__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+							<template lwc:if={selectOptionMap.variable4SO}>
+								<lightning-layout-item padding="around-none">
+									<lightning-record-edit-form name="cblight__CBVariable4__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable4Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable4__c"
+												onchange={handleBudgetLine}
+												value={budgetLine.cblight__CBVariable4__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+							<template lwc:if={selectOptionMap.variable5SO}>
+								<lightning-layout-item padding="around-none">
+									<lightning-record-edit-form name="cblight__CBVariable5__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable5Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable5__c"
+												onchange={handleBudgetLine}
+												value={budgetLine.cblight__CBVariable5__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+							<!-- VARIABLES -->
+						</lightning-layout>
+					</div>
+				</template>
+			</header>
+
+			<!-- SPINNER -->
+			<c-cb-spinner show={showSpinner}></c-cb-spinner>
+			<!-- SPINNER -->
+
+			<div class="slds-modal__content">
+				<template lwc:if={showBudgetLineContent}>
+					<div class="slds-m-top_small">
+						<lightning-tabset>
+							<!-- AMOUNTS TAB -->
+							<lightning-tab label="Budget" onactive={handleBudgetTab}>
+								<lightning-layout class="slds-p-around_small">
+									<template lwc:if={budgetLine.cblight__isFormulaBudgetLine__c}>
+										<lightning-layout-item padding="around-none" size="2">
+											<lightning-input label="Name" name="Name" onblur={handleBudgetLine}
+															 value={budgetLine.Name} max-length="80"></lightning-input>
+										</lightning-layout-item>
+
+										<lightning-layout-item padding="around-none" size="1">
+											<div class="slds-p-top_large">
+												<div class="nflFormulaHint" title="Formula Reminder">
+													<lightning-icon icon-name="utility:formula"
+																	alternative-text="Formula" size="small"
+																	title="x-small size"></lightning-icon>
+													: {budgetLine.cblight__NFLFormula__c}
+												</div>
+												<template for:each={budgetLine.amountObject.titles} for:item="title"
+														  for:index="index">
+													<template lwc:if={index}>
+														<div class="nflIndex"
+															 key={title}>#{index}
+														</div>
+													</template>
+													<lightning-input
+															class="dec NFLTitle"
+															disabled="true"
+															key={title}
+															name="Name"
+															value={title}
+															variant="label-hidden">
+													</lightning-input>
+												</template>
+											</div>
+										</lightning-layout-item>
+									</template>
+									<template if:false={budgetLine.cblight__isFormulaBudgetLine__c}>
+										<lightning-layout-item padding="around-none" size="3">
+											<lightning-input label="Name" name="Name" onblur={handleBudgetLine}
+															 value={budgetLine.Name} max-length="80"></lightning-input>
+										</lightning-layout-item>
+									</template>
+
+									<lightning-layout-item class="" padding="around-none" size="8">
+										<!-- Budget Line Amounts -->
+										<lightning-layout>
+											<lightning-layout-item flexibility="auto" padding="around-none">
+												<!-- COMPLETE ASSISTANT -->
+												<div class="slds-p-top_large">
+													<c-cb-complete-assistant
+															objects={budgetLine.amountObject.wholeAmounts}
+															onapplycompleteamounts={applyCompleteAmounts}
+															field="cblight__Value__c"
+													></c-cb-complete-assistant>
+												</div>
+												<!-- COMPLETE ASSISTANT -->
+											</lightning-layout-item>
+											<!-- YTD Amounts -->
+											<template lwc:if={showYTDAmounts}>
+												<template for:each={YTDAmounts}
+														  for:item="amount">
+													<lightning-layout-item flexibility="auto" key={amount.Id}
+																		   padding="around-none">
+														<lightning-input
+																class="dec"
+																disabled
+																formatter="currency"
+																label={amount.cblight__PeriodName__c}
+																name={amount.Id}
+																onblur={handleBudgetLine}
+																step="0.01"
+																type="number"
+																value={amount.cblight__Value__c}>
+														</lightning-input>
+													</lightning-layout-item>
+												</template>
+											</template>
+											<!-- YTD Amounts -->
+											<template if:false={showYTDAmounts}>
+												<template for:each={budgetLine.amountObject.wholeAmounts}
+														  for:item="amount">
+													<lightning-layout-item flexibility="auto" key={amount.Id}
+																		   padding="around-none">
+														<template lwc:if={budgetLine.CurrencyIsoCode}>
+															<c-cb-input-currency name={amount.Id}
+																				 disabled={amount.disabled}
+																				 label={amount.cblight__PeriodName__c}
+																				 currency-code={budgetLine.CurrencyIsoCode}
+																				 inblur={handleBudgetLine}
+																				 val={amount.cblight__Value__c}></c-cb-input-currency>
+														</template>
+
+														<template if:false={budgetLine.CurrencyIsoCode}>
+															<lightning-input
+																	class="dec" onfocus={selectWhole}
+																	disabled={amount.disabled}
+																	formatter="currency"
+																	label={amount.cblight__PeriodName__c}
+																	name={amount.Id}
+																	onblur={handleBudgetLine}
+																	step="0.01"
+																	type="number"
+																	value={amount.cblight__Value__c}
+																	max-length="10">
+															</lightning-input>
+														</template>
+														<template lwc:if={amount.cblight__CBStyleName__c}>
+															<div style="width: 100%; height: 2px"
+																 class={amount.cblight__CBStyleName__c}></div>
+														</template>
+													</lightning-layout-item>
+												</template>
+											</template>
+										</lightning-layout>
+										<!-- Budget Line Amounts -->
+										<template lwc:if={budgetLine.cblight__isFormulaBudgetLine__c}>
+											<div style="height: 1px; width: 100%; background-color: #47464f"></div>
+										</template>
+										<!-- NonFin lib lines -->
+										<template for:each={budgetLine.amountObject.displayedNFLibs}
+												  for:item="libItems">
+											<lightning-layout key={libItems}>
+												<lightning-layout-item flexibility="auto" padding="around-none">
+													<!-- COMPLETE ASSISTANT -->
+													<div>
+														<c-cb-complete-assistant
+																objects={libItems}
+																onapplycompleteamounts={applyCompleteAmounts}
+																field="cblight__Value__c"
+														></c-cb-complete-assistant>
+													</div>
+													<!-- COMPLETE ASSISTANT -->
+												</lightning-layout-item>
+
+												<template for:each={libItems} for:item="item">
+													<lightning-layout-item flexibility="auto" key={item.Id}
+																		   padding="around-none">
+														<template lwc:if={item.isCurrency}>
+															<lightning-input
+																	class="dec" onfocus={selectWhole}
+																	disabled={item.disabled}
+																	formatter="currency"
+																	name={item.Id}
+																	onchange={handleCustomNFLChange}
+																	step="0.01"
+																	type="number"
+																	value={item.cblight__Value__c}
+																	max-length="10"
+																	variant="label-hidden">
+															</lightning-input>
+														</template>
+														<template lwc:if={item.isPercent}>
+															<lightning-input
+																	class="dec" onfocus={selectWhole}
+																	disabled={item.disabled}
+																	formatter="percent"
+																	name={item.Id}
+																	onchange={handleCustomNFLChange}
+																	step="0.01"
+																	type="number"
+																	value={item.cblight__Value__c}
+																	variant="label-hidden"
+															>
+															</lightning-input>
+														</template>
+														<template lwc:if={item.isItem}>
+															<lightning-input
+																	class="dec" onfocus={selectWhole}
+																	disabled={item.disabled}
+																	name={item.Id}
+																	onchange={handleCustomNFLChange}
+																	step="0.01"
+																	type="number"
+																	max-length="10"
+																	value={item.cblight__Value__c}
+																	variant="label-hidden"
+															>
+															</lightning-input>
+														</template>
+													</lightning-layout-item>
+												</template>
+											</lightning-layout>
+										</template>
+										<!-- NonFin lib lines -->
+									</lightning-layout-item>
+									<!-- Global line total -->
+									<lightning-layout-item padding="around-none" size="1">
+										<template lwc:if={budgetLine.CurrencyIsoCode}>
+											<c-cb-input-currency disabled="true" is-bold="true"
+																 currency-code={budgetLine.CurrencyIsoCode}
+																 label='BY Total'
+																 val={budgetLine.yearlyTotal}></c-cb-input-currency>
+										</template>
+
+										<template if:false={budgetLine.CurrencyIsoCode}>
+											<lightning-input
+													class="dec totalAmount"
+													disabled="true"
+													formatter="currency"
+													label="BY Total"
+													step="0.01"
+													type="number"
+													value={budgetLine.yearlyTotal}
+											></lightning-input>
+										</template>
+
+									</lightning-layout-item>
+									<!-- Global line total -->
+								</lightning-layout>
+
+								<!-- ALLOCATED LINES -->
+								<template lwc:if={budgetLine.cblight__isAllocation__c}>
+									<template lwc:if={showAllocation}>
+										<div style="background: #e2e9f7; border-radius: 8px;">
+											<div class="allocation-box slds-text-title slds-text-title_caps totalAmount">
+												Allocations
+											</div>
+											<div class="slds-box card-wrapper">
+												<!--												<div class="slds-p-around_xx-small slds-text-title slds-text-title_caps totalAmount">
+																									Allocations
+																								</div>-->
+
+												<!-- ALLOCATED TOTAL LINE -->
+												<template lwc:if={allocationSummary.ready}>
+													<lightning-layout class="" key={allocatedBL.Id}>
+														<lightning-layout-item padding="around-none" size="3">
+															<lightning-layout>
+																<lightning-layout-item size="10">
+																	<lightning-input
+																			label="Name"
+																			name="Name"
+																			variant="label-hidden"
+																			disabled="true"
+																			class="totalAmount"
+																			value={allocationSummary.Name}
+																	>
+																	</lightning-input>
+																</lightning-layout-item>
+																<lightning-layout-item size="2">
+																	<lightning-input
+																			formatter="percent"
+																			style="color: #00cf00"
+																			type="number"
+																			variant="label-hidden"
+																			step="0.01"
+																			class="totalAmount"
+																			disabled="true"
+																			value={allocationSummary.percent}
+																	>
+																	</lightning-input>
+																</lightning-layout-item>
+															</lightning-layout>
+														</lightning-layout-item>
+														<lightning-layout-item class="" padding="around-none" size="8">
+															<lightning-layout>
+																<template
+																		for:each={allocationSummary.cblight__CBAmounts__r}
+																		for:item="amount">
+																	<lightning-layout-item flexibility="auto"
+																						   key={amount.Id}
+																						   padding="around-none">
+																		<lightning-input
+																				class="dec totalAmount"
+																				variant="label-hidden"
+																				formatter="currency"
+																				disabled="true"
+																				step="0.01"
+																				type="number"
+																				value={amount.cblight__Value__c}
+																		>
+																		</lightning-input>
+																	</lightning-layout-item>
+																</template>
+															</lightning-layout>
+														</lightning-layout-item>
+														<lightning-layout-item padding="around-none" size="1">
+															<lightning-input
+																	class="dec totalAmount"
+																	disabled="true"
+																	variant="label-hidden"
+																	formatter="currency"
+																	step="0.01"
+																	type="number"
+																	value={allocationSummary.yearlyTotal}
+															>
+															</lightning-input>
+														</lightning-layout-item>
+													</lightning-layout>
+												</template>
+											</div>
+											<!-- ALLOCATED TOTAL LINE -->
+
+											<template for:each={budgetLine.cblight__ChildrenBudgetLines__r}
+													  for:item="allocatedBL">
+												<div key={allocatedBL.Id}
+													 class="slds-box slds-p-around_x-small card-wrapper slds-m-top_small">
+													<lightning-card>
+														<div style="display: flex; align-items: center; position: absolute; right: 15px; top: 3px;">
+															<lightning-icon size="small"
+																			icon-name="utility:data_model"></lightning-icon>
+															<template
+																	lwc:if={allocatedBL.cblight__isFormulaBudgetLine__c}>
+																<lightning-icon size="small"
+																				icon-name="utility:formula"></lightning-icon>
+															</template>
+															<lightning-badge label={allocatedBL.idx}
+																			 class="slds-text-title_bold slds-m-right_small"></lightning-badge>
+															<lightning-button-icon
+																	icon-name="utility:edit"
+																	slot="actions"
+																	size="small"
+																	variant="border-filled"
+																	value={allocatedBL.Id}
+																	onclick={redirectToAllocatedBL}
+																	title="Redirect to the budget line details"
+															></lightning-button-icon>
+															<lightning-button-icon
+																	icon-name="utility:delete"
+																	slot="actions"
+																	size="small"
+																	variant="border-filled"
+																	value={allocatedBL.Id}
+																	onclick={deleteAllocatedBL}
+																	title="Delete"
+															></lightning-button-icon>
+														</div>
+
+														<div>
+															<!-- VARIABLES OF ALLOCATED ANALYTICS -->
+															<lightning-layout
+																	class="slds-p-bottom_x-small analytics-wrapper">
+																<lightning-layout-item padding="around-none"
+																					   flexibility="shrink">
+																	<lightning-record-edit-form
+																			name="cblight__CBAccount__c"
+																			object-api-name="cblight__CBBudgetLine__c"
+																	>
+																		<label>{orgVariable.cblight__CBAccountLabel__c}</label>
+																		<lightning-input-field
+																				field-name="cblight__CBAccount__c"
+																				onchange={handleAllocatedBudgetLine}
+																				data-field="cblight__CBAccount__c"
+																				data-id={allocatedBL.Id}
+																				value={allocatedBL.cblight__CBAccount__c}
+																				variant="label-hidden"
+																		>
+																		</lightning-input-field>
+																	</lightning-record-edit-form>
+																</lightning-layout-item>
+																<lightning-layout-item padding="around-none"
+																					   flexibility="shrink">
+																	<lightning-record-edit-form
+																			name="cblight__CBDivision__c"
+																			object-api-name="cblight__CBBudgetLine__c"
+																	>
+																		<label>{orgVariable.cblight__CBDivisionLabel__c}</label>
+																		<lightning-input-field
+																				field-name="cblight__CBDivision__c"
+																				onchange={handleAllocatedBudgetLine}
+																				data-field="cblight__CBDivision__c"
+																				data-id={allocatedBL.Id}
+																				value={allocatedBL.cblight__CBDivision__c}
+																				variant="label-hidden"
+																		>
+																		</lightning-input-field>
+																	</lightning-record-edit-form>
+																</lightning-layout-item>
+
+																<!-- VARIABLES -->
+																<template lwc:if={selectOptionMap.variable1SO}>
+																	<lightning-layout-item padding="around-none"
+																						   flexibility="shrink">
+																		<lightning-record-edit-form
+																				name="cblight__CBVariable1__c"
+																				object-api-name="cblight__CBBudgetLine__c"
+																		>
+																			<label>{orgVariable.cblight__CBVariable1Label__c}</label>
+																			<lightning-input-field
+																					field-name="cblight__CBVariable1__c"
+																					data-field="cblight__CBVariable1__c"
+																					data-id={allocatedBL.Id}
+																					onchange={handleAllocatedBudgetLine}
+																					value={allocatedBL.cblight__CBVariable1__c}
+																					variant="label-hidden"
+																			>
+																			</lightning-input-field>
+																		</lightning-record-edit-form>
+																	</lightning-layout-item>
+																</template>
+																<template lwc:if={selectOptionMap.variable2SO}>
+																	<lightning-layout-item padding="around-none"
+																						   flexibility="shrink">
+																		<lightning-record-edit-form
+																				name="cblight__CBVariable2__c"
+																				object-api-name="cblight__CBBudgetLine__c"
+																		>
+																			<label>{orgVariable.cblight__CBVariable2Label__c}</label>
+																			<lightning-input-field
+																					field-name="cblight__CBVariable2__c"
+																					data-field="cblight__CBVariable2__c"
+																					data-id={allocatedBL.Id}
+																					onchange={handleAllocatedBudgetLine}
+																					value={allocatedBL.cblight__CBVariable2__c}
+																					variant="label-hidden"
+																			>
+																			</lightning-input-field>
+																		</lightning-record-edit-form>
+																	</lightning-layout-item>
+																</template>
+																<template lwc:if={selectOptionMap.variable3SO}>
+																	<lightning-layout-item padding="around-none"
+																						   flexibility="shrink">
+																		<lightning-record-edit-form
+																				name="cblight__CBVariable3__c"
+																				object-api-name="cblight__CBBudgetLine__c"
+																		>
+																			<label>{orgVariable.cblight__CBVariable3Label__c}</label>
+																			<lightning-input-field
+																					field-name="cblight__CBVariable3__c"
+																					data-field="cblight__CBVariable3__c"
+																					data-id={allocatedBL.Id}
+																					onchange={handleAllocatedBudgetLine}
+																					value={allocatedBL.cblight__CBVariable3__c}
+																					variant="label-hidden"
+																			>
+																			</lightning-input-field>
+																		</lightning-record-edit-form>
+																	</lightning-layout-item>
+																</template>
+																<template lwc:if={selectOptionMap.variable4SO}>
+																	<lightning-layout-item padding="around-none"
+																						   flexibility="shrink">
+																		<lightning-record-edit-form
+																				name="cblight__CBVariable4__c"
+																				object-api-name="cblight__CBBudgetLine__c"
+																		>
+																			<label>{orgVariable.cblight__CBVariable4Label__c}</label>
+																			<lightning-input-field
+																					field-name="cblight__CBVariable4__c"
+																					data-field="cblight__CBVariable4__c"
+																					data-id={allocatedBL.Id}
+																					onchange={handleAllocatedBudgetLine}
+																					value={allocatedBL.cblight__CBVariable4__c}
+																					variant="label-hidden"
+																			>
+																			</lightning-input-field>
+																		</lightning-record-edit-form>
+																	</lightning-layout-item>
+																</template>
+																<template lwc:if={selectOptionMap.variable5SO}>
+																	<lightning-layout-item padding="around-none"
+																						   flexibility="shrink">
+																		<lightning-record-edit-form
+																				name="cblight__CBVariable5__c"
+																				object-api-name="cblight__CBBudgetLine__c"
+																		>
+																			<label>{orgVariable.cblight__CBVariable5Label__c}</label>
+																			<lightning-input-field
+																					field-name="cblight__CBVariable5__c"
+																					data-field="cblight__CBVariable5__c"
+																					data-id={allocatedBL.Id}
+																					onchange={handleAllocatedBudgetLine}
+																					value={allocatedBL.cblight__CBVariable5__c}
+																					variant="label-hidden"
+																			>
+																			</lightning-input-field>
+																		</lightning-record-edit-form>
+																	</lightning-layout-item>
+																</template>
+															</lightning-layout>
+															<!-- VARIABLES OF ALLOCATED ANALYTICS -->
+
+															<!-- ALLOCATED LINE WITH AMOUNTS -->
+															<lightning-layout>
+																<lightning-layout-item padding="around-none"
+																					   size="3">
+																	<lightning-layout>
+																		<lightning-layout-item size="10">
+																			<lightning-input
+																					label="Name"
+																					variant="label-hidden"
+																					data-field="Name"
+																					data-id={allocatedBL.Id}
+																					onchange={handleAllocatedBudgetLine}
+																					value={allocatedBL.Name}
+																					max-length="80">
+																			</lightning-input>
+																		</lightning-layout-item>
+																		<lightning-layout-item size="2">
+																			<lightning-input
+																					label="Percent"
+																					formatter="percent"
+																					style="color: #00cf00"
+																					type="number"
+																					variant="label-hidden"
+																					step="0.01"
+																					disabled={allocatedBL.percentDisabled}
+																					name={allocatedBL.Id}
+																					onchange={handleAllocatedPercent}
+																					value={allocatedBL.percent}
+																			>
+																			</lightning-input>
+																		</lightning-layout-item>
+																	</lightning-layout>
+																</lightning-layout-item>
+																<lightning-layout-item class=""
+																					   padding="around-none"
+																					   size="8">
+																	<lightning-layout>
+																		<lightning-layout-item flexibility="auto"
+																							   padding="around-none">
+																			<!-- COMPLETE ASSISTANT -->
+
+																			<c-cb-complete-assistant
+																					objects={allocatedBL.cblight__CBAmounts__r}
+																					onapplycompleteamounts={applyCompleteAmounts}
+																					field="cblight__Value__c"
+																			></c-cb-complete-assistant>
+
+																			<!-- COMPLETE ASSISTANT -->
+																		</lightning-layout-item>
+																		<template
+																				for:each={allocatedBL.cblight__CBAmounts__r}
+																				for:item="amount">
+																			<lightning-layout-item
+																					flexibility="auto"
+																					key={amount.Id}
+																					padding="around-none">
+																				<lightning-input
+																						class="dec"
+																						variant="label-hidden"
+																						disabled={amount.disabled}
+																						formatter="currency"
+																						data-id={amount.Id}
+																						onchange={handleAllocatedBudgetLine}
+																						step="0.01"
+																						type="number"
+																						value={amount.cblight__Value__c}
+																				>
+																				</lightning-input>
+																			</lightning-layout-item>
+																		</template>
+																	</lightning-layout>
+																</lightning-layout-item>
+																<lightning-layout-item padding="around-none"
+																					   size="1">
+																	<lightning-input
+																			class="dec totalAmount"
+																			disabled="true"
+																			variant="label-hidden"
+																			formatter="currency"
+																			label="BY Total"
+																			step="0.01"
+																			type="number"
+																			value={allocatedBL.yearlyTotal}
+																	>
+																	</lightning-input>
+																</lightning-layout-item>
+															</lightning-layout>
+															<!-- ALLOCATED LINE WITH AMOUNTS -->
+														</div>
+													</lightning-card>
+												</div>
+											</template>
+										</div>
+									</template>
+								</template>
+								<!-- ALLOCATED LINES -->
+							</lightning-tab>
+							<!-- AMOUNTS TAB -->
+
+							<!-- FORMULA TAB -->
+							<template lwc:if={budgetLine.cblight__isFormulaBudgetLine__c}>
+								<lightning-tab label="Formula Settings" onactive={handleFormulaSettingTab}>
+									<lightning-layout>
+										<lightning-layout-item size="5">
+											<div style="max-height: 300px; overflow-y: scroll" class="allocationDiv">
+												<div class="slds-text-title_caps slds-p-left_large">Source Catalog</div>
+												<lightning-accordion
+														active-section-name={activeSections}
+														allow-multiple-sections-open="true"
+														class="example-accordion"
+														onsectiontoggle={handleSectionToggle}>
+													<template for:each={layers} for:item="layer">
+														<lightning-accordion-section
+																key={layer.Id}
+																label={layer.Name}
+																name={layer.Name}>
+															<c-cb-nfl-selector
+																	name={layer.Name}
+																	layer={layer}
+																	onlineclicked={lineClicked}
+																	onlinedragged={lineDragged}
+															></c-cb-nfl-selector>
+														</lightning-accordion-section>
+													</template>
+												</lightning-accordion>
+
+											</div>
+										</lightning-layout-item>
+										<lightning-layout-item class="slds-m-left_medium" size="5">
+											<div class="slds-text-title_caps slds-p-left_large slds-p-bottom_medium">
+												Legend
+											</div>
+
+											<lightning-layout>
+												<lightning-layout-item>
+													<lightning-badge label="1"></lightning-badge>
+												</lightning-layout-item>
+												<lightning-layout-item size="10">
+													<lightning-input
+															disabled="true"
+															label="1"
+															ondragover={allowDrop}
+															ondrop={drop}
+															value={budgetLine.cblight__NFLTitle1__c}
+															variant="label-hidden"
+													></lightning-input>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Delete"
+															class="slds-m-left_xx-small"
+															icon-name="utility:delete"
+															onclick={deleteLegendValue}
+															title="Delete"
+															value="1"
+													></lightning-button-icon>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Click to redirect"
+															class="slds-m-left_xx-small"
+															icon-name="utility:zoomin"
+															onclick={redirectToNFL}
+															title="Click to redirect"
+															value="1"
+															variant="bare"
+													></lightning-button-icon>
+												</lightning-layout-item>
+											</lightning-layout>
+											<lightning-layout>
+												<lightning-layout-item>
+													<lightning-badge label="2"></lightning-badge>
+												</lightning-layout-item>
+												<lightning-layout-item size="10">
+													<lightning-input
+															disabled="true"
+															label="2"
+															ondragover={allowDrop}
+															ondrop={drop}
+															value={budgetLine.cblight__NFLTitle2__c}
+															variant="label-hidden"
+													></lightning-input>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Delete"
+															class="slds-m-left_xx-small"
+															icon-name="utility:delete"
+															onclick={deleteLegendValue}
+															title="Delete"
+															value="2"
+													></lightning-button-icon>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Click to redirect"
+															class="slds-m-left_xx-small"
+															icon-name="utility:zoomin"
+															onclick={redirectToNFL}
+															title="Click to redirect"
+															value="2"
+															variant="bare"
+													></lightning-button-icon>
+												</lightning-layout-item>
+											</lightning-layout>
+											<lightning-layout>
+												<lightning-layout-item>
+													<lightning-badge label="3"></lightning-badge>
+												</lightning-layout-item>
+												<lightning-layout-item size="10">
+													<lightning-input
+															disabled="true"
+															label="3"
+															ondragover={allowDrop}
+															ondrop={drop}
+															value={budgetLine.cblight__NFLTitle3__c}
+															variant="label-hidden"
+													></lightning-input>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Delete"
+															class="slds-m-left_xx-small"
+															icon-name="utility:delete"
+															onclick={deleteLegendValue}
+															title="Delete"
+															value="3"
+													></lightning-button-icon>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Click to redirect"
+															class="slds-m-left_xx-small"
+															icon-name="utility:zoomin"
+															onclick={redirectToNFL}
+															title="Click to redirect"
+															value="3"
+															variant="bare"
+													></lightning-button-icon>
+												</lightning-layout-item>
+											</lightning-layout>
+											<lightning-layout>
+												<lightning-layout-item>
+													<lightning-badge label="4"></lightning-badge>
+												</lightning-layout-item>
+												<lightning-layout-item size="10">
+													<lightning-input
+															disabled="true"
+															label="4"
+															ondragover={allowDrop}
+															ondrop={drop}
+															value={budgetLine.cblight__NFLTitle4__c}
+															variant="label-hidden"
+													></lightning-input>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Delete"
+															class="slds-m-left_xx-small"
+															icon-name="utility:delete"
+															onclick={deleteLegendValue}
+															title="Delete"
+															value="4"
+													></lightning-button-icon>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Click to redirect"
+															class="slds-m-left_xx-small"
+															icon-name="utility:zoomin"
+															onclick={redirectToNFL}
+															title="Click to redirect"
+															value="4"
+															variant="bare"
+													></lightning-button-icon>
+												</lightning-layout-item>
+											</lightning-layout>
+											<lightning-layout>
+												<lightning-layout-item>
+													<lightning-badge label="5"></lightning-badge>
+												</lightning-layout-item>
+												<lightning-layout-item size="10">
+													<lightning-input
+															disabled="true"
+															label="5"
+															ondragover={allowDrop}
+															ondrop={drop}
+															value={budgetLine.cblight__NFLTitle5__c}
+															variant="label-hidden"
+													></lightning-input>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Delete"
+															class="slds-m-left_xx-small"
+															icon-name="utility:delete"
+															onclick={deleteLegendValue}
+															title="Delete"
+															value="5"
+													></lightning-button-icon>
+												</lightning-layout-item>
+												<lightning-layout-item size="1">
+													<lightning-button-icon
+															alternative-text="Click to redirect"
+															class="slds-m-left_xx-small"
+															icon-name="utility:zoomin"
+															onclick={redirectToNFL}
+															title="Click to redirect"
+															value="5"
+															variant="bare"
+													></lightning-button-icon>
+												</lightning-layout-item>
+											</lightning-layout>
+
+											<div class="slds-text-title_caps slds-p-left_large slds-p-top_medium">
+												<span>Formula</span>
+												<div style="display: inline-block;" class="vert-align-help-text">
+													<lightning-helptext icon-name="utility:info"
+																		class="slds-m-left_x_small"
+																		content="Examples:  #1*#2 or (#1+#2)/#3"></lightning-helptext>
+												</div>
+											</div>
+											<lightning-layout>
+												<lightning-layout-item class="slds-p-left_large" size="6">
+													<lightning-input
+															onchange={changeFormula}
+															value={budgetLine.cblight__NFLFormula__c}
+															variant="label-hidden"
+													></lightning-input>
+													<div class={formulaWarning.class}> {formulaWarning.message}</div>
+												</lightning-layout-item>
+
+												<lightning-layout-item size="1">
+													<lightning-button-menu
+															title="Choose one of the most common formulas."
+															icon-name="utility:formula">
+
+														<template for:each={commonFormulas} for:item="formula">
+															<lightning-menu-item key={formula} value={formula}
+																				 onclick={applyAutoFormula}
+																				 label={formula}></lightning-menu-item>
+														</template>
+													</lightning-button-menu>
+
+												</lightning-layout-item>
+												<lightning-layout-item size="6">
+													<c-cb-function type="NFL"></c-cb-function>
+												</lightning-layout-item>
+											</lightning-layout>
+										</lightning-layout-item>
+
+										<lightning-layout-item size="2"> EXAMPLE</lightning-layout-item>
+									</lightning-layout>
+								</lightning-tab>
+							</template>
+							<!-- FORMULA TAB -->
+
+							<!-- OTHER -->
+							<lightning-tab label="Other">
+								<lightning-layout>
+									<lightning-layout-item padding="around-small" size="3">
+										<lightning-textarea label="Description" onchange={handleBudgetLine}
+															name="cblight__Description__c"
+															value={budgetLine.cblight__Description__c}></lightning-textarea>
+									</lightning-layout-item>
+									<lightning-layout-item padding="around-small" size="3">
+										<c-cb-files-uploader record-id={budgetLine.Id}></c-cb-files-uploader>
+									</lightning-layout-item>
+								</lightning-layout>
+								<div class="max-width">
+									<c-cb-budget-line-drill-down
+											parameters={budgetLine.cblight__DrillDownIds__c}></c-cb-budget-line-drill-down>
+								</div>
+							</lightning-tab>
+							<!-- OTHER -->
+						</lightning-tabset>
+					</div>
+				</template>
+			</div>
+			<footer class="slds-modal__footer">
+				<lightning-layout>
+					<lightning-layout-item size="1">
+						<lightning-button icon-name="utility:loop" label="Revisions"
+										  onclick={openRevisionDialog}></lightning-button>
+					</lightning-layout-item>
+					<lightning-layout-item size="6">
+						<template lwc:if={budgetLine.cblight__isAllocation__c}>
+							<lightning-button
+									label="Topdown"
+									icon-name="utility:arrow_bottom"
+									class="slds-p-around_x-small"
+									title="Fill in subline amounts based on allocated budget"
+									onclick={fillInAllocatedAmounts}
+							></lightning-button>
+							<lightning-button
+									label="Bottom-up"
+									icon-name="utility:arrow_top"
+									class="slds-p-around_x-small"
+									title="Fill in allocated budget amounts from the subline amounts"
+									onclick={fillInBudgetLineFromAllocation}
+							></lightning-button>
+							<lightning-button
+									label="Allocate"
+									icon-name="utility:add"
+									class="slds-p-around_x-small"
+									onclick={addAllocatedBudgetLine}
+							></lightning-button>
+						</template>
+					</lightning-layout-item>
+					<lightning-layout-item size="1">
+						<lightning-input type="toggle" label="YTD"
+										 onchange={displayYTDAmounts}></lightning-input>
+					</lightning-layout-item>
+					<lightning-layout-item size="4">
+						<lightning-button-group>
+
+							<lightning-button label="Delete" icon-name="utility:delete"
+											  onclick={deleteBudgetLine}
+											  variant="destructive"></lightning-button>
+							<lightning-button label="Clone" icon-name="utility:copy"
+											  onclick={cloneBudgetLine}
+											  variant="bare"></lightning-button>
+						</lightning-button-group>
+						<lightning-button-group class="slds-p-left_medium">
+							<lightning-button icon-name="utility:save" label="Save" class="slds-m"
+											  onclick={saveBudgetLine}
+											  variant="brand"></lightning-button>
+							<lightning-button icon-name="utility:close" label="Close"
+											  onclick={closeBudgetLineModal}
+											  variant="bare"></lightning-button>
+						</lightning-button-group>
+					</lightning-layout-item>
+				</lightning-layout>
+			</footer>
+		</div>
+	</section>
+
+	<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+	<!--Revisions Dialog-->
+	<template lwc:if={showRevisionDialog}>
+		<c-cb-revision record-id={recordId} org-variable={orgVariable} show-revision-dialog={showRevisionDialog}
+					   amounts={budgetLine.cblight__CBAmounts__r}
+					   oncloserevisionmodal={closeRevisionDialog}></c-cb-revision>
+	</template>
+	<!--Revisions Dialog-->
+</template>

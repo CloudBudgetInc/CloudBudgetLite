@@ -1,0 +1,68 @@
+/* General styles for all components */
+
+.dec {
+	text-align: right !important;
+}
+
+.dec input {
+	text-align: right !important;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.totalFont {
+	font-weight: bold;
+}
+
+.table-header-frozen {
+	overflow: auto;
+	height: 100%;
+}
+
+
+.table-header-frozen table {
+	border: 0;
+}
+
+.table-header-frozen thead th {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+}
+
+.formulaWarning {
+	color: firebrick;
+}
+
+.formulaValid {
+	color: #1c730e;
+}
+
+.vert-align-help-text {
+	position: relative;
+	bottom: 3px;
+}
+
+.fade-background {
+	display: block;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	left: 50%;
+	right: 50%;
+	margin-left: -50vw;
+	margin-right: -50vw;
+	padding-top: 15vh;
+	background-color: rgba(0, 0, 0, 0.4);
+	-webkit-transition: 0.5s;
+	overflow: auto;
+	z-index: 9999;
+}
+
+.box-shadow {
+	box-shadow: rgba(0, 0, 0, 0.35) 10px 10px 20px 20px;
+	border-radius: 4px;
+}

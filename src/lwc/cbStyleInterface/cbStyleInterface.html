@@ -1,0 +1,249 @@
+<template>
+	<!-- Styles interface -->
+	<lightning-card>
+		<div class="slds-clearfix slds-p-horizontal_medium">
+			<div class="slds-float_left">
+				<h3 slot="title">
+					<lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+					Style Setup
+				</h3>
+			</div>
+
+			<div class="slds-float_right">
+				<lightning-button variant="Neutral" label="New Style" title="New Style" onclick={openStyle}></lightning-button>
+			</div>
+		</div>
+	</lightning-card>
+	<br />
+	<!-- Styles List -->
+	<lightning-card>
+		<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered slds-table_striped">
+			<thead>
+				<tr class="slds-text-title_caps">
+					<th>
+						<div>Style Name</div>
+					</th>
+					<th>
+						<div>Example</div>
+					</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<template for:each={styleList} for:index="index" for:item="fieldObj">
+					<tr key={fieldObj.id}>
+						<td>
+							<span style="color: #000000">{fieldObj.index}. </span
+							><lightning-button
+								variant="base"
+								data-id={fieldObj.Id}
+								label={fieldObj.Name}
+								title="Style name"
+								onclick={openStyle}
+								class="button"
+							></lightning-button>
+						</td>
+						<td class={fieldObj.cssName}>
+							<div>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
+						</td>
+					</tr>
+				</template>
+			</tbody>
+		</table>
+	</lightning-card>
+
+	<!-- Modal window -->
+	<template if:true={isModalOpen}>
+		<section
+			role="dialog"
+			tabindex="-1"
+			aria-labelledby="modal-heading-01"
+			aria-modal="true"
+			aria-describedby="modal-content-id-1"
+			class="slds-modal slds-fade-in-open slds-modal_large"
+		>
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button
+						class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+						title="Close"
+						onclick={toggleModal}
+					>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h3 slot="title">
+						<lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+						Style
+					</h3>
+				</header>
+				<div class="slds-modal__content" id="modal-content-id-1">
+					<div slot="footer"></div>
+					<div class="slds-grid">
+						<!-- Name input -->
+						<div class="slds-p-around_medium lgc-bg slds-col">
+							<lightning-input
+								type="text"
+								data-id="Name"
+								label="Name"
+								placeholder="Enter name"
+								value={style.Name}
+								onchange={handleChange}
+								max-length="60"
+								required
+							></lightning-input>
+						</div>
+						<!-- Text color input -->
+						<div class="slds-p-around_medium lgc-bg slds-col">
+							<lightning-input
+								type="color"
+								data-id="cblight__Color__c"
+								name="input-text-color"
+								label="Pick text color"
+								max-length="20"
+								value={style.cblight__Color__c}
+								onchange={handleChange}
+								required
+							></lightning-input>
+						</div>
+						<!-- Background Color -->
+						<div class="slds-p-around_medium lgc-bg slds-col">
+							<lightning-input
+								type="color"
+								data-id="cblight__BackgroundColor__c"
+								name="input-background-color"
+								max-length="20"
+								label="Pick background color"
+								value={style.cblight__BackgroundColor__c}
+								onchange={handleChange}
+								required
+							></lightning-input>
+						</div>
+						<!-- Font Weight -->
+						<div class="slds-p-around_medium lgc-bg slds-col z-index">
+							<lightning-combobox
+								name="Font Weight"
+								data-id="cblight__FontWeight__c"
+								label="Font Weight"
+								value={style.cblight__FontWeight__c}
+								placeholder="Select Font Weight"
+								options={fontWeights}
+								onchange={handleChange}
+								required
+							></lightning-combobox>
+						</div>
+						<!-- Font Family -->
+						<div class="slds-p-around_medium lgc-bg slds-col">
+							<lightning-combobox
+								name="Font Family"
+								label="Font Family"
+								data-id="cblight__Font__c"
+								value={style.cblight__Font__c}
+								placeholder="Select Font Family"
+								options={fontFamilys}
+								onchange={handleChange}
+								required
+							></lightning-combobox>
+						</div>
+						<!-- State -->
+						<div class="slds-p-around_medium lgc-bg slds-col">
+							<lightning-combobox
+								name="State"
+								label="State"
+								data-id="cblight__State__c"
+								value={style.cblight__State__c}
+								placeholder="State"
+								options={state}
+								onchange={handleChange}
+								required
+							></lightning-combobox>
+						</div>
+					</div>
+				</div>
+				<!-- SPINNER -->
+				<c-cb-spinner show={showSpinner}></c-cb-spinner>
+				<!-- SPINNER -->
+				<footer class="slds-modal__footer" style="border-radius: 0%">
+					<table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_striped">
+						<thead>
+							<tr class="slds-text-title_caps">
+								<th>
+									<div>Style Name</div>
+								</th>
+								<th>
+									<div>Example</div>
+								</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<th class={style.styleСSSName}>
+									<div>{style.Name}</div>
+								</th>
+								<th class={style.styleСSSName}>
+									<div>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
+								</th>
+							</tr>
+						</tbody>
+					</table>
+				</footer>
+				<footer class="slds-modal__footer">
+					<!-- Button group -->
+					<lightning-button-group>
+						<!-- Delete Style Button-->
+						<lightning-button
+							if:true={isCloneSaveNewDeleteButtonActive}
+							variant="destructive"
+							label="Delete"
+							onclick={deleteStyle}
+							title="Delete"
+							icon-name="utility:delete"
+						></lightning-button>
+						<!-- Save/New Style Button-->
+						<lightning-button
+							if:true={isCloneSaveNewDeleteButtonActive}
+							name="save/new"
+							variant="brand-outline"
+							label="Save/New"
+							onclick={saveNewStyle}
+							title="Save/New"
+							icon-name="utility:new"
+						></lightning-button>
+						<!-- Clone Style Button-->
+						<lightning-button
+							if:true={isCloneSaveNewDeleteButtonActive}
+							name="clone"
+							variant="Neutral"
+							label="Clone"
+							onclick={cloneStyle}
+							title="Clone"
+							icon-name="utility:copy"
+						></lightning-button>
+					</lightning-button-group>
+					<lightning-button-group>
+						<!-- Save Style Button-->
+						<lightning-button
+							class="slds-m-left_medium"
+							variant="brand"
+							name="save"
+							label="Save"
+							title="Save"
+							onclick={saveStyle}
+							icon-name="utility:save"
+						></lightning-button>
+						<!-- Back to list Button-->
+						<lightning-button
+							variant="bare"
+							label="Close"
+							title="Close"
+							onclick={toggleModal}
+							icon-name="utility:close"
+						></lightning-button>
+					</lightning-button-group>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+</template>

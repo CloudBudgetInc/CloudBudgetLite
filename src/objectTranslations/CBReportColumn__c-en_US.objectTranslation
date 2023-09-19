@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Report Column</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Report Columns</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Period --></label>
+        <name>CBPeriod__c</name>
+        <relationshipLabel><!-- CB Report Columns --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Report --></label>
+        <name>CBReport__c</name>
+        <relationshipLabel><!-- CB Report Columns --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Style --></label>
+        <name>CBStyle__c</name>
+        <relationshipLabel><!-- CB Report Columns --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Color --></label>
+        <name>Color__c</name>
+    </fields>
+    <fields>
+        <label><!-- Font Style --></label>
+        <name>FontStyle__c</name>
+        <picklistValues>
+            <masterLabel>italic</masterLabel>
+            <translation><!-- italic --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>normal</masterLabel>
+            <translation><!-- normal --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Formula columns to calculate some values. For example: $1 * $2 / 2 --></help>
+        <label><!-- Formula --></label>
+        <name>Formula__c</name>
+    </fields>
+    <fields>
+        <label><!-- Master Column --></label>
+        <name>MasterColumn__c</name>
+        <relationshipLabel><!-- Master Columns --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Need YTD --></label>
+        <name>NeedYTD__c</name>
+    </fields>
+    <fields>
+        <label><!-- Order Number --></label>
+        <name>OrderNumber__c</name>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Formula</masterLabel>
+            <translation><!-- Formula --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Master</masterLabel>
+            <translation><!-- Master --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Simple</masterLabel>
+            <translation><!-- Simple --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Total</masterLabel>
+            <translation><!-- Total --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Unit --></label>
+        <name>Unit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Value Field --></label>
+        <name>ValueField__c</name>
+    </fields>
+    <fields>
+        <label><!-- Is Hidden --></label>
+        <name>isHidden__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

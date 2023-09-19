@@ -1,0 +1,76 @@
+@import "c/cbStyle";
+
+.headerPeriodElement {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 15px;
+}
+
+.numberLayoutItem {
+    font-weight: bold;
+    width: 100%;
+}
+
+.titleText {
+    font-weight: bold;
+    padding-left: 15px;
+    vertical-align: bottom;
+}
+
+.titleTextBottomLine {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dotted grey;
+}
+
+.summaryLinefalse {
+    position: sticky;
+    z-index: 1;
+    top: 107px;
+    left: 0;
+}
+
+.summaryLinetrue {
+    position: sticky;
+    z-index: 1;
+    top: 141px;
+    left: 0;
+}
+
+.fitTarget {
+    color: green !important;
+}
+
+.lessTarget {
+    color: #858500 !important;
+}
+
+.overTarget {
+    color: red !important;
+}
+
+.linkText {
+    border-radius: 4px !important;
+    height: 100%;
+    border: 1px solid #c9c9c9 !important;
+    cursor: pointer !important;
+    padding: 5px !important;
+    color: #3b3b76 !important;
+    font-weight: bold !important;
+    backdrop-filter: blur(5px) !important;
+    /* for Safari */
+    -webkit-backdrop-filter: blur(5px) !important;
+}
+
+.linkText:hover {
+    text-decoration: underline !important;
+}
+
+.category_table tr:first-child td {
+    vertical-align: top;
+}
+
+.moduleTitle {
+    font-weight: bold;
+    text-decoration: underline;
+}

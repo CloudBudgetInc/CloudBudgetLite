@@ -1,0 +1,473 @@
+<template>
+
+	<lightning-card title="Init Wizard" icon-name="custom:custom108">
+
+		<template if:true={selectedConfiguration}>
+			<lightning-button label="Predefine" slot="actions" onclick={savePredefineConfiguration}></lightning-button>
+		</template>
+		<lightning-button label="Report" slot="actions" onclick={renderInitWizardReport}></lightning-button>
+		<lightning-button label="Help and Support" slot="actions" onclick={openWelcome}></lightning-button>
+
+		<template if:true={showWelcomeMat}>
+			<c-cb-welcome name='main'></c-cb-welcome>
+		</template>
+
+		<!-- INIT WIZARD REPORT -->
+		<template if:true={showInitWizardReport}>
+			<c-cb-init-wizard-report mapping-type={mapping.cblight__Type__c}></c-cb-init-wizard-report>
+		</template>
+		<!-- INIT WIZARD REPORT -->
+
+
+		<lightning-progress-indicator current-step={currentStep} type="base" variant="base">
+			<lightning-progress-step label="Accounts" value="accounts" onclick={setStep}></lightning-progress-step>
+			<lightning-progress-step label="Divisions" value="divisions" onclick={setStep}></lightning-progress-step>
+			<lightning-progress-step label="Periods" value="periods" onclick={setStep}></lightning-progress-step>
+			<lightning-progress-step label="Variable 1" value="variables1" onclick={setStep}></lightning-progress-step>
+			<lightning-progress-step label="Variable 2" value="variables2" onclick={setStep}></lightning-progress-step>
+			<lightning-progress-step label="Variable 3" value="variables3" onclick={setStep}></lightning-progress-step>
+			<lightning-progress-step label="Variable 4" value="variables4" onclick={setStep}></lightning-progress-step>
+			<lightning-progress-step label="Variable 5" value="variables5" onclick={setStep}></lightning-progress-step>
+		</lightning-progress-indicator>
+
+		<!-- ACCOUNTS -->
+		<template if:true={stepRender.accounts} class="slds-m-top_large">
+
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 1 OF 8: {orgVariable.cblight__CBAccountLabel__c}</h1>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="account" label="Select Account Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handleAccountChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="accountName" label="Name Field" value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handleAccountTypeChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="accountType" label="Type Field" value={mapping.cblight__SourceType__c}
+											options={sobjectFieldsSO} onchange={handleAccountTypeChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="accountSubType" label="SubType Field"
+											value={mapping.cblight__SourceSubtype__c} options={sobjectFieldsSO}
+											onchange={handleAccountTypeChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+
+				</template>
+			</lightning-layout>
+
+			<lightning-layout>
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title='Source GL Account Filter'
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SpecialFilter__c}
+											 fields-available={sobjectFieldsSO}
+											 filter-title='Positive GL Account Condition'
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSpecialFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBAccountLabel__c}
+									  onclick={saveAndRunMapAccounts}>
+					</lightning-button>
+				</div>
+			</template>
+
+
+		</template>
+		<!-- ACCOUNTS -->
+
+		<!-- DIVISIONS -->
+		<template if:true={stepRender.divisions} class="slds-m-top_large">
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 2 OF 8: {orgVariable.cblight__CBDivisionLabel__c}</h1>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="division" label="Select Division Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handleDivisionChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="divisionName" label="Name Field"
+											value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handleDivisionChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title={filterTitle}
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBDivisionLabel__c}
+									  onclick={saveAndRunMapDivisions}>
+					</lightning-button>
+				</div>
+			</template>
+		</template>
+		<!-- DIVISIONS -->
+
+		<!-- PERIODS -->
+		<template if:true={stepRender.periods} class="slds-m-top_large">
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 3 OF 8: {orgVariable.cblight__CBPeriodLabel__c}</h1>
+			</div>
+
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<lightning-button variant="brand" label={orgVariable.CBPeriodSetup} title={orgVariable.openPeriodSetup}
+								  onclick={togglePeriodsSetupDialog} class="slds-m-left_x-small"></lightning-button>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="cblight__SourceSObject__c" label="Select Period Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handlePeriodChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceName__c" label="Name Field"
+											value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handlePeriodChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceType__c" label="Start Date Field"
+											value={mapping.cblight__SourceType__c}
+											options={sobjectFieldsSO} onchange={handlePeriodChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceSubtype__c" label="BY Field"
+											value={mapping.cblight__SourceSubtype__c}
+											field-level-help="Leave this blank if the source period object does not have a lookup to a budget year"
+											options={sobjectFieldsSO} onchange={handlePeriodChange}>
+						</lightning-combobox>
+
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+
+			<lightning-layout>
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title={filterTitle}
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBPeriodLabel__c}
+									  onclick={saveAndRunMapPeriods}>
+					</lightning-button>
+					<lightning-button variant="brand" label="Custom" onclick={saveAndRunMapPeriods}>
+					</lightning-button>
+				</div>
+			</template>
+		</template>
+		<!-- PERIODS -->
+
+
+		<!-- PERIOD Dialog-->
+		<template if:true={showPeriodDialog}>
+			<section role="dialog" tabindex="-1" aria-modal="true"
+					 aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-2"
+					 class="slds-modal slds-fade-in-open slds-modal_large" data-id="periodModal">
+				<div class="slds-modal__container">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							title="Close" onclick={togglePeriodsSetupDialog}>
+						<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+										size="small"></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<div class="slds-modal__header">
+
+						<h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">
+							{orgVariable.CBPeriodSetup}
+						</h1>
+					</div>
+					<div class="slds-modal__content slds-p-around_xxx-small" id="modal-content-id-2">
+						<c-cb-periods-setup></c-cb-periods-setup>
+					</div>
+					<footer class="slds-modal__footer">
+						<button class="slds-button slds-button_neutral" onclick={togglePeriodsSetupDialog}
+								title="Close">
+							Close
+						</button>
+					</footer>
+				</div>
+			</section>
+			<div class="slds-backdrop slds-backdrop_open"></div>
+		</template>
+		<!-- PERIOD Dialog-->
+
+
+		<!-- VARIABLE 1 -->
+		<template if:true={stepRender.variables1} class="slds-m-top_large">
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 4 OF 8: {orgVariable.cblight__CBVariable1Label__c}</h1>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="variable1" data-id="cblight__SourceSObject__c"
+										label="Select Source Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handleVariableChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
+											label="Name Field"
+											value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handleVariableChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title={filterTitle}
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBVariable1Label__c}
+									  onclick={saveAndRunMapVariable}>
+					</lightning-button>
+				</div>
+			</template>
+		</template>
+		<!-- VARIABLE 1 -->
+
+		<!-- VARIABLE 2 -->
+		<template if:true={stepRender.variables2} class="slds-m-top_large">
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 5 OF 8: {orgVariable.cblight__CBVariable2Label__c}</h1>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="variable2" data-id="cblight__SourceSObject__c"
+										label="Select Source Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handleVariableChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
+											label="Name Field"
+											value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handleVariableChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title={filterTitle}
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBVariable2Label__c}
+									  onclick={saveAndRunMapVariable}>
+					</lightning-button>
+				</div>
+			</template>
+		</template>
+		<!-- VARIABLE 2 -->
+
+		<!-- VARIABLE 3 -->
+		<template if:true={stepRender.variables3} class="slds-m-top_large">
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 6 OF 8: {orgVariable.cblight__CBVariable3Label__c}</h1>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="variable3" data-id="cblight__SourceSObject__c"
+										label="Select Source Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handleVariableChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
+											label="Name Field"
+											value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handleVariableChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title={filterTitle}
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBVariable3Label__c}
+									  onclick={saveAndRunMapVariable}>
+					</lightning-button>
+				</div>
+			</template>
+		</template>
+		<!-- VARIABLE 3 -->
+
+		<!-- VARIABLE 4 -->
+		<template if:true={stepRender.variables4} class="slds-m-top_large">
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 7 OF 8: {orgVariable.cblight__CBVariable4Label__c}</h1>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="variable4" data-id="cblight__SourceSObject__c"
+										label="Select Source Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handleVariableChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
+											label="Name Field"
+											value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handleVariableChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title={filterTitle}
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBVariable4Label__c}
+									  onclick={saveAndRunMapVariable}>
+					</lightning-button>
+				</div>
+			</template>
+		</template>
+		<!-- VARIABLE 4 -->
+
+		<!-- VARIABLE 5 -->
+		<template if:true={stepRender.variables5} class="slds-m-top_large">
+			<div class="slds-m-left_medium slds-m-bottom_large slds-align_absolute-center">
+				<h1 style="font-weight: bold;">STEP 8 OF 8: {orgVariable.cblight__CBVariable5Label__c}</h1>
+			</div>
+			<lightning-layout>
+
+				<lightning-layout-item padding="around-medium" size="2">
+					<lightning-combobox name="variable5" data-id="cblight__SourceSObject__c"
+										label="Select Source Record"
+										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
+										onchange={handleVariableChange}>
+					</lightning-combobox>
+				</lightning-layout-item>
+
+				<template if:true={showFilter}>
+					<lightning-layout-item padding="around-medium" size="2">
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
+											label="Name Field"
+											value={mapping.cblight__SourceName__c}
+											options={sobjectFieldsSO} onchange={handleVariableChange}>
+						</lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item padding="around-medium" size="6">
+						<c-cb-filter-manager base-request-string={mapping.cblight__SourceFilter__c}
+											 fields-available={sobjectFieldsSO} filter-title={filterTitle}
+											 users-and-queues={usersAndQueues}
+											 onresultrequeststringchanged={setSourceFilterString}
+											 sobject-type={mapping.cblight__SourceSObject__c}></c-cb-filter-manager>
+					</lightning-layout-item>
+				</template>
+			</lightning-layout>
+			<template if:true={showFilter}>
+				<div class="slds-m-left_medium">
+					<lightning-button variant="brand" label={orgVariable.mapcblight__CBVariable5Label__c}
+									  onclick={saveAndRunMapVariable}>
+					</lightning-button>
+				</div>
+			</template>
+		</template>
+		<!-- VARIABLE 5 -->
+
+		<!-- FOOTER -->
+		<div slot="footer">
+			<lightning-button label="Previous Step" icon-name="utility:jump_to_left" onclick={previousStep}
+							  disabled={stepRender.accounts}>
+			</lightning-button>
+			<lightning-button label="Next Step" icon-name="utility:jump_to_right" onclick={nextStep}
+							  disabled={stepRender.variables5}>
+			</lightning-button>
+		</div>
+		<!-- FOOTER -->
+
+		<!-- SPINNER -->
+		<c-cb-spinner show={showSpinner}></c-cb-spinner>
+		<!-- SPINNER -->
+
+	</lightning-card>
+
+
+</template>

@@ -1,0 +1,12 @@
+.slds-modal__container {
+    text-align: left;
+}
+
+.shadow {
+    box-shadow: rgba(0, 0, 0, 0.35) 10px 10px 20px 20px;
+    border-radius: 4px;
+}
+
+.slds-backdrop_open {
+    visibility: hidden;
+}

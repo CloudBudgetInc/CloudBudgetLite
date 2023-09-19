@@ -1,0 +1,84 @@
+@import 'c/cbStyle';
+
+.shadow {
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+}
+
+.general_section_label {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.clusterText {
+    text-transform: uppercase;
+    letter-spacing: .002rem;
+    text-align: left;
+}
+
+.clusterHeader {
+    text-align: right !important;
+    padding-right: 5px;
+}
+
+.clusterEdgeTop {
+    border-top: 2px solid #5e759b;
+    width: 21px;
+    position: absolute;
+    height: 2px;
+}
+
+.clusterEdgeLeft {
+    height: 100%;
+    width: 1px;
+    background-color: #5e759b;
+}
+
+.clusterEdgeBottom {
+    background-color: #5e759b;
+    width: 21px;
+    position: absolute;
+    height: 2px;
+}
+
+.showHideClusterButtons {
+    margin-left: 2px;
+}
+
+
+.lvl0 {
+    background-color: rgb(235, 234, 234);
+    border-radius: 5px;
+}
+
+.lvl1 {
+    background-color: rgb(225, 224, 224);
+    border-radius: 5px;
+}
+
+.lvl2 {
+    background-color: rgb(215, 214, 214);
+    border-radius: 5px;
+}
+
+.lvl3 {
+    background-color: rgb(206, 204, 204);
+    border-radius: 5px;
+}
+
+.clusterSplitLine {
+    border-bottom: 1px dotted gray;
+    width: 100%;
+}
+
+.approvalButtonMargin {
+    margin-top: -10px;
+}
+
+.headerTextMargin {
+    margin-top: -5px;
+}
+
+.fullScreen {
+    width: 100% !important;
+}

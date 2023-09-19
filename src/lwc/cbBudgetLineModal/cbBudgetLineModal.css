@@ -1,0 +1,125 @@
+@import 'c/cbStyle';
+
+.bl-modal {
+	height: 105%;
+}
+
+.analytics-wrapper {
+	max-width: 88%;
+}
+
+.totalAmount {
+	font-weight: bold;
+}
+
+.NFLTitle {
+	font-style: italic;
+	color: darkblue;
+}
+
+.allocationDiv::-webkit-scrollbar {
+	width: 0;
+}
+
+::-webkit-scrollbar {
+	width: 0px;
+	background: rgba(255, 255, 255, 0.0);
+}
+
+.slds-card__header {
+	padding: 0 !important;
+}
+
+.nflIndex {
+	position: absolute;
+	margin-left: -20px;
+	margin-top: 5px;
+}
+
+.nflFormulaHint {
+	position: absolute;
+	margin-top: -25px;
+	margin-left: -25px;
+}
+
+.allocation-box {
+	padding: 7px 0 8px 15px;
+}
+
+.card-wrapper {
+	background: white;
+	border: #b6b6b6 1px solid;
+	margin: 3px 6px;
+	padding: 6px;
+	display: inline-block
+}
+
+.analyticsStyle {
+	text-align: left;
+	alignment: left;
+}
+
+.headerButtonsStyle {
+	text-align: center;
+	alignment: right;
+}
+
+.my-allocate-button {
+--slds-c-icon-color-background : white !important;
+--slds-c-button-color-background :  white !important;
+
+}
+.badgeContainer {
+	border: 1px solid #d2d2d2;
+	border-radius: 20px;
+	background-color: #ffffff;
+	margin-left: 10px;
+	padding-top: 3px;
+	padding-bottom: 2px;
+}
+
+.headerHR {
+	margin: 5px 0 5px 0;
+}
+
+.customBadge {
+	--slds-c-badge-color-background: #dcf5ff;
+	--slds-c-badge-color-border: #d2d2d2;
+}
+
+.warning-message {
+	font-size: smaller;
+	color: indianred;
+}
+
+.max-width {
+	max-width: 100%;
+	overflow-x: scroll !important;
+}
+
+.dev-door-container {
+	position: absolute;
+	margin-top: -90px;
+	width: 550px;
+	height: 80px;
+}
+
+.dev-door-content {
+	width: 100%;
+	height: 100%;
+	background-color: #f3f3f3;
+	border-radius: 5px;
+}
+
+.dev-door-label {
+	font-weight: bold;
+}
+
+.dev-door-toggle {
+	margin-top: 8px;
+	margin-right: 10px;
+}
+
+.slds-p-left_x-small {
+	padding-left: 0.75rem !important;
+}

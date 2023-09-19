@@ -1,0 +1,5 @@
+@import 'c/cbStyle';
+
+.desc {
+    font-size: smaller !important;
+}

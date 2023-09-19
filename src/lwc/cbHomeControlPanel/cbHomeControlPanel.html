@@ -1,0 +1,652 @@
+<template>
+
+
+	<!-- THE MAIN CONTROL PANEL -->
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+	<lightning-tabset class="slds-tabs_large">
+
+		<lightning-tab label="Home">
+
+			<lightning-layout class="slds-m-top_medium">
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__Budget_Lines" onclick={redirectTo}>
+						<div data-name="cblight__Budget_Lines"
+							 onclick={redirectTo}>Budget Manager
+						</div>
+						<lightning-icon icon-name="utility:budget_category_value" class="slds-p-top_small"
+										size="large" data-name="cblight__Budget_Lines"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__CBInvoice__c" onclick={redirectTo}>
+						<div data-name="cblight__CBInvoice__c"
+							 onclick={redirectTo}>Invoices
+						</div>
+						<lightning-icon icon-name="utility:contract_doc" class="slds-p-top_small"
+										size="large" data-name="cblight__CBInvoice__c"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__CBDivision__c" onclick={redirectTo}>
+						<div data-name="cblight__CBDivision__c"
+							 onclick={redirectTo}>Divisions
+						</div>
+						<lightning-icon icon-name="utility:company" class="slds-p-top_small"
+										size="large" data-name="cblight__CBDivision__c"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__CBAccount__c" onclick={redirectTo}>
+						<div data-name="cblight__CBAccount__c"
+							 onclick={redirectTo}>GL Accounts
+						</div>
+						<lightning-icon icon-name="utility:your_account" class="slds-p-top_small"
+										size="large" data-name="cblight__CBAccount__c"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__Style_Setup" onclick={redirectTo}>
+						<div data-name="cblight__Style_Setup"
+							 onclick={redirectTo}>Styles
+						</div>
+						<lightning-icon icon-name="utility:edit_gpt" class="slds-p-top_small"
+										size="large" data-name="cblight__Style_Setup"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+			</lightning-layout>
+			<lightning-layout>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__CBVariable1__c" onclick={redirectTo}>
+						<div data-name="cblight__CBVariable1__c"
+							 onclick={redirectTo}>Vendors
+						</div>
+						<lightning-icon icon-name="utility:people" class="slds-p-top_small"
+										size="large" data-name="cblight__CBVariable1__c"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__CBVariable2__c" onclick={redirectTo}>
+						<div data-name="cblight__CBVariable2__c"
+							 onclick={redirectTo}>Products
+						</div>
+						<lightning-icon icon-name="utility:product" class="slds-p-top_small"
+										size="large" data-name="cblight__CBVariable2__c"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__CBPeriod__c" onclick={redirectTo}>
+						<div data-name="cblight__CBPeriod__c"
+							 onclick={redirectTo}>Periods
+						</div>
+						<lightning-icon icon-name="utility:date_time" class="slds-p-top_small"
+										size="large" data-name="cblight__CBPeriod__c"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="cblight__CBReport__c" onclick={redirectTo}>
+						<div data-name="cblight__CBReport__c"
+							 onclick={redirectTo}>Reports
+						</div>
+						<lightning-icon icon-name="utility:service_report" class="slds-p-top_small"
+										size="large" data-name="cblight__CBReport__c"
+										onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+				<lightning-layout-item size="4" class="slds-m-right_medium slds-m-top_medium">
+					<div class="card" data-name="Dashboard" onclick={redirectTo}>
+						<div data-name="Dashboard" onclick={redirectTo}>SF Dashboard</div>
+						<lightning-icon icon-name="utility:graph" class="slds-p-top_small"
+										size="large" data-name="Dashboard" onclick={redirectTo}></lightning-icon>
+					</div>
+				</lightning-layout-item>
+			</lightning-layout>
+
+
+		</lightning-tab>
+
+		<lightning-tab label="Dashboard">
+
+			<template lwc:if={showHomeChart}>
+				<div class="slds-m-top_large">
+					<div style="width: 1100px; height: 900px">
+						<lightning-layout class="slds-m-left_medium">
+							<lightning-layout-item padding="around-none" size="auto">
+								<lightning-record-edit-form name="cblight__CBBudgetYear__c"
+															object-api-name="cblight__CBBudgetLine__c">
+									<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBBudgetYearLabel__c}</label>
+									<lightning-input-field
+											field-name="cblight__CBBudgetYear__c"
+											name="cblight__CBBudgetYear__c"
+											onchange={handleHomeChartFilter}
+											value={params.cblight__CBBudgetYear__c}
+											variant="label-hidden"
+									>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+							</lightning-layout-item>
+							<template lwc:if={accTypeSO}>
+								<lightning-layout-item padding="around-none" size="auto">
+									<label class="slds-text-align_left slds-show">Account Type</label>
+									<lightning-combobox
+											name="cblight__CBAccountSign__c"
+											variant="label-hidden"
+											value={params.cblight__CBAccountSign__c}
+											placeholder="Acc Type"
+											options={accTypeSO}
+											onchange={handleHomeChartFilter}></lightning-combobox>
+								</lightning-layout-item>
+							</template>
+
+							<template lwc:if={orgVariable.cblight__ScenarioIsUsing__c}>
+								<lightning-layout-item padding="around-none" size="auto">
+									<lightning-record-edit-form name="cblight__CBScenario__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">Scenario</label>
+										<lightning-input-field
+												field-name="cblight__CBScenario__c"
+												name="cblight__CBScenario__c"
+												onchange={handleHomeChartFilter}
+												value={params.cblight__CBScenario__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+
+							<lightning-layout-item padding="around-none" size="auto">
+								<lightning-record-edit-form name="cblight__CBDivision__c"
+															object-api-name="cblight__CBBudgetLine__c">
+									<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBDivisionLabel__c}</label>
+									<lightning-input-field
+											field-name="cblight__CBDivision__c"
+											name="cblight__CBDivision__c"
+											onchange={handleHomeChartFilter}
+											value={params.cblight__CBDivision__c}
+											variant="label-hidden"
+									>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+							</lightning-layout-item>
+
+							<template lwc:if={orgVariable.displayVar1}>
+								<lightning-layout-item padding="around-none" size="auto">
+									<lightning-record-edit-form name="cblight__CBVariable1__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable1Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable1__c"
+												name="cblight__CBVariable1__c"
+												onchange={handleHomeChartFilter}
+												value={params.cblight__CBVariable1__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+
+							<template lwc:if={orgVariable.displayVar2}>
+								<lightning-layout-item padding="around-none" size="auto">
+									<lightning-record-edit-form name="cblight__CBVariable2__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable2Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable2__c"
+												name="cblight__CBVariable2__c"
+												onchange={handleHomeChartFilter}
+												value={params.cblight__CBVariable2__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+
+							<template lwc:if={orgVariable.displayVar3}>
+								<lightning-layout-item padding="around-none" size="auto">
+									<lightning-record-edit-form name="cblight__CBVariable3__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable3Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable3__c"
+												name="cblight__CBVariable3__c"
+												onchange={handleHomeChartFilter}
+												value={params.cblight__CBVariable3__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+
+							<template lwc:if={orgVariable.displayVar4}>
+								<lightning-layout-item padding="around-none" size="auto">
+									<lightning-record-edit-form name="cblight__CBVariable4__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable4Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable4__c"
+												name="cblight__CBVariable4__c"
+												onchange={handleHomeChartFilter}
+												value={params.cblight__CBVariable4__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+
+							<template lwc:if={orgVariable.displayVar5}>
+								<lightning-layout-item padding="around-none" size="auto">
+									<lightning-record-edit-form name="cblight__CBVariable5__c"
+																object-api-name="cblight__CBBudgetLine__c">
+										<label class="slds-text-align_left slds-show">{orgVariable.cblight__CBVariable5Label__c}</label>
+										<lightning-input-field
+												field-name="cblight__CBVariable5__c"
+												name="cblight__CBVariable5__c"
+												onchange={handleHomeChartFilter}
+												value={params.cblight__CBVariable5__c}
+												variant="label-hidden"
+										>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</template>
+							<lightning-layout-item padding="around-none">
+								<div style="padding-top: 20px;">
+									<lightning-button-icon icon-name="utility:refresh"
+														   onclick={getDataForChart}></lightning-button-icon>
+								</div>
+							</lightning-layout-item>
+
+
+						</lightning-layout>
+
+						<lightning-layout slass="slds-p-around_none">
+							<lightning-layout-item size="8">
+								<c-cb-chart chart-config={homePageLineChartConfig}></c-cb-chart>
+							</lightning-layout-item>
+							<lightning-layout-item size="4">
+								<c-cb-chart chart-config={homePageBarChartConfig}></c-cb-chart>
+							</lightning-layout-item>
+						</lightning-layout>
+
+
+					</div>
+
+				</div>
+			</template>
+
+		</lightning-tab>
+		<!--<lightning-tab label="Data Status" onactive={getStatistic}>
+			<div>
+				<lightning-layout>
+					<lightning-layout-item size="12">
+						<c-cb-event-monitor></c-cb-event-monitor>
+						<lightning-card title="Mapped Analytics">
+							<lightning-button slot="actions" label="Sync" onclick={syncMappedAnalytics}
+											  icon-name="utility:refresh"></lightning-button>
+							<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+								<thead>
+								<tr class="slds-line-height_reset">
+									<th>
+										Source
+									</th>
+									<th>
+										Source
+									</th>
+									<th>
+										Source Total
+									</th>
+									<th>
+
+									</th>
+									<th>
+										Result
+									</th>
+									<th>
+										Result
+									</th>
+									<th>
+										Details
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								<template for:each={statisticRows} for:item="row">
+									<tr class="slds-hint-parent" key={row}>
+										<th>
+											<lightning-button variant="base" value={row.sourceObjectAPIName}
+															  onclick={redirectToListView}
+															  label={row.sourceObjectName}></lightning-button>
+											<template lwc:if={row.filter}>
+												<lightning-helptext content={row.filter}></lightning-helptext>
+											</template>
+										</th>
+										<td>
+											{row.sourceNumber}
+										</td>
+										<td>
+											{row.sourceNumberTotal}
+										</td>
+										<td>
+											<template lwc:if={row.sourceNumber}>
+												<lightning-icon icon-name="utility:jump_to_right"
+																alternative-text="Mapped"
+																title="Mapped"></lightning-icon>
+											</template>
+											<template lwc:if={row.warning}>
+												<lightning-icon icon-name="utility:warning"
+																alternative-text={row.warning}
+																class="warning-icon"
+																title={row.warning}></lightning-icon>
+											</template>
+										</td>
+										<td>
+											<lightning-button variant="base" value={row.resultObjectAPIName}
+															  onclick={redirectToListView}
+															  label={row.resultObjectName}></lightning-button>
+										</td>
+										<td>
+											{row.resultNumber}
+										</td>
+										<td>
+											<lightning-button label="Report" variant="base"
+															  onclick={renderMappingReport}
+															  value={row.type}></lightning-button>
+										</td>
+									</tr>
+								</template>
+								</tbody>
+							</table>
+						</lightning-card>
+						<template lwc:if={showMappingReport}>
+							<c-cb-init-wizard-report mapping-type={reportType}></c-cb-init-wizard-report>
+						</template>
+					</lightning-layout-item>
+				</lightning-layout>
+				<template lwc:if={showChart}>
+					<div style="width:300px; height: 300px;">
+						<lightning-card title="Storage" icon-name="utility:chart">
+							<c-cb-chart chart-config={chartConfig}></c-cb-chart>
+						</lightning-card>
+					</div>
+				</template>
+			</div>
+
+		</lightning-tab>-->
+		<!--<lightning-tab label="Jobs" onactive={updateScheduledJobsPanel}>
+			<c-cb-event-monitor></c-cb-event-monitor>
+			<lightning-accordion allow-multiple-sections-open
+								 active-section-name={openedSections}>
+				<lightning-accordion-section name="queues" label="Task Queue">
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+						<thead>
+						<tr class="slds-line-height_reset">
+							<th>
+								Name
+							</th>
+							<th style="width: 100px">
+								Task Queue Updated
+							</th>
+							<th style="width: 100px">
+								Last Run Date
+							</th>
+							<th style="width: 100px">
+								Description
+							</th>
+							<th style="width: 50px">
+								Action
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						<template for:each={taskQueues} for:item="tq">
+							<tr class="slds-hint-parent" key={tq.Id}>
+								<th>
+									{tq.Name}
+								</th>
+								<td>
+									<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+																   hour="2-digit"
+																   minute="2-digit"
+																   value={tq.CreatedDate}></lightning-formatted-date-time>
+								</td>
+								<td>
+									<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+																   hour="2-digit"
+																   minute="2-digit"
+																   value={tq.LastModifiedDate}></lightning-formatted-date-time>
+								</td>
+								<td>
+									<lightning-formatted-date-time
+											value={tq.cblight__Description__c}></lightning-formatted-date-time>
+								</td>
+								<td style="display: flex; align-items: center">
+									<div>
+										<lightning-button-icon icon-name="utility:reminder" onclick={setNewScheduledJob}
+															   value={tq.Name}
+															   title="Add Scheduled Job"></lightning-button-icon>
+									</div>
+									<div>
+										<lightning-button icon-name="utility:right" onclick={runTaskQueueManually}
+														  value={tq.Id} variant="success" label="Run" class=""
+														  title="Run the Job Manually"></lightning-button>
+									</div>
+								</td>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+				</lightning-accordion-section>
+				<lightning-accordion-section name="scheduled" label="Scheduled Jobs">
+					<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+						<thead>
+						<tr class="slds-line-height_reset">
+							<th>
+								Name
+							</th>
+							<th style="width: 100px">
+								Times Triggered
+							</th>
+							<th style="width: 100px">
+								Next Fire Time
+							</th>
+							<th style="width: 100px">
+								State
+							</th>
+							<th style="width: 50px">
+								Action
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						<template for:each={cronTriggers} for:item="ct">
+							<tr class="slds-hint-parent" key={ct.Name}>
+								<th>
+									<template lwc:if={ct.isCB}>
+										<lightning-badge class="slds-m-right_small" label="CB3.0"></lightning-badge>
+									</template>
+									{ct.CronJobDetail.Name}
+								</th>
+								<td>
+									{ct.TimesTriggered}
+								</td>
+								<td>
+									<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+																   hour="2-digit"
+																   minute="2-digit"
+																   value={ct.NextFireTime}></lightning-formatted-date-time>
+								</td>
+								<td>
+									{ct.State}
+								</td>
+								<td>
+									<template lwc:if={ct.isCB}>
+										<lightning-button icon-name="utility:delete"
+														  value={ct.Id} onclick={deleteScheduledJob}
+														  variant="destructive"></lightning-button>
+									</template>
+								</td>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+				</lightning-accordion-section>
+
+			</lightning-accordion>
+
+		</lightning-tab>-->
+		<!--<lightning-tab label="CB Logs">
+			<div style="width: 70%; overflow-x: scroll;">
+				<c-cb-log></c-cb-log>
+			</div>
+		</lightning-tab> -->
+		<!--<lightning-tab label="SF Logs" onactive={updateAuditTrialsPanel}>
+			<div style="width: 70%; height: 700px; overflow: scroll;">
+				<table class="slds-table slds-table_cell-buffer slds-table_bordered datatable-full-size">
+					<thead>
+					<tr class="slds-line-height_reset">
+						<th>
+							Action
+						</th>
+						<th>
+							User
+						</th>
+						<th>
+							Date
+						</th>
+						<th>
+							Description
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<template for:each={auditTrails} for:item="at">
+						<tr class="slds-hint-parent" key={at.Action}>
+							<th>
+								{at.Action}
+							</th>
+							<td>
+								{at.CreatedBy.Name}
+							</td>
+							<td>
+								<lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+															   hour="2-digit"
+															   minute="2-digit"
+															   value={at.CreatedDate}></lightning-formatted-date-time>
+							</td>
+							<td>
+								{at.Display}
+							</td>
+						</tr>
+					</template>
+					</tbody>
+				</table>
+			</div>
+		</lightning-tab> -->
+		<!--<lightning-tab label="Trial Data" onactive={updateTrialDataPanel}>
+			<div class="slds-p-around_medium slds-modal__content">
+				<lightning-layout>
+					<lightning-layout-item size="2">
+						<lightning-combobox
+								label="Trial Data Profile"
+								placeholder="Select Profile"
+								options={trialDataProfiles}
+								value="default"
+						></lightning-combobox>
+					</lightning-layout-item>
+					<lightning-layout-item class="slds-p-top_large">
+						<lightning-button label="Generate Trial Data" disabled={lockButton}
+										  onclick={generateTrialData}></lightning-button>
+					</lightning-layout-item>
+					<lightning-layout-item class="slds-p-top_large">
+						<lightning-button label="Generate Non Financial Libs" disabled={lockButton}
+										  onclick={generateTrialNonFinLibData}></lightning-button>
+					</lightning-layout-item>
+				</lightning-layout>
+			</div>
+		</lightning-tab>-->
+		<lightning-tab label="Support">
+			<p class="slds-p-around_medium">
+				<lightning-icon icon-name="standard:document_reference" class="slds-m-bottom_small"></lightning-icon>
+				<lightning-formatted-url value="https://cloudbudget-3-0.gitbook.io/cloudbudget-3.0/"
+										 class="slds-m-left_medium slds-text-heading_medium"
+										 tooltip="Redirect to GitBook" label="Get Documentation"
+										 target="_blank"></lightning-formatted-url>
+			</p>
+			<p class="slds-p-around_medium">
+				<lightning-icon icon-name="standard:dynamic_record_choice" class="slds-m-bottom_small"></lightning-icon>
+				<lightning-formatted-url value="https://cloudbudget.com/"
+										 tooltip="Redirect to CloudBudget.com" label="Visit CloudBudget"
+										 class="slds-m-left_medium slds-text-heading_medium"
+										 target="_blank"></lightning-formatted-url>
+			</p>
+
+		</lightning-tab>
+		<lightning-tab label="Contact Us">
+			<div style="font-size: larger; font-weight: bolder; color:#295eab !important; font-family: cursive;"
+				 class="slds-p-left_large">
+				<div class="slds-m-top_large">CloudBudget, LLC.</div>
+				<div class="slds-m-top_small">600 Copperline Drive, #202</div>
+				<div class="slds-m-top_small">Chapel Hill, NC, 27516</div>
+
+				<div class="slds-m-top_large">📞 +1 917 940 9328</div>
+				<div class="slds-m-top_small">📧 info@cloudbudget.com</div>
+			</div>
+		</lightning-tab>
+	</lightning-tabset>
+
+
+	<!-- THE MAIN CONTROL PANEL -->
+
+	<!-- NEW SCHEDULED JOB MODAL -->
+	<template lwc:if={showNewJobModal}>
+		<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+				 class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+					<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+						<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+					</svg>
+					<span class="slds-assistive-text">Cancel and close</span>
+				</button>
+				<div class="slds-modal__header">
+					<h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Scheduled Job Setup</h1>
+				</div>
+				<div class="slds-modal__content slds-p-around_medium">
+					<lightning-input type="time" label="Run scheduled job at" name="runTime"
+									 onchange={handleTQSetupChange}
+									 value={selectedTaskQueue.runTime}></lightning-input>
+					<lightning-combobox
+							label="Send the notification to"
+							value={selectedTaskQueue.publicGroupId}
+							name="publicGroupId"
+							placeholder="Select Public Group"
+							options={selectOptions.publicGroupSO}
+							onchange={handleTQSetupChange}></lightning-combobox>
+				</div>
+				<div class="slds-modal__footer slds-modal__footer_directional">
+					<lightning-button label="Set Job" variant="brand" onclick={saveNewScheduledJob}></lightning-button>
+					<lightning-button label="Close" onclick={toggleNewJobModal}></lightning-button>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+	</template>
+	<!-- NEW SCHEDULED JOB MODAL -->
+
+</template>

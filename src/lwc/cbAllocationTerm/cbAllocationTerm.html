@@ -1,0 +1,84 @@
+<template>
+
+	<lightning-card title="Allocation Terms">
+		<template for:each={validationMessages} for:item="m">
+			<div style="color: indianred;" key={m}>{m}</div>
+		</template>
+		<lightning-button label="" slot="actions" icon-name="utility:refresh"
+						  onclick={getAllocationTerms}></lightning-button>
+		<lightning-button label="" slot="actions" icon-name="utility:add"
+						  onclick={addNewAllocTerm}></lightning-button>
+
+		<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered"
+			   aria-label="Example table of Opportunities with vertical borders">
+			<thead>
+			<tr class="slds-line-height_reset">
+				<th>
+					<div class="slds-truncate" title="Index">#</div>
+				</th>
+				<th>
+					<div class="slds-truncate" title="Name">Name</div>
+				</th>
+				<th>
+					<div class="slds-truncate" title="Part">Part, %</div>
+				</th>
+				<th>
+					<div class="slds-truncate" title="Shift">Shift</div>
+				</th>
+				<th>
+					<div class="slds-truncate" title="Period Unit">Period Unit</div>
+				</th>
+				<th>
+					<div class="slds-truncate" title="Action">Action</div>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<template for:each={allocationTerms} for:item='term'>
+				<tr class="slds-hint-parent" key={term}>
+					<th data-label="Index">
+						{term.idx}
+					</th>
+					<th data-label="Name">
+						<lightning-input value={term.Name} variant="label-hidden" label={term.Id}
+										 onblur={handleChange}
+										 name="Name"></lightning-input>
+					</th>
+					<td data-label="Part">
+						<lightning-input type="number" value={term.cblight__Part__c} formatter="percent-fixed" step="0.0001"
+										 label={term.Id}
+										 name="cblight__Part__c" onblur={handleChange}
+										 variant="label-hidden"></lightning-input>
+					</td>
+					<td data-label="Shift">
+						<lightning-input type="number" value={term.cblight__Shift__c} variant="label-hidden" step="1.0"
+										 label={term.Id}
+										 onblur={handleChange} name="cblight__Shift__c"></lightning-input>
+					</td>
+					<td data-label="Period Unit">
+						<lightning-combobox
+								name="cblight__PeriodUnit__c"
+								label={term.Id}
+								variant="label-hidden"
+								value={term.cblight__PeriodUnit__c}
+								placeholder="Select Unit"
+								options={periodUnitSO}
+								onblur={handleChange}
+						></lightning-combobox>
+					</td>
+					<td data-label="Action">
+						<lightning-button icon-name="utility:delete" variant="destructive" value={term.Id}
+										  onclick={deleteAllocationTerm}></lightning-button>
+					</td>
+				</tr>
+			</template>
+			</tbody>
+		</table>
+	</lightning-card>
+
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+
+</template>

@@ -1,0 +1,19 @@
+<template>
+    <lightning-button-group>
+        <lightning-combobox style="min-width: 200px;"
+                            label="Functions"
+                            value={selectedFunctionId}
+                            placeholder="Select Function"
+                            options={functionSO}
+                            variant="label-hidden"
+                            onchange={applyFunction}></lightning-combobox>
+        <lightning-button-menu alternative-text="Function menu" icon-name="utility:settings">
+            <lightning-menu-item onclick={saveCombination} label="Add Combination"
+                                 icon-name="utility:add"></lightning-menu-item>
+            <lightning-menu-item onclick={redirectToFunctions} label="Edit Functions"
+                                 icon-name="utility:edit"></lightning-menu-item>
+        </lightning-button-menu>
+    </lightning-button-group>
+
+
+</template>

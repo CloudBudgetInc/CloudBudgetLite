@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Mapping</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Mapping</value>
+    </caseValues>
+    <fields>
+        <label><!-- Result sObject --></label>
+        <name>ResultSObject__c</name>
+    </fields>
+    <fields>
+        <help><!-- Result records sObject name --></help>
+        <label><!-- Result Type --></label>
+        <name>ResultType__c</name>
+    </fields>
+    <fields>
+        <help><!-- Filter string for source records --></help>
+        <label><!-- Source Filter --></label>
+        <name>SourceFilter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Source Name --></label>
+        <name>SourceName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Source sObject --></label>
+        <name>SourceSObject__c</name>
+    </fields>
+    <fields>
+        <label><!-- Source Subtype --></label>
+        <name>SourceSubtype__c</name>
+    </fields>
+    <fields>
+        <help><!-- Source sObject type name --></help>
+        <label><!-- Source Type --></label>
+        <name>SourceType__c</name>
+    </fields>
+    <fields>
+        <label><!-- Special Filter --></label>
+        <name>SpecialFilter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

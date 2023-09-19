@@ -1,0 +1,5 @@
+@import 'c/cbStyle';
+
+.slds-modal__content {
+  overflow: initial;
+}

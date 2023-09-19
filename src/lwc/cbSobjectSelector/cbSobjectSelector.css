@@ -1,0 +1,33 @@
+.label {
+	font-size: smaller;
+	display: block;
+}
+
+.selected {
+	font-weight: bold;
+}
+
+.button {
+	width: 100%;
+	display: inline-block;
+	text-align: left;
+}
+
+.search {
+	margin-bottom: 10px;
+}
+
+.numbers {
+	text-align: center;
+	margin: 10px;
+}
+
+.slds-modal_small .slds-modal__container {
+	width: 30%;
+	max-width: 20rem;
+	min-width: 0;
+}
+
+.inline-block {
+	display: inline-block;
+}

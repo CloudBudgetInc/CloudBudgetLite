@@ -1,0 +1,291 @@
+<template>
+	<lightning-card title="Task Queues" icon-name="custom:custom108">
+		<lightning-button-icon slot="actions" icon-name="utility:add" title="Add a new Task Queue"
+							   onclick={addTaskQueue}></lightning-button-icon>
+		<lightning-button-icon slot="actions" icon-name="utility:refresh" title="Refresh the page"
+							   onclick={connectedCallback}></lightning-button-icon>
+		<lightning-button-icon slot="actions" icon-name="utility:contract_alt" title="Combine task queues"
+							   onclick={toggleCombineDialog}></lightning-button-icon>
+		<template if:true={showContent}>
+			<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+				<thead>
+				<tr class="slds-line-height_reset">
+					<th>
+						<div class="slds-truncate" title="Title">Title</div>
+					</th>
+					<th>
+						<div class="slds-truncate" title="Tasks">Tasks</div>
+					</th>
+					<th>
+						<div class="slds-truncate" title="Status">Status</div>
+					</th>
+					<th>
+						<div class="slds-truncate" title="Created By">Created By</div>
+					</th>
+					<th style="width:8%">
+						<div class="slds-truncate" title="Actions">Actions</div>
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<template for:each={taskQueues} for:item="tq">
+					<tr class={tq.cblight__Status__c} key={tq}>
+						<th data-label="Name">
+							{tq.Name}
+						</th>
+						<th data-label="Tasks">
+							<template lwc:if={tq.cblight__CB_Tasks__r}>
+								<template for:each={tq.cblight__CB_Tasks__r} for:item="task">
+									<div key={task}>
+										<template lwc:if={task.isIdle}>
+											<lightning-icon icon-name="utility:anchor" size="xx-small" title="Idle"
+											></lightning-icon>
+										</template>
+										<template lwc:elseif={task.isActive}>
+											<lightning-icon icon-name="utility:hourglass" size="xx-small" title="Active"
+															variant="warning"></lightning-icon>
+										</template>
+										<template lwc:else>
+											<lightning-icon icon-name="utility:success" variant="success" title="Done"
+															size="xx-small"></lightning-icon>
+										</template>
+										{task.cblight__OrderNumber__c} : {task.Name}
+									</div>
+								</template>
+							</template>
+							<template lwc:else>
+								<div class="emptyList">Empty List</div>
+							</template>
+						</th>
+						<th data-label="Status">
+							{tq.cblight__Status__c}
+							<template if:true={tq.isActive}>
+								<div class="slds-float_right">
+									<svg title='Status: Active'
+										 width="35"
+										 height="35"
+										 viewBox="0 0 50 50"
+										 fill="none"
+										 xmlns="http://www.w3.org/2000/svg">
+										<path
+												class="gear gear-large"
+												d="M1.0214 29.0087L2.05061 35.4986C2.11905 35.9292 2.34909 36.3128 2.69015 36.5652C3.0312 36.8176 3.45535 36.9181 3.86934 36.8446L6.38638 36.3988C6.98996 37.4369 7.72966 38.3831 8.57125 39.2016L7.67892 41.67C7.53082 42.0798 7.54479 42.533 7.71773 42.9301C7.89069 43.3271 8.20846 43.6355 8.60116 43.7873L14.5237 46.0776C14.9164 46.2295 15.3518 46.2124 15.7342 46.03C16.1166 45.8477 16.4146 45.5152 16.5627 45.1055L17.4551 42.637C18.6188 42.5891 19.7716 42.3762 20.8818 42.0043L22.4987 44.0487C23.0515 44.7466 24.0527 44.8432 24.7251 44.267L29.6184 40.0673C29.9416 39.7877 30.1464 39.3871 30.188 38.9528C30.2297 38.5184 30.1048 38.0854 29.8408 37.7482L28.2521 35.7377C28.8227 34.6598 29.2401 33.5022 29.4912 32.3011L31.9653 31.8617C32.8237 31.7094 33.4114 30.8539 33.2686 29.9606L32.2394 23.4707C32.1709 23.0402 31.9409 22.6565 31.5998 22.4041C31.2588 22.1517 30.8347 22.0512 30.4206 22.1247L27.9036 22.5705C27.303 21.536 26.5684 20.5932 25.7202 19.7683L26.6125 17.2998C26.7606 16.8901 26.7467 16.4369 26.5737 16.0398C26.4007 15.6428 26.083 15.3344 25.6903 15.1825L19.7678 12.8923C19.375 12.7404 18.9396 12.7575 18.5572 12.9398C18.1749 13.1221 17.8768 13.4547 17.7287 13.8644L16.8364 16.3329C15.6727 16.3808 14.5198 16.5937 13.4097 16.9656L11.7942 14.9218C11.6628 14.7551 11.5008 14.6171 11.3177 14.5159C11.1346 14.4146 10.9339 14.3521 10.7271 14.3318C10.5203 14.3116 10.3115 14.3339 10.1126 14.3977C9.91366 14.4615 9.72854 14.5654 9.56782 14.7035L4.67448 18.9031C4.35128 19.1828 4.14658 19.5834 4.10493 20.0177C4.06329 20.4521 4.18808 20.885 4.45213 21.2222L6.04075 23.2327C5.46927 24.31 5.05093 25.4674 4.79886 26.6682L2.32462 27.1076C1.46627 27.2599 0.878545 28.1154 1.0214 29.0087ZM19.3786 23.3058C22.6449 24.5689 24.2994 28.3673 23.0675 31.7749C21.8357 35.1826 18.1777 36.9266 14.9114 35.6636C11.6451 34.4005 9.99059 30.6021 11.2224 27.1944C12.4543 23.7867 16.1123 22.0426 19.3786 23.3058Z"
+												fill="black"
+										/>
+										<path
+												class="gear gear-medium"
+												d="M29.8277 14.2456L31.7991 17.699C31.9299 17.9281 32.1453 18.0951 32.3978 18.1634C32.6503 18.2318 32.9192 18.1957 33.1455 18.0633L34.5215 17.2588C35.0932 17.715 35.725 18.0893 36.3893 18.3687V19.9637C36.3893 20.2284 36.4932 20.4822 36.678 20.6694C36.8629 20.8566 37.1136 20.9618 37.375 20.9618H41.3177C41.5791 20.9618 41.8298 20.8566 42.0146 20.6694C42.1995 20.4822 42.3033 20.2284 42.3033 19.9637V18.3687C42.9729 18.0865 43.6013 17.7131 44.1712 17.2588L45.5472 18.0633C46.0173 18.3378 46.6225 18.1731 46.8936 17.699L48.8649 14.2456C48.9947 14.0163 49.0296 13.7443 48.9623 13.4889C48.8949 13.2336 48.7306 13.0155 48.5052 12.8822L47.1528 12.0907C47.2585 11.3547 47.2578 10.6069 47.1509 9.871L48.5032 9.07952C48.9724 8.80505 49.135 8.19122 48.863 7.71613L46.8916 4.26275C46.7607 4.03368 46.5454 3.86663 46.2929 3.79831C46.0404 3.73 45.7715 3.76601 45.5452 3.89845L44.1692 4.7029C43.6 4.24815 42.9719 3.87471 42.3023 3.59303V1.99809C42.3023 1.73338 42.1985 1.47951 42.0137 1.29233C41.8288 1.10516 41.5781 1 41.3167 1H37.374C37.1126 1 36.8619 1.10516 36.677 1.29233C36.4922 1.47951 36.3883 1.73338 36.3883 1.99809V3.59303C35.7188 3.8753 35.0904 4.2487 34.5205 4.7029L33.1455 3.89845C33.0335 3.83274 32.9098 3.79004 32.7815 3.77279C32.6531 3.75554 32.5227 3.76408 32.3977 3.79791C32.2726 3.83175 32.1554 3.89022 32.0527 3.96998C31.9499 4.04974 31.8638 4.14923 31.7991 4.26275L29.8277 7.71613C29.698 7.9455 29.663 8.21747 29.7304 8.47283C29.7978 8.72819 29.9621 8.94625 30.1875 9.07952L31.5398 9.871C31.4335 10.607 31.4335 11.3548 31.5398 12.0907L30.1875 12.8822C29.7183 13.1567 29.5557 13.7705 29.8277 14.2456V14.2456ZM39.3453 6.98853C41.5197 6.98853 43.288 8.77909 43.288 10.9809C43.288 13.1827 41.5197 14.9732 39.3453 14.9732C37.171 14.9732 35.4027 13.1827 35.4027 10.9809C35.4027 8.77909 37.171 6.98853 39.3453 6.98853Z"
+												fill="black"
+										/>
+										<path
+												class="gear gear-small"
+												d="M32.669 43.5965L34.2461 46.3592C34.3508 46.5425 34.5231 46.6761 34.7251 46.7308C34.9271 46.7854 35.1422 46.7566 35.3232 46.6506L36.424 46.0071C36.8814 46.372 37.3868 46.6714 37.9183 46.895V48.1709C37.9183 48.3827 38.0014 48.5858 38.1492 48.7355C38.2971 48.8853 38.4977 48.9694 38.7068 48.9694H41.861C42.0701 48.9694 42.2707 48.8853 42.4185 48.7355C42.5664 48.5858 42.6495 48.3827 42.6495 48.1709V46.895C43.1851 46.6692 43.6879 46.3704 44.1438 46.0071L45.2446 46.6506C45.6207 46.8702 46.1049 46.7385 46.3217 46.3592L47.8988 43.5965C48.0026 43.413 48.0305 43.1954 47.9766 42.9911C47.9227 42.7869 47.7913 42.6124 47.611 42.5058L46.5291 41.8726C46.6136 41.2837 46.6131 40.6855 46.5275 40.0968L47.6094 39.4636C47.9847 39.244 48.1148 38.753 47.8972 38.3729L46.3201 35.6102C46.2154 35.4269 46.0431 35.2933 45.8412 35.2386C45.6392 35.184 45.424 35.2128 45.243 35.3188L44.1422 35.9623C43.6869 35.5985 43.1843 35.2998 42.6487 35.0744V33.7985C42.6487 33.5867 42.5656 33.3836 42.4178 33.2339C42.2699 33.0841 42.0693 33 41.8602 33H38.706C38.4969 33 38.2963 33.0841 38.1485 33.2339C38.0006 33.3836 37.9175 33.5867 37.9175 33.7985V35.0744C37.3819 35.3002 36.8791 35.599 36.4232 35.9623L35.3232 35.3188C35.2336 35.2662 35.1347 35.232 35.032 35.2182C34.9294 35.2044 34.825 35.2113 34.725 35.2383C34.6249 35.2654 34.5311 35.3122 34.449 35.376C34.3668 35.4398 34.2979 35.5194 34.2461 35.6102L32.669 38.3729C32.5652 38.5564 32.5372 38.774 32.5912 38.9783C32.6451 39.1825 32.7765 39.357 32.9568 39.4636L34.0387 40.0968C33.9536 40.6856 33.9536 41.2838 34.0387 41.8726L32.9568 42.5058C32.5815 42.7254 32.4514 43.2164 32.669 43.5965V43.5965ZM40.2831 37.7908C42.0226 37.7908 43.4373 39.2233 43.4373 40.9847C43.4373 42.7461 42.0226 44.1786 40.2831 44.1786C38.5436 44.1786 37.129 42.7461 37.129 40.9847C37.129 39.2233 38.5436 37.7908 40.2831 37.7908Z"
+												fill="black"
+										/>
+									</svg>
+								</div>
+							</template>
+						</th>
+						<th data-label="Status">
+							{tq.Owner.Name}
+						</th>
+						<th data-label="Actions">
+							<lightning-button-group>
+								<lightning-button-icon label="Edit" icon-name="utility:edit" value={tq.Id}
+													   onclick={editTaskQueue}
+													   variant="brand"></lightning-button-icon>
+								<lightning-button label="" icon-name="utility:lower_flag" onclick={resetTaskQueue}
+												  value={tq.Id}
+												  variant="destructive"></lightning-button>
+								<lightning-button label="" icon-name="utility:delete" onclick={deleteTaskQueue}
+												  value={tq.Id}
+												  variant="destructive"></lightning-button>
+							</lightning-button-group>
+						</th>
+					</tr>
+				</template>
+				</tbody>
+			</table>
+
+		</template>
+
+		<!-- TASK QUEUE MODAL WINDOW -->
+		<template lwc:if={showTaskQueueDialog}>
+
+			<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+					 class="slds-modal slds-fade-in-open slds-modal_large">
+				<div class="slds-modal__container">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							onclick={closeDialog}>
+						<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+							<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+						</svg>
+						<span class="slds-assistive-text">Cancel and close</span>
+					</button>
+					<div class="slds-modal__header">
+						<h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Task Queue:
+							{selectedTaskQueue.Name}
+						</h1>
+					</div>
+					<div class="slds-modal__content">
+						<lightning-layout class="slds-p-around_small">
+							<lightning-layout-item size="2">
+								<lightning-input label="Title" name="Name" value={selectedTaskQueue.Name}
+												 onchange={handleChangeTQ}></lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item size="2">
+								<lightning-input label="Related to" disabled
+												 value={selectedTaskQueue.cblight__RelatedTo__c}></lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item size="3">
+								<lightning-input label="Description" name="cblight__Description__c"
+												 value={selectedTaskQueue.cblight__Description__c}
+												 onchange={handleChangeTQ}></lightning-input>
+							</lightning-layout-item>
+						</lightning-layout>
+						<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-m-top_medium">
+							<thead>
+							<tr class="slds-line-height_reset">
+								<th style="width: 25px;">
+									<div class="slds-truncate" title="Order">Order</div>
+								</th>
+								<th>
+									<div class="slds-truncate" title="Title">Title</div>
+								</th>
+								<th>
+									<div class="slds-truncate" title="Class Name">Class Name</div>
+								</th>
+								<th>
+									<div class="slds-truncate" title="Status">Status</div>
+								</th>
+								<th>
+									<div class="slds-truncate" title="Parameter1">Parameter1</div>
+								</th>
+								<th>
+									<div class="slds-truncate" title="Parameter2">Parameter2</div>
+								</th>
+								<th>
+									<div class="slds-truncate" title="Actions">Actions</div>
+								</th>
+							</tr>
+							</thead>
+							<tbody>
+							<template for:each={selectedTaskQueue.cblight__CB_Tasks__r} for:item="t">
+								<tr key={t}>
+									<th data-label="Order Number">
+										{t.cblight__OrderNumber__c}
+									</th>
+									<th data-label="Name">
+										<lightning-layout>
+											<lightning-layout-item size="2">
+												<lightning-icon icon-name="utility:apps" size="small"
+																draggable="true" data-param={t.Id}
+																ondrop={dropElement}
+																ondragstart={dragStart}
+																ondragover={dragOver}
+																class="slds-p-right_small draggableLine"></lightning-icon>
+											</lightning-layout-item>
+											<lightning-layout-item size="10">
+												<lightning-input value={t.Name} variant="label-hidden"
+																 name="Name" label={t.Id}
+																 onblur={handleChangeTask}></lightning-input>
+											</lightning-layout-item>
+										</lightning-layout>
+									</th>
+									<th data-label="Class Name">
+										<lightning-combobox
+												name="cblight__ClassName__c"
+												label={t.Id}
+												variant="label-hidden"
+												value={t.cblight__ClassName__c}
+												placeholder="Select Process Class"
+												options={classSO}
+												onchange={handleChangeTask}></lightning-combobox>
+									</th>
+									<th data-label="Status">
+										{t.cblight__Status__c}
+									</th>
+									<th data-label="Parameter1">
+										<lightning-input value={t.cblight__Parameter1__c} variant="label-hidden"
+														 name="cblight__Parameter1__c" label={t.Id}
+														 onblur={handleChangeTask}></lightning-input>
+									</th>
+									<th data-label="Parameter2">
+										<lightning-input value={t.cblight__Parameter2__c} variant="label-hidden"
+														 name="cblight__Parameter2__c" label={t.Id}
+														 onblur={handleChangeTask}></lightning-input>
+									</th>
+									<th data-label="Actions">
+										<lightning-button-icon icon-name="utility:delete" onclick={deleteTaskQueue}
+															   value={t.Id} label="dialog"
+															   variant="destructive"></lightning-button-icon>
+									</th>
+								</tr>
+							</template>
+							</tbody>
+						</table>
+					</div>
+					<div class="slds-modal__footer">
+						<lightning-button-group>
+							<lightning-button label="Add Task" icon-name="utility:add"
+											  onclick={addTask}></lightning-button>
+							<lightning-button label="Save" variant="success" icon-name="utility:save"
+											  onclick={saveTaskQueue}></lightning-button>
+							<lightning-button label="Close" icon-name="utility:close"
+											  onclick={closeDialog}></lightning-button>
+						</lightning-button-group>
+					</div>
+				</div>
+			</section>
+			<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+		</template>
+		<!-- TASK QUEUE MODAL WINDOW -->
+
+		<!-- COMBINE MODAL WINDOW -->
+		<template lwc:if={showCombineDialog}>
+
+			<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+					 class="slds-modal slds-fade-in-open slds-modal_small">
+				<div class="slds-modal__container">
+
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							onclick={toggleCombineDialog}>
+						<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+							<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+						</svg>
+						<span class="slds-assistive-text">Cancel and close</span>
+					</button>
+					<div class="slds-modal__header">
+						<h1 class="slds-modal__title slds-hyphenate">Task Queue Merge
+						</h1>
+					</div>
+					<div class="slds-modal__content">
+						<div class="slds-p-around_medium">
+							<lightning-checkbox-group name="Available Task Queues"
+													  label="Available Task Queues"
+													  options={combineOptions}
+													  value={selectedForCombiningTQ}
+													  onchange={handleChangeCombineOptions}></lightning-checkbox-group>
+						</div>
+					</div>
+					<div class="slds-modal__footer">
+						<lightning-button-group>
+							<lightning-button label="Combine" variant="success" icon-name="utility:contract_alt"
+											  onclick={combineTaskQueues}></lightning-button>
+							<lightning-button label="Close" icon-name="utility:close"
+											  onclick={toggleCombineDialog}></lightning-button>
+						</lightning-button-group>
+					</div>
+				</div>
+			</section>
+			<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+		</template>
+		<!-- COMBINE MODAL WINDOW -->
+
+		<!-- SPINNER -->
+		<c-cb-spinner show={showSpinner}></c-cb-spinner>
+		<!-- SPINNER -->
+	</lightning-card>
+</template>

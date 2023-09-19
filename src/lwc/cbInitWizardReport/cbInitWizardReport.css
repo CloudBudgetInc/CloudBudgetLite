@@ -1,0 +1,17 @@
+@import 'c/cbStyle';
+
+.warning {
+  color: #3f2500;
+}
+
+.success {
+  color: #002600;
+}
+
+.warning-badge {
+  --sds-c-badge-color-background: orange;
+}
+
+.success-badge {
+  --sds-c-badge-color-background: #cdffac;
+}

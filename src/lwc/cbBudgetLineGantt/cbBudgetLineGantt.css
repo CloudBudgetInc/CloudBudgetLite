@@ -1,0 +1,96 @@
+@import 'c/cbStyle';
+
+.middleAmount {
+    background-color: #e8f6ff;
+    text-align: right !important;
+    border-top: 1px solid #a4cbdc;
+    border-bottom: 1px solid #a4cbdc;
+}
+
+.firstAmount {
+    background-color: #e8f6ff;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-left: 2px solid #a4cbdc;
+    text-align: right !important;
+    border-top: 1px solid #a4cbdc;
+    border-bottom: 1px solid #a4cbdc;
+}
+
+.lastAmount {
+    background-color: #e8f6ff;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-right: 2px solid #a4cbdc;
+    text-align: right !important;
+    border-top: 1px solid #a4cbdc;
+    border-bottom: 1px solid #a4cbdc;
+}
+
+.formulaLine {
+    background-color: #cdfacf !important;
+}
+
+.tableWrapper {
+    width: auto;
+    height: 90%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+.slds-table tr > th:first-child, .slds-table tr > td:first-child {
+    position: sticky;
+    z-index: 900;
+    top: 0;
+    left: 0;
+    background-color: #fefdff;
+}
+
+.tableWrapper thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.titleColumn {
+    width: 200px;
+    height: 100%;
+    border-right: 1px #1b5297;
+    padding-bottom: 0 !important;
+}
+
+
+/* TITLE */
+.totalColumn {
+    font-weight: bold;
+    background-color: #1b5297;
+    color: white;
+}
+
+.titleTd {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-right: 0 !important;
+}
+
+.buttonDiv {
+    display: inline-block;
+    width: 92%;
+    vertical-align: top;
+}
+
+.triangleDiv {
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid rgb(27, 82, 151);
+    width: 0;
+    height: 0;
+    display: inline-block;
+}
+
+/* TITLE */
+
+.dropSector {
+    width: 50px;
+    height: 25px;
+}

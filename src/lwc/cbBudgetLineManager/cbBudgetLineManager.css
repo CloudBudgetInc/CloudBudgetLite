@@ -1,0 +1,87 @@
+.headerPeriodLine {
+	position: sticky;
+	z-index: 2;
+	top: 90px;
+	left: 0;
+	background-color: #ecf8f6;
+	white-space: nowrap;
+	border-radius: 4px !important;
+}
+
+.headerPageInfoLine {
+	position: sticky;
+	z-index: 2;
+	top: 108px;
+	left: 0;
+}
+
+.headerPeriodLineElement {
+	text-align: center;
+}
+
+.headerPeriodLineText {
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.row {
+	padding: 0 21px 0 15px;
+}
+
+/* PADDING */
+.paddingLeft1 {
+	margin-left: 5px;
+}
+
+.paddingLeft2 {
+	margin-left: 10px;
+}
+.wrapper-height {
+	height: auto;
+}
+
+.headerVariableIconPadding {
+	padding: 3px 0 0 1px;
+	width: auto;
+}
+
+.saveButton {
+    bottom: 50px;
+    right: 50px;
+	background-color: #fff;
+	border-radius: 5px;
+	border: solid 2px slategrey;
+	box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+}
+
+:host {
+	/* Removes SF Card Header padding/margin top/bottom only */
+	--slds-c-card-header-spacing-block-end: 0px;
+	--slds-c-card-header-spacing-block-start: 0px;
+
+	/* Removes SF Card body padding/margin top/bottom only */
+	--slds-c-card-body-spacing-block-start: 0px;
+	--slds-c-card-body-spacing-block-end: 0px;
+}
+
+.moduleTitle {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.relativeContainer {
+    position: relative;
+}
+
+.absolutePosition {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    margin: 1rem;
+    z-index: 1;
+}
+
+.headerButtonsStyle {
+	text-align: center;
+	alignment: center;
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Account Subtype</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Sub Accounts</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Parent Sub Account --></label>
+        <name>CBParentSubAccount__c</name>
+        <relationshipLabel><!-- CB Sub Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Code --></label>
+        <name>Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- ExtId --></label>
+        <name>ExtId__c</name>
+    </fields>
+    <fields>
+        <label><!-- Index --></label>
+        <name>Index__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

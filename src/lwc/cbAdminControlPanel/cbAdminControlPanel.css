@@ -1,0 +1,13 @@
+@import 'c/cbStyle';
+
+.slds-modal__content {
+    overflow: initial;
+}
+
+.datatable-full-size {
+    width: 100% !important;
+}
+
+.warning-icon{
+    --lwc-colorTextIconDefault: #ffcc72;
+}

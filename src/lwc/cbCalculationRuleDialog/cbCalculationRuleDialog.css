@@ -1,0 +1,36 @@
+@import 'c/cbStyle';
+
+.desc {
+    font-size: smaller !important;
+}
+
+.slds-modal__content {
+    overflow: initial;
+}
+
+.calc-rule-modal {
+    height: 100%;
+}
+
+.calc-rule-modal-content {
+    overflow-y: scroll;
+    height: calc(100% - 150px);
+}
+
+.formula-help-text-wrapper {
+    display: inline-block;
+    margin-bottom: -2px;
+}
+
+.formulas-list-layout {
+    padding-top: 20px;
+}
+
+.mode-wrapper {
+    vertical-align: top;
+    margin-top: -5px;
+}
+
+hr {
+    margin-top: 20px;
+}

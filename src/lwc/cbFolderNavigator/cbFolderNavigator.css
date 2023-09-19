@@ -1,0 +1,53 @@
+@import 'c/cbStyle';
+
+.inline-wrapper {
+    display: inline;
+}
+.path {
+    display: flex;
+}
+.visible-container {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.pathItem {
+    display: flex;
+    align-items: center;
+}
+.folder-button {
+    margin-left: 10px;
+}
+.border {
+    padding: 2px;
+    border: 1px solid rgb(24, 24, 24);
+    border-radius: 3px;
+}
+.pathItem:not(:last-child):after {
+    content: ">";
+    padding: 0 10px;
+}
+.sections {
+    height: 100%;
+}
+
+.tree-section {
+    padding: 10px;
+    overflow: auto;
+}
+.record-list-section {
+    padding: 10px;
+}
+.slds-modal__content {
+    overflow: hidden;
+}
+.breadcrumb-button {
+    border: none;
+    color: rgb(1, 118, 211);
+    cursor: pointer;
+}
+.breadcrumb-button:hover {
+    text-decoration: underline;
+}

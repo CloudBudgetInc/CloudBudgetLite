@@ -1,0 +1,480 @@
+<template>
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+	<template if:true={readyToRender}>
+
+		<section tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+				 class="slds-modal slds-fade-in-open slds-modal_large">
+			<div class="slds-modal__container calc-rule-modal">
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+						<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+							<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+						</svg>
+						<span class="slds-assistive-text">Cancel and close</span>
+					</button>
+
+					<div>
+						<h1 class="slds-modal__title slds-hyphenate">Calculation Rule:
+							{calculationRule.Name}</h1>
+					</div>
+				</header>
+
+				<div class="slds-modal__content slds-p-around_small calc-rule-modal-content" id="modal-content-id-1">
+
+					<lightning-card title='General'>
+
+						<lightning-layout class="slds-m-left_small">
+
+							<lightning-layout-item size="2">
+								<label>Name</label>
+								<lightning-input value={calculationRule.Name} label="Name" type="text"
+												 name="Name" variant="label-hidden" max-length="80"
+												 onchange={handleRuleChanging}></lightning-input>
+							</lightning-layout-item>
+							<lightning-layout-item size="1" class="mode-wrapper">
+								<lightning-record-edit-form name='cblight__Mode__c'
+															class="general-card-actions slds-p-around_none"
+															object-api-name='cblight__CBCalculationRule__c'>
+									<lightning-input-field field-name='cblight__Mode__c' name='cblight__Mode__c'
+														   value={calculationRule.cblight__Mode__c}
+														   onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+							</lightning-layout-item>
+							<lightning-layout-item size="3">
+								<label>Description</label>
+								<lightning-input value={calculationRule.cblight__Description__c} label="Description"
+												 type="text"
+												 name="cblight__Description__c" variant="label-hidden"
+												 onchange={handleRuleChanging}></lightning-input>
+							</lightning-layout-item>
+							<lightning-layout-item size="2">
+								<lightning-record-edit-form object-api-name={calculationRuleApiName}>
+									<label>Calculation Rule Folder</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name={folderField}
+											value={calculationRule.cblight__CBFolder__c}
+											name="cblight__CBFolder__c"
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+
+								</lightning-record-edit-form>
+							</lightning-layout-item>
+
+
+						</lightning-layout>
+					</lightning-card>
+					<hr>
+
+					<lightning-card title='Source Budget Line'>
+						<lightning-button label="Check Filters" slot="actions" icon-name="utility:question"
+										  onclick={checkBudgetLines}></lightning-button>
+						<lightning-layout>
+							<lightning-layout-item size="6">
+								<c-cb-filter-manager
+										base-request-string={calculationRule.cblight__SourceParentFilter__c}
+										fields-available={SOMap.budgetLineFieldSO}
+										filter-title="Budget Lines Filter"
+										onresultrequeststringchanged={setParentFilter}
+										sobject-type="cblight__CBBudgetLine__c"
+								></c-cb-filter-manager>
+							</lightning-layout-item>
+							<lightning-layout-item size="6">
+								<c-cb-filter-manager
+										base-request-string={calculationRule.cblight__SourceChildFilter__c}
+										fields-available={SOMap.amountFieldSO}
+										filter-title="Amounts Filter"
+										onresultrequeststringchanged={setChildFilter}
+										sobject-type="cblight__CBAmount__c"
+								></c-cb-filter-manager>
+							</lightning-layout-item>
+						</lightning-layout>
+					</lightning-card>
+					<hr>
+
+					<lightning-card title='Dependency'>
+						<template lwc:if={isContractMode}>
+							<c-cb-allocation-term cr-id={calculationRule.Id}></c-cb-allocation-term>
+						</template>
+						<template lwc:else>
+							<template if:true={calculationRule.Id}>
+								<lightning-button label='Allocation Terms' slot="actions"
+												  onclick={setAllocationMode}></lightning-button>
+							</template>
+							<lightning-layout class="slds-m-left_small">
+								<lightning-layout-item>
+									<label>Var</label>
+									<lightning-input value={calculationRule.cblight__Value__c} label="Value" type="number"
+													 step="0.0001" name="cblight__Value__c" variant="label-hidden"
+													 class="dec"
+													 onchange={handleRuleChanging} max-length="11"></lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item>
+									<label class="slds-m-right_xxx-small">Formula</label>
+									<div class="formula-help-text-wrapper vert-align-help-text">
+										<lightning-helptext icon-name="utility:info"
+															class="slds-m-left_x_small"
+															content="Examples:  #1*#2 or (#1+#2)/#3">
+
+										</lightning-helptext>
+									</div>
+									<lightning-input value={calculationRule.cblight__Formula__c} label="Formula"
+													 name="cblight__Formula__c" variant="label-hidden"
+													 onchange={handleRuleChanging}></lightning-input>
+									<div class={formulaWarning.class}> {formulaWarning.message}</div>
+								</lightning-layout-item>
+								<lightning-layout-item class="formulas-list-layout">
+
+									<lightning-button-menu title="Choose one of the most common formulas"
+														   icon-name="utility:formula">
+
+										<template for:each={COMMON_FORMULAS} for:item="formula">
+											<lightning-menu-item key={formula} value={formula}
+																 onclick={applyAutoFormulaCR}
+																 label={formula}></lightning-menu-item>
+										</template>
+									</lightning-button-menu>
+
+								</lightning-layout-item>
+								<lightning-layout-item>
+									<label>Period Shift</label>
+									<lightning-input value={calculationRule.cblight__PeriodShift__c} label="Period Shift"
+													 name="cblight__PeriodShift__c" variant="label-hidden" class="dec"
+													 onchange={handleRuleChanging}></lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item>
+									<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+										<label>NF Library</label>
+										<lightning-input-field
+												variant="label-hidden"
+												field-name="cblight__NFL1__c"
+												name="cblight__NFL1__c"
+												value={calculationRule.cblight__NFL1__c}
+												onchange={handleRuleChanging}>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+								</lightning-layout-item>
+							</lightning-layout>
+						</template>
+					</lightning-card>
+					<hr>
+
+					<lightning-card title='Target Budget Lines'>
+
+						<lightning-layout class="slds-m-left_small">
+							<lightning-layout-item size="2">
+								<div class="slds-m-bottom_small">
+									<label>Result Name</label>
+									<lightning-input type="text" variant="label-hidden" onchange={handleRuleChanging}
+													 name="cblight__ResultName__c" max-length="80"
+													 value={calculationRule.cblight__ResultName__c}></lightning-input>
+								</div>
+							</lightning-layout-item>
+						</lightning-layout>
+
+						<lightning-layout class="slds-m-left_small">
+
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBBudgetYearLabel__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBBudgetYear__c"
+											name="cblight__CBBudgetYear__c"
+											disabled={calculationRule.cblight__copyBudgetYear__c}
+											value={calculationRule.cblight__CBBudgetYear__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+								<lightning-input type="checkbox" label={orgVariable.copyCBBudgetYearLabel}
+												 onchange={handleRuleChanging}
+												 name="cblight__copyBudgetYear__c"
+												 checked={calculationRule.cblight__copyBudgetYear__c}></lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBAccountLabel__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBAccount__c"
+											name="cblight__CBAccount__c"
+											disabled={calculationRule.cblight__copyAccount__c}
+											value={calculationRule.cblight__CBAccount__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+								<lightning-input type="checkbox" label={orgVariable.copyCBAccountLabel}
+												 onchange={handleRuleChanging}
+												 name="cblight__copyAccount__c"
+												 checked={calculationRule.cblight__copyAccount__c}></lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBDivisionLabel__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBDivision__c"
+											name="cblight__CBDivision__c"
+											disabled={calculationRule.cblight__copyDivision__c}
+											value={calculationRule.cblight__CBDivision__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+								<lightning-input type="checkbox" label={orgVariable.copyCBDivisionLabel}
+												 onchange={handleRuleChanging}
+												 name="cblight__copyDivision__c"
+												 checked={calculationRule.cblight__copyDivision__c}></lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBVariable1Label__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBVariable1__c"
+											name="cblight__CBVariable1__c"
+											disabled={calculationRule.cblight__copyVariable1__c}
+											value={calculationRule.cblight__CBVariable1__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+								<lightning-input type="checkbox" label={orgVariable.copyCBVariable1Label}
+												 onchange={handleRuleChanging}
+												 name="cblight__copyVariable1__c"
+												 checked={calculationRule.cblight__copyVariable1__c}></lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBVariable2Label__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBVariable2__c"
+											name="cblight__CBVariable2__c"
+											disabled={calculationRule.cblight__copyVariable2__c}
+											value={calculationRule.cblight__CBVariable2__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+								<lightning-input type="checkbox" label={orgVariable.copyCBVariable2Label}
+												 onchange={handleRuleChanging}
+												 name="cblight__copyVariable2__c"
+												 checked={calculationRule.cblight__copyVariable2__c}></lightning-input>
+							</lightning-layout-item>
+
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBVariable3Label__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBVariable3__c"
+											name="cblight__CBVariable3__c"
+											disabled={calculationRule.cblight__copyVariable3__c}
+											value={calculationRule.cblight__CBVariable3__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+								<lightning-input type="checkbox" label={orgVariable.copyCBVariable3Label}
+												 onchange={handleRuleChanging}
+												 name="cblight__copyVariable3__c"
+												 checked={calculationRule.cblight__copyVariable3__c}></lightning-input>
+							</lightning-layout-item>
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBVariable4Label__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBVariable4__c"
+											name="cblight__CBVariable4__c"
+											disabled={calculationRule.cblight__copyVariable4__c}
+											value={calculationRule.cblight__CBVariable4__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+								</lightning-record-edit-form>
+								<lightning-input type="checkbox" label={orgVariable.copyCBVariable4Label}
+												 onchange={handleRuleChanging}
+												 name="cblight__copyVariable4__c"
+												 checked={calculationRule.cblight__copyVariable4__c}></lightning-input>
+							</lightning-layout-item>
+							<lightning-layout-item>
+								<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+									<label>{orgVariable.cblight__CBVariable5Label__c}</label>
+									<lightning-input-field
+											variant="label-hidden"
+											field-name="cblight__CBVariable5__c"
+											name="cblight__CBVariable5__c"
+											disabled={calculationRule.cblight__copyVariable5__c}
+											value={calculationRule.cblight__CBVariable5__c}
+											onchange={handleRuleChanging}>
+									</lightning-input-field>
+									<lightning-input type="checkbox" label={orgVariable.copyCBVariable5Label}
+													 onchange={handleRuleChanging}
+													 name="cblight__copyVariable5__c"
+													 checked={calculationRule.cblight__copyVariable5__c}></lightning-input>
+								</lightning-record-edit-form>
+							</lightning-layout-item>
+
+							<template if:true={orgVariable.cblight__ScenarioIsUsing__c}>
+								<lightning-layout-item>
+									<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
+										<label>Scenario</label>
+										<lightning-input-field
+												variant="label-hidden"
+												field-name="cblight__CBScenario__c"
+												name="cblight__CBScenario__c"
+												disabled={calculationRule.cblight__copyScenario__c}
+												value={calculationRule.cblight__CBScenario__c}
+												onchange={handleRuleChanging}>
+										</lightning-input-field>
+									</lightning-record-edit-form>
+									<lightning-input type="checkbox" label={orgVariable.copyCBScenarioLabel}
+													 onchange={handleRuleChanging}
+													 name="cblight__copyScenario__c"
+													 checked={calculationRule.cblight__copyScenario__c}></lightning-input>
+								</lightning-layout-item>
+							</template>
+
+
+						</lightning-layout>
+
+						<template if:false={isContractMode}>
+							<div class="slds-m-top_medium slds-m-left_medium">Example:</div>
+							<lightning-layout class="slds-m-left_small">
+								<lightning-layout-item>
+									<lightning-layout>
+										<lightning-layout-item>
+											<div class="slds-p-top_large">
+												<lightning-badge label="#1"
+																 class="slds-badge_inverse"></lightning-badge>
+											</div>
+										</lightning-layout-item>
+										<lightning-layout-item>
+											<lightning-input value='Base BL Example' type="text"
+															 disabled
+															 label='Title'>
+											</lightning-input>
+										</lightning-layout-item>
+									</lightning-layout>
+								</lightning-layout-item>
+								<template for:each={amounts.baseAmounts} for:item="a">
+									<lightning-layout-item key={a}>
+										<lightning-input value={a.value} type="number" step="0.01" formatter="currency"
+														 disabled class="dec"
+														 label={a.label}>
+										</lightning-input>
+									</lightning-layout-item>
+								</template>
+							</lightning-layout>
+							<template if:true={amounts.valueAmounts}>
+								<lightning-layout class="slds-m-left_small">
+									<lightning-layout-item>
+
+
+										<lightning-layout>
+											<lightning-layout-item>
+												<div>
+													<lightning-badge label={exampleTableIndex.valueAmounts}
+																	 class="slds-badge_inverse"></lightning-badge>
+												</div>
+											</lightning-layout-item>
+											<lightning-layout-item>
+												<lightning-input value='Calculation Rule Var' type="text"
+																 disabled variant="label-hidden">
+												</lightning-input>
+											</lightning-layout-item>
+										</lightning-layout>
+
+
+									</lightning-layout-item>
+									<template for:each={amounts.valueAmounts} for:item="a">
+										<lightning-layout-item key={a}>
+											<lightning-input value={a.value} type="number" step="0.0001"
+															 disabled class="dec"
+															 variant="label-hidden">
+											</lightning-input>
+										</lightning-layout-item>
+									</template>
+								</lightning-layout>
+							</template>
+							<template if:true={NFLItems}>
+								<lightning-layout class="slds-m-left_small">
+									<lightning-layout-item>
+
+										<lightning-layout>
+											<lightning-layout-item>
+												<div>
+													<lightning-badge label={exampleTableIndex.NFLAmounts}
+																	 class="slds-badge_inverse"></lightning-badge>
+												</div>
+											</lightning-layout-item>
+											<lightning-layout-item>
+												<lightning-input value='NFL Value' type="text"
+																 disabled variant="label-hidden">
+												</lightning-input>
+											</lightning-layout-item>
+										</lightning-layout>
+
+									</lightning-layout-item>
+									<template for:each={amounts.NFLAmounts} for:item="a">
+										<lightning-layout-item key={a}>
+											<lightning-input value={a.value} type="number" step="0.01"
+															 disabled class="dec"
+															 variant="label-hidden">
+											</lightning-input>
+										</lightning-layout-item>
+									</template>
+								</lightning-layout>
+							</template>
+							<lightning-layout class="slds-m-left_small">
+								<lightning-layout-item>
+									<lightning-layout>
+										<lightning-layout-item>
+											<div>
+												<lightning-badge label="##"
+																 class="slds-badge_inverse"></lightning-badge>
+											</div>
+										</lightning-layout-item>
+										<lightning-layout-item>
+											<lightning-input value='Result BL' type="text"
+															 disabled variant="label-hidden">
+											</lightning-input>
+										</lightning-layout-item>
+									</lightning-layout>
+								</lightning-layout-item>
+								<template for:each={amounts.resultAmounts} for:item="a">
+									<lightning-layout-item key={a}>
+										<lightning-input value={a.value} type="number" step="0.01" formatter="currency"
+														 disabled class="dec"
+														 variant="label-hidden">
+										</lightning-input>
+									</lightning-layout-item>
+								</template>
+							</lightning-layout>
+						</template>
+
+
+					</lightning-card>
+
+				</div>
+				<div class="slds-modal__footer">
+					<lightning-button lable="Close" onclick={closeDialog} label="Close">
+					</lightning-button>
+					<lightning-button label="Clone" icon-name="utility:copy"
+									  onclick={cloneCalculationRule}>
+					</lightning-button>
+					<lightning-button variant="brand" label="Save" icon-name="utility:save"
+									  onclick={saveCalculationRule}>
+					</lightning-button>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+	</template>
+
+
+</template>

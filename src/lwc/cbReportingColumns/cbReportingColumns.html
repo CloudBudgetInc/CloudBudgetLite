@@ -1,0 +1,226 @@
+<template>
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+	<template if:true={showDialog}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+				 class="slds-modal slds-fade-in-open slds-modal_large">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							onclick={hideReportColumns}
+							title="Close">
+						<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+							<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+						</svg>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 class="slds-modal__title slds-hyphenate">Report Columns</h2>
+				</header>
+				<div class="slds-modal__content modal-content-box">
+					<lightning-layout class="slds-p-around_small">
+						<lightning-layout-item size="1">
+							<div class="slds-p-top_large">
+								<lightning-button icon-name="utility:add" label="Add" variant="brand"
+												  alternative-text="Add Column"
+												  onclick={addColumn}></lightning-button>
+							</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="1">
+							<lightning-combobox label="Mode"
+												value={report.cblight__Mode__c}
+												options={modeSO} validity=""
+												onchange={changeMode}>
+							</lightning-combobox>
+						</lightning-layout-item>
+
+						<lightning-layout-item size="1">
+							<lightning-combobox label="Quarters?"
+												value={report.cblight__needQuarterTotals__c}
+												options={trueFalseSO} validity=""
+												onchange={changeQuarterTotals}>
+							</lightning-combobox>
+						</lightning-layout-item>
+						<lightning-layout-item size="1">
+							<lightning-combobox label="Only Total"
+												value={report.cblight__needOnlyTotal__c}
+												options={trueFalseSO}
+												onchange={changeOnlyTotals} validity="">
+							</lightning-combobox>
+						</lightning-layout-item>
+						<lightning-layout-item size="1">
+							<lightning-combobox label="Single Column"
+												value={report.cblight__oneColumnMode__c}
+												options={trueFalseSO}
+												onchange={changeOneColumnMode} validity="">
+							</lightning-combobox>
+						</lightning-layout-item>
+
+						<template if:true={isManual}>
+							<div class="slds-p-top_large">
+								<lightning-button label="Clone Master Group"
+												  onclick={cloneMasterGroup}></lightning-button>
+							</div>
+							<div class="slds-p-top_large">
+								<lightning-button variant="destructive"
+												  label="Delete Simple Columns"
+												  onclick={deleteSimpleColumns}></lightning-button>
+							</div>
+						</template>
+					</lightning-layout>
+
+					<div class="table-wrapper">
+						<table class="config-report-table slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered tableFixHead">
+							<thead>
+							<tr class="slds-line-height_reset">
+								<th style="padding-left: 15px">
+									<div title="Order Number">#</div>
+								</th>
+								<th style="max-width: 70px">
+									<div title="Type">Type</div>
+								</th>
+								<th style="width: 15px">
+									<div title='Select a column you want to hide'>
+										<lightning-icon icon-name="utility:hide" size="x-small"></lightning-icon>
+									</div>
+								</th>
+								<th>
+									<div title="Title">Title</div>
+								</th>
+								<th>
+									<div title="Field">Field</div>
+								</th>
+								<th style="width:15px;">
+									<div title="YTD">YTD</div>
+								</th>
+								<th>
+									<div title="Style">Style</div>
+								</th>
+								<th>
+									<div title="Value Unit">Unit</div>
+								</th>
+								<template if:true={isManual}>
+									<th>
+										<div title="Period">Period</div>
+									</th>
+									<th>
+										<div>
+											<span title="Formula" class="slds-m-right_xxx-small">Formula</span>
+											<span class="vert-align-help-text">
+												<lightning-helptext icon-name="utility:info"
+																	class="slds-m-left_x_small"
+																	content="Examples:  #1 * #2 or (#1 + #2)/#3"></lightning-helptext>
+											</span>
+										</div>
+									</th>
+								</template>
+								<th style="max-width: 45px" title="Actions">
+
+								</th>
+							</tr>
+							</thead>
+							<tbody>
+							<template for:each={columns} for:item="column">
+								<tr key={column.Id}>
+									<td key={column} style="padding-left: 15px; width: 45px"
+										class="draggableLine"
+										draggable="true"
+										ondrop={dropElement}
+										ondragstart={dragStart}
+										ondragover={dragOver}>
+										{column.cblight__OrderNumber__c}
+									</td>
+									<td title="Type">
+										<lightning-badge label={column.cblight__Type__c}></lightning-badge>
+									</td>
+									<td>
+										<lightning-input type="checkbox" name="cblight__isHidden__c" label="isHidden" variant="label-hidden"
+														 value={column.cblight__isHidden__c} data-id={column.Id}
+														 onchange={handleChangeColumnData}
+														 checked={column.cblight__isHidden__c}
+														 title="Check to hide the column"></lightning-input>
+									</td>
+									<td title="Column name">
+										<lightning-input value={column.Name} name="Name" data-id={column.Id}
+														 onchange={handleChangeColumnData} max-length="80"
+														 label="Name" variant="label-hidden"></lightning-input>
+									</td>
+									<td title="The field where the value is stored" style="width: 12%;">
+										<lightning-combobox name="cblight__ValueField__c" label="Field" validity="" variant="label-hidden"
+															value={column.cblight__ValueField__c}
+															options={staticDate.fieldsWithDigitSO}
+															onchange={handleChangeColumnData}
+															required="true" data-id={column.Id}>
+										</lightning-combobox>
+									</td>
+									<td>
+										<lightning-input type="checkbox" name="cblight__NeedYTD__c" label="YTD" variant="label-hidden"
+														 value={column.cblight__NeedYTD__c} data-id={column.Id}
+														 onchange={handleChangeColumnData}
+														 checked={column.cblight__NeedYTD__c}></lightning-input>
+									</td>
+									<td title="Column style class">
+										<lightning-record-edit-form object-api-name="cblight__CBReportColumn__c">
+
+											<lightning-input-field field-name="cblight__CBStyle__c" name="cblight__CBStyle__c" variant="label-hidden"
+																   value={column.cblight__CBStyle__c} data-id={column.Id}
+																   onchange={handleChangeColumnData}>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</td>
+									<td title="Column unit">
+										<lightning-record-edit-form object-api-name="cblight__CBReportColumn__c">
+
+											<lightning-input-field field-name="cblight__Unit__c" name="cblight__Unit__c" variant="label-hidden"
+																   value={column.cblight__Unit__c} data-id={column.Id}
+																   onchange={handleChangeColumnData}>
+											</lightning-input-field>
+										</lightning-record-edit-form>
+									</td>
+									<template if:true={isManual}>
+										<td title="Column period">
+											<lightning-combobox name="cblight__CBPeriod__c" label="Period" variant="label-hidden"
+																value={column.cblight__CBPeriod__c} validity="" data-id={column.Id}
+																options={staticDate.periodSO}
+																onchange={handleChangeColumnData}>
+											</lightning-combobox>
+										</td>
+										<td title="Column formula" style="width: 20%">
+
+											<lightning-input value={column.cblight__Formula__c} name="cblight__Formula__c" data-id={column.Id}
+															 onchange={handleChangeColumnData}
+															 label="" variant="label-hidden"></lightning-input>
+
+											<template if:true={column.cblight__Formula__c}>
+												<div style="white-space: initial" class={column.formulaWarning.class}> {column.formulaWarning.message}</div>
+											</template>
+										</td>
+									</template>
+									<td style="max-width: 45px; padding: 0 5px">
+										<lightning-button-icon icon-name="utility:delete" alternative-text="Delete"
+															   value={column.Id}
+															   class="slds-m-left_xx-small"
+															   onclick={deleteColumn}
+															   title="Delete"></lightning-button-icon>
+									</td>
+
+								</tr>
+							</template>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+				<footer class="slds-modal__footer">
+					<button class="slds-button slds-button_brand" onclick={saveReportColumns}>
+						Save
+					</button>
+					<button class="slds-button slds-button_neutral" onclick={closeReportColumns}>Close
+					</button>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+</template>

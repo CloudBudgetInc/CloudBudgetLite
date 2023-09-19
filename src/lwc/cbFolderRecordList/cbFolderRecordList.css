@@ -1,0 +1,14 @@
+.header {
+    font-weight: bold;
+}
+.record-list {
+    height: 100%;
+    overflow: auto;
+}
+.record-item {
+    padding: 6px;
+}
+
+.record-item:hover {
+    background-color: rgba(65, 148, 249, 0.1);
+}

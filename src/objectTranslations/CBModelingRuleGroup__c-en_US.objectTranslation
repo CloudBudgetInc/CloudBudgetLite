@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Modeling Rule Group</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Modeling Rule Groups</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Folder --></label>
+        <name>CBFolder__c</name>
+        <relationshipLabel><!-- CB Modeling Rule Group Folders --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Delete Old Results --></label>
+        <name>DeleteOldResults__c</name>
+    </fields>
+    <fields>
+        <label><!-- Label --></label>
+        <name>Label__c</name>
+    </fields>
+    <fields>
+        <help><!-- True if DrillDown needed --></help>
+        <label><!-- Store Drill Down --></label>
+        <name>StoreDrillDown__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Folder type must be &quot;Modeling Rule&quot; --></errorMessage>
+        <name>ModelingRuleType</name>
+    </validationRules>
+</CustomObjectTranslation>

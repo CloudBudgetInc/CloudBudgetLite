@@ -1,0 +1,213 @@
+<template>
+
+	<!-- APPROVAL MODAL WINDOW -->
+	<template if:false={showSpinner}>
+		<div>
+			<lightning-accordion allow-multiple-sections-open active-section-name={activeApprovalSections}>
+				<template for:each={budgetLineGroups} for:item='BLG'>
+					<lightning-accordion-section name={BLG.title} label={BLG.title} key={BLG.status}>
+
+						<div class="slds-grid slds-grid_align-end slds-m-bottom_large">
+
+							<div class="slds-col slds-m-right_large">
+								<template lwc:if={BLG.nextStatus}>
+									<lightning-button label={BLG.nextStatus} onclick={triggerStatus}
+													  title="Group action for the selected Budget Lines" value={BLG.status} name="forward"  variant="success">
+									</lightning-button>
+								</template>
+								<template lwc:if={BLG.previousStatus}>
+									<lightning-button label={BLG.previousStatus} title="Group reject for the selected Budget Lines" onclick={triggerStatus}
+													  value={BLG.status} name="back" variant="destructive">
+									</lightning-button>
+								</template>
+							</div>
+
+							<div class="slds-col">
+								<template if:false={userIsNotAdmin}>
+									<lightning-button label="Change Owners" onclick={changeBLUsers}
+													  title="Change  users on the different steps of the approval process for selected Budget lines" value={BLG.status} name="back" variant="brand">
+									</lightning-button>
+								</template>
+								<lightning-button data-id="groupMailing" name={BLG.status}
+												  label="Send Group Email" title="Send Group Email to the selected users" onclick={openEmailModal} value={BLG.value}>
+								</lightning-button>
+							</div>
+
+						</div>
+
+						<table class="approval-table">
+							<thead>
+							<tr>
+								<th>Budget line</th>
+								<th>Owner</th>
+								<th>Able to Reject</th>
+								<th>Able to Submit</th>
+								<th class="narrow-column"></th>
+							</tr>
+							</thead>
+							<tbody>
+							<template for:each={BLG.lines} for:item='line'>
+
+								<tr key={line.Id}>
+									<td>
+										<div style="display: flex">
+											<lightning-input type="checkbox" id={line.Id} label="" variant="label-hidden"
+															 name={BLG.status} value={line.Id} checked="true"
+															 onchange={handleBLList}>
+											</lightning-input>
+											<span class="slds-truncate" style="width: 90%">{line.Name}</span>
+										</div>
+									</td>
+									<td>
+										<div>
+											<lightning-combobox data-id={line.Id} label=""
+																variant="label-hidden" name="OwnerId"
+																placeholder={line.OwnerName} value={line.OwnerId}
+																options={userList} onchange={handleUsers}
+																disabled={userIsNotAdmin}>
+											</lightning-combobox>
+										</div>
+									</td>
+									<td>
+										<lightning-combobox data-id={line.Id} label=""
+															variant="label-hidden" name="cblight__APHaveAccessToBack__c"
+															placeholder={line.APHaveAccessToBackName}
+															value={line.cblight__APHaveAccessToBack__c} options={userList}
+															onchange={handleUsers} disabled={userIsNotAdmin}>
+										</lightning-combobox>
+									</td>
+									<td>
+										<lightning-combobox data-id={line.Id} label=""
+															variant="label-hidden" name="cblight__APHaveAccessToAhead__c"
+															placeholder={line.APHaveAccessToAheadName}
+															value={line.cblight__APHaveAccessToAhead__c} options={userList}
+															onchange={handleUsers} disabled={userIsNotAdmin}>
+										</lightning-combobox>
+									</td>
+									<td>
+										<lightning-button-icon data-id="oneLineMailing" name={BLG.status}
+															   value={line.Id}
+															   title="Send single email to Owner" onclick={openEmailModal}
+															   class="slds-m-left_x-small" icon-name="utility:email"></lightning-button-icon>
+									</td>
+								</tr>
+							</template>
+							</tbody>
+						</table>
+					</lightning-accordion-section>
+				</template>
+			</lightning-accordion>
+		</div>
+	</template>
+	<!-- APPROVAL MODAL WINDOW -->
+
+	<!-- APPROVAL MODAL WINDOW -->
+
+	<!-- BL MODAL WINDOW -->
+	<template lwc:if={showModal}>
+		<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-02"
+				 class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container slds-c-modal-color-border">
+				<div class="slds-modal__header">
+					<h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Email notification service</h1>
+					<p class="slds-m-top_x-small"></p>
+				</div>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+
+					<lightning-tabset>
+						<lightning-tab label="Email Text">
+							<p class="slds-p-top_medium">
+								<lightning-input type="text" label="Email Subject:" name="emailTopic" value={emailTopic}
+												 onchange={handleInputChange}></lightning-input>
+							</p>
+							<p class="slds-p-top_medium">
+								<lightning-textarea type="text" label="Email Body:" name="emailText" value={emailText}
+													onchange={handleInputChange}></lightning-textarea>
+							</p>
+							<div class="slds-grid slds-gutters">
+								<div class="slds-col slds-size_xxx-small">
+									<lightning-input class="slds-var-m-left_small slds-p-top_large" type="checkbox"
+													 name={deadlineCheckbox} onchange={addDeadlineToMail}></lightning-input>
+								</div>
+								<div class="slds-col slds-size_x-small">
+									<lightning-input type="date" name="Deadline" label="Add a final date to email."
+													 value={deadline} disabled={deadlineNotChecked} onchange={handleInputChange}>
+									</lightning-input>
+								</div>
+							</div>
+						</lightning-tab>
+						<lightning-tab label="Recipients">
+							<table class="slds-table slds-table_col-bordered email-recipients-table">
+								<thead>
+								<tr>
+									<th>Budget Line</th>
+									<th>Owner</th>
+									<th>Able to Reject</th>
+									<th>Able to Submit</th>
+								</tr>
+								</thead>
+								<tbody>
+								<template for:each={mailingBudgetLines} for:item='line'>
+									<tr key={line.Id}>
+										<td>
+											<p class="slds-text-align_left slds-p-top_small slds-truncate" title={line.Name} style="max-width: 260px">
+												{line.Name}
+											</p>
+										</td>
+
+										<td class="slds-p-around_none slds-truncate">
+											<lightning-input class="slds-var-m-left_small" type="checkbox"
+															 title="All checkboxes with the same user will be unchecked/checked also"
+															 data-id={line.OwnerId} label={line.OwnerName} value={line.OwnerId}
+															 name="OwnerId" onchange={addUserToNotification} checked="true">
+											</lightning-input>
+										</td>
+
+										<td class="slds-p-around_none slds-truncate">
+											<template lwc:if={line.cblight__APHaveAccessToBack__c}>
+												<lightning-input class="slds-var-m-left_small" type="checkbox"
+																 title="All checkboxes with the same user will be unchecked/checked also"
+																 data-id={line.cblight__APHaveAccessToBack__c} label={line.APHaveAccessToBackName}
+																 value={line.cblight__APHaveAccessToBack__c}
+																 name="cblight__APHaveAccessToBack__c" onchange={addUserToNotification}
+																 checked="true">
+												</lightning-input>
+											</template>
+										</td>
+
+										<td class="slds-p-around_none slds-truncate">
+											<template lwc:if={line.cblight__APHaveAccessToAhead__c}>
+												<lightning-input class="slds-var-m-left_small" type="checkbox"
+																 title="All checkboxes with the same user will be unchecked/checked also"
+																 data-id={line.cblight__APHaveAccessToAhead__c} label={line.APHaveAccessToAheadName}
+																 value={line.cblight__APHaveAccessToAhead__c}
+																 name="cblight__APHaveAccessToAhead__c" onchange={addUserToNotification}
+																 checked="true">
+												</lightning-input>
+											</template>
+										</td>
+									</tr>
+								</template>
+								</tbody>
+							</table>
+						</lightning-tab>
+					</lightning-tabset>
+				</div>
+				<div class="slds-modal__footer">
+					<button class="slds-button slds-button_neutral" onclick={toggleModal}
+							aria-label="Cancel and close">Cancel
+					</button>
+					<button class="slds-button slds-button_brand" onclick={sendNotificationtoSpecifiedUser}>Send
+						Email
+					</button>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open "></div>
+	</template>
+	<!-- BL MODAL WINDOW -->
+
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+</template>

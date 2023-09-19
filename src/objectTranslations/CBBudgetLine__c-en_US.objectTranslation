@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Budget Line</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Budget Lines</value>
+    </caseValues>
+    <fields>
+        <label><!-- AP Ahead Trigger --></label>
+        <name>APAheadTrigger__c</name>
+    </fields>
+    <fields>
+        <label><!-- AP Back Trigger --></label>
+        <name>APBackTrigger__c</name>
+    </fields>
+    <fields>
+        <label><!-- AP Have Access To Ahead --></label>
+        <name>APHaveAccessToAhead__c</name>
+        <relationshipLabel><!-- CB Budget Lines (AP Have Access To Ahead) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- AP Have Access To Back --></label>
+        <name>APHaveAccessToBack__c</name>
+        <relationshipLabel><!-- CB Budget Lines (AP Have Access To Back) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- AP Next Status Name --></label>
+        <name>APNextStatusName__c</name>
+    </fields>
+    <fields>
+        <label><!-- AP Previous Status Name --></label>
+        <name>APPreviousStatusName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Button title --></label>
+        <name>Buttontitle__c</name>
+    </fields>
+    <fields>
+        <label><!-- Sign --></label>
+        <name>CBAccountSign__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account Type --></label>
+        <name>CBAccountType__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Account --></label>
+        <name>CBAccount__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Budget Year --></label>
+        <name>CBBudgetYear__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Calculation Rule --></label>
+        <name>CBCalculationRule__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Division --></label>
+        <name>CBDivision__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Key --></label>
+        <name>CBKey__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Owner Name --></label>
+        <name>CBOwnerName__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Scenario --></label>
+        <name>CBScenario__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Account Subtype --></label>
+        <name>CBSubAccountName__c</name>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 1 --></label>
+        <name>CBVariable1__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 2 --></label>
+        <name>CBVariable2__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 3 --></label>
+        <name>CBVariable3__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 4 --></label>
+        <name>CBVariable4__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 5 --></label>
+        <name>CBVariable5__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Code --></label>
+        <name>Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Drill Down Ids --></label>
+        <name>DrillDownIds__c</name>
+    </fields>
+    <fields>
+        <label><!-- Index --></label>
+        <name>Index__c</name>
+    </fields>
+    <fields>
+        <label><!-- Lock --></label>
+        <name>Lock__c</name>
+        <picklistValues>
+            <masterLabel>Deleting</masterLabel>
+            <translation><!-- Deleting --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Editing</masterLabel>
+            <translation><!-- Editing --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- CB Non-Financial Library 1 --></label>
+        <name>NFL1__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Non-Financial Library 2 --></label>
+        <name>NFL2__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Non-Financial Library 3 --></label>
+        <name>NFL3__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Non-Financial Library 4 --></label>
+        <name>NFL4__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Non-Financial Library 5 --></label>
+        <name>NFL5__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- NFL Formula --></label>
+        <name>NFLFormula__c</name>
+    </fields>
+    <fields>
+        <help><!-- Lookup to a parent budget line --></help>
+        <label><!-- Parent Budget Line --></label>
+        <name>ParentBudgetLine__c</name>
+        <relationshipLabel><!-- CB Budget Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+    </fields>
+    <fields>
+        <label><!-- User --></label>
+        <name>User__c</name>
+        <relationshipLabel><!-- CB Budget Lines (User) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Value --></label>
+        <name>Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Warning Message --></label>
+        <name>WarningMessage__c</name>
+    </fields>
+    <fields>
+        <help><!-- True if the budget line is allocated to simple lines --></help>
+        <label><!-- Is Allocation --></label>
+        <name>isAllocation__c</name>
+    </fields>
+    <fields>
+        <label><!-- Is Formula --></label>
+        <name>isFormulaBudgetLine__c</name>
+    </fields>
+    <fields>
+        <help><!-- True is the current budget line is topdown sum --></help>
+        <label><!-- is Topdown --></label>
+        <name>isTopdown__c</name>
+    </fields>
+    <layouts>
+        <layout>CB Budget Line Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

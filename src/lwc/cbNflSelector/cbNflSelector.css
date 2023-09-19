@@ -1,0 +1,12 @@
+.search {
+	max-width: 300px;
+}
+
+.search-input {
+	display: inline-block;
+}
+
+.load-button {
+	display: inline-block;
+	padding: 3px;
+}

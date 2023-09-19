@@ -1,0 +1,186 @@
+<template>
+	<!-- THE MAIN TABLE -->
+	<lightning-card title="Modeling Rules" variant="Narrow" icon-name="standard:account">
+
+		<lightning-button-icon icon-name="utility:add" variant="brand" alternative-text="Add Modeling Rule Group"
+							   onclick={editModelingRuleGroup}
+							   slot="actions"></lightning-button-icon>
+		<lightning-button-icon icon-name="utility:help_center" variant="brand" alternative-text="Welcome Mat"
+							   onclick={showWelcome}
+							   slot="actions"></lightning-button-icon>
+		<c-cb-folder-navigator type="Modeling Rule" onfolderselected={handleSelectedFolder}></c-cb-folder-navigator>
+
+		<lightning-layout>
+
+			<div style="position: absolute; z-index: 9000; margin-left: auto; margin-right: auto; left: 0; right: 0; text-align: center;">
+				<template if:true={error}>
+
+					<c-cb-error-panel errors={error}></c-cb-error-panel>
+
+				</template>
+			</div>
+
+
+		</lightning-layout>
+	</lightning-card>
+
+	<template for:each={modelingRuleGroups} for:item="mrg">
+		<lightning-card title={mrg.title} key={mrg} icon-name="custom:custom15">
+			<div slot="actions">
+				<lightning-button-menu alternative-text="Show menu">
+					<lightning-menu-item value={mrg.Id} name="recalculate" label="Recalculate"
+										 onclick={recalculateModelingRuleGroupData}></lightning-menu-item>
+					<lightning-menu-item value={mrg.Id} name="delete" label="Delete Data"
+										 onclick={deleteModelingRuleGroupData}></lightning-menu-item>
+				</lightning-button-menu>
+				<lightning-button label="Edit" title="Edit Group" icon-name="utility:edit"
+								  value={mrg.Id}
+								  onclick={editModelingRuleGroup}></lightning-button>
+				<lightning-button label="Add Rule" title="Add Rule" icon-name="utility:add"
+								  value={mrg.Id}
+								  onclick={addModelingRule}></lightning-button>
+				<lightning-button label="Delete" title="Delete Group" icon-name="utility:delete"
+								  value={mrg.Id} variant="destructive"
+								  onclick={deleteModelingRuleGroup}></lightning-button>
+			</div>
+			<template for:each={mrg.cblight__CBModelingRules__r} for:item="modelingRule">
+				<div key={modelingRule.Id} class="slds-box slds-p-top_xxx-small  slds-p-bottom_xxx-small"
+					 style="background-color: #f3f7fe !important;">
+
+					<lightning-layout>
+						<lightning-layout-item size="2">
+							<div class="slds-text-heading_small">{modelingRule.title}</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="8">
+							<lightning-layout>
+								<lightning-layout-item size="2">
+									<strong>SP: </strong>
+									{modelingRule.cblight__SourceRecordParentType__c}
+								</lightning-layout-item>
+								<template if:true={modelingRule.cblight__SourceRecordChildType__c}>
+									<lightning-layout-item size="2">
+										<strong>SC: </strong>
+										{modelingRule.cblight__SourceRecordChildType__c}
+									</lightning-layout-item>
+								</template>
+								<template if:true={modelingRule.cblight__ResultRecordParentType__c}>
+									<lightning-layout-item size="2">
+										<strong>TP: </strong>
+										{modelingRule.cblight__ResultRecordParentType__c}
+									</lightning-layout-item>
+								</template>
+								<template if:true={modelingRule.cblight__ResultRecordChildType__c}>
+									<lightning-layout-item size="2">
+										<strong>TC: </strong>
+										{modelingRule.cblight__ResultRecordChildType__c}
+									</lightning-layout-item>
+								</template>
+							</lightning-layout>
+						</lightning-layout-item>
+
+						<lightning-layout-item size="2">
+							<div class="slds-float_right">
+								<lightning-button label="Edit Rule" title="Edit Rule"
+												  value={modelingRule.Id} onclick={openModelingRule}
+												  icon-name="utility:edit"></lightning-button>
+								<lightning-button label="Delete" title="Delete Rule" icon-name="utility:delete"
+												  onclick={deleteModelingRule} value={modelingRule.Id}
+												  variant="destructive"></lightning-button>
+							</div>
+						</lightning-layout-item>
+					</lightning-layout>
+				</div>
+			</template>
+		</lightning-card>
+	</template>
+	<!-- THE MAIN TABLE -->
+
+
+	<!-- MODELING RULE MODAL WINDOW -->
+	<template if:true={showModalWindow}>
+		<c-cb-modeling-rule-dialog modeling-rule-id={selectedModelingRuleId}
+								   available-sobjects={availableSObjects}></c-cb-modeling-rule-dialog>
+	</template>
+	<!-- MODELING RULE MODAL WINDOW -->
+
+	<!-- GROUP SETUP -->
+	<template if:true={showModelingRuleGroupSetup}>
+		<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+				 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+							onclick={saveAndCloseModelingRuleGroup}
+							title="Close">
+						<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+							<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+						</svg>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Modeling Rule Group</h2>
+				</header>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+					<lightning-input label="Name" value={modelingRuleGroup.Name} name="Name" max-length="80"
+									 onchange={handleModelingRuleGroupSetup}>
+					</lightning-input>
+					<lightning-layout>
+						<lightning-layout-item size="5">
+							<lightning-input type="checkbox" label="Delete Old Results" name="cblight__DeleteOldResults__c"
+											 checked={modelingRuleGroup.cblight__DeleteOldResults__c}
+											 onchange={handleModelingRuleGroupSetup}></lightning-input>
+						</lightning-layout-item>
+						<lightning-layout-item size="5">
+							<lightning-input type="checkbox" label="Store DrillDown" name="cblight__StoreDrillDown__c"
+											 checked={modelingRuleGroup.cblight__StoreDrillDown__c}
+											 onchange={handleModelingRuleGroupSetup}></lightning-input>
+						</lightning-layout-item>
+						<lightning-layout-item size="2">
+							<lightning-button-icon size="small" icon-name='utility:arrow_bottom' onclick={getJSON}
+												   alternative-text="Get JSON"></lightning-button-icon>
+							<lightning-button-icon size="small" icon-name='utility:magicwand' onclick={setJSON}
+												   alternative-text="Apply JSON"></lightning-button-icon>
+							<template if:true={showMRGCloneButton}>
+								<lightning-button-icon size="small" icon-name='utility:copy' onclick={cloneRule}
+													   alternative-text="Clone Rule Group"></lightning-button-icon>
+							</template>
+						</lightning-layout-item>
+					</lightning-layout>
+					<template if:true={mrJSON}>
+						<lightning-textarea value={mrJSON} onchange={handleJSONString}
+											label="Modeling Rule as JSON"></lightning-textarea>
+					</template>
+					<lightning-record-edit-form object-api-name={modelingRuleGroupApiName}>
+						<label>Folder</label>
+						<lightning-input-field
+								variant="label-hidden"
+								field-name={folderField}
+								value={modelingRuleGroup.cblight__CBFolder__c}
+								name="cblight__CBFolder__c"
+								onchange={handleChangeMRGFolder}>
+						</lightning-input-field>
+					</lightning-record-edit-form>
+				</div>
+				<footer class="slds-modal__footer">
+					<button class="slds-button slds-button_brand" onclick={saveAndCloseModelingRuleGroup}>Save and
+						Close
+					</button>
+					<button class="slds-button slds-button_neutral" onclick={closeModelingRuleGroup}>Close</button>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+	<!-- GROUP SETUP -->
+
+	<!-- WELCOME MAT -->
+	<template if:true={showWelcomeMat}>
+		<c-cb-welcome name="Modeling Rule"></c-cb-welcome>
+	</template>
+	<!-- WELCOME MAT -->
+
+
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+</template>

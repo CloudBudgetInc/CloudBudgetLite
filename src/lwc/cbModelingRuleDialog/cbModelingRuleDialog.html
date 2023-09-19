@@ -1,0 +1,246 @@
+<template>
+	<!-- THE DIALOG WINDOW -->
+	<section aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container ">
+			<header class="slds-modal__header">
+				<h2 class="slds-text-heading_small">MODELING RULE: <span
+						style="font-weight: bold;">{modelingRule.Name}</span></h2>
+				<lightning-icon class="slds-modal__close" icon-name="utility:close" variant="inverse" size="small"
+								onclick={closeModalWindow}></lightning-icon>
+			</header>
+			<div class="slds-modal__content slds-p-around_small">
+
+				<!-- SPINNER -->
+				<c-cb-spinner show={showSpinner}></c-cb-spinner>
+				<!-- SPINNER -->
+
+				<template if:true={showContent}>
+					<!-- FIRST ROW -->
+					<lightning-layout>
+
+						<lightning-layout-item padding="around-none" size={column1Wide}>
+							<lightning-input label="Name" value={modelingRule.Name} name="Name"
+											 onblur={handleModelingRuleChange} max-length="80">
+							</lightning-input>
+						</lightning-layout-item>
+
+						<lightning-layout-item padding="around-none" size="6">
+
+						</lightning-layout-item>
+
+						<lightning-layout-item padding="around-none" size="3">
+							<lightning-layout>
+								<lightning-layout-item size="6">
+									<lightning-combobox
+									name="cblight__Mode__c"
+									label="Mode"
+									value={modelingRule.cblight__Mode__c}
+									placeholder="Select Mode"
+									options={modelingRuleModes}
+									onchange={handleModelingRuleChange}
+									required
+								></lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="6">
+									<lightning-input label="Date Shift" value={modelingRule.cblight__PeriodShift__c}
+													 title="The period offset of the resulting records in months. For example -12 will move each period back 12 months."
+													 name="cblight__PeriodShift__c" onchange={handleModelingRuleChange}>
+									</lightning-input>
+								</lightning-layout-item>
+							</lightning-layout>
+						</lightning-layout-item>
+
+					</lightning-layout>
+					<!-- FIRST ROW -->
+
+					<!-- SECOND ROW -->
+					<lightning-layout>
+
+						<lightning-layout-item padding="around-none" size={column1Wide}>
+							<c-cb-sobject-selector
+									name="cblight__SourceRecordParentType__c"
+									label="Source Parent"
+									onsobjchanged={handleSobjectChange}
+									selected-item={modelingRule.cblight__SourceRecordParentType__c}>
+							</c-cb-sobject-selector>
+
+							<c-cb-sobject-selector
+									name="cblight__SourceRecordChildType__c"
+									onsobjchanged={handleSobjectChange}
+									label="Source Child"
+									show-empty-option="true"
+									selected-item={modelingRule.cblight__SourceRecordChildType__c}>
+							</c-cb-sobject-selector>
+
+							<lightning-layout>
+								<lightning-layout-item size="9">
+									<lightning-input label="Keys" value={modelingRule.cblight__KeyFields__c}
+													 title={modelingRule.cblight__KeyFields__c} disabled
+													 name="cblight__KeyFields__c">
+									</lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item>
+									<div class="slds-m-top_large">
+										<c-cb-modeling-rule-keys modeling-rule={modelingRule} field-map={fieldMap}
+																 onkeyschanged={handleKeysChanged}></c-cb-modeling-rule-keys>
+										<lightning-button-icon icon-name="utility:refresh" label="Generate"
+															   title="Refresh Keys"
+															   onclick={generateKeysButton}></lightning-button-icon>
+									</div>
+								</lightning-layout-item>
+							</lightning-layout>
+						</lightning-layout-item>
+
+
+						<lightning-layout-item padding="around-none" size={column2Wide} class="slds-p-right_medium">
+							<template if:true={linesReadyToDisplay}>
+								<!-- Source Parent Filter -->
+								<c-cb-filter-manager base-request-string={modelingRule.cblight__SourceParentFilter__c}
+													 fields-available={fieldMap.sourceParentFieldSO}
+													 filter-title={sourceParentFilterTitle}
+													 users-and-queues={usersAndQueues}
+													 onresultrequeststringchanged={setNewFilterString}
+													 sobject-type={modelingRule.cblight__SourceRecordParentType__c}></c-cb-filter-manager>
+								<!-- Source Parent Filter -->
+								<!-- Source Child Filter -->
+								<template if:true={displaySourceChildFilter}>
+									<c-cb-filter-manager base-request-string={modelingRule.cblight__SourceChildFilter__c}
+														 fields-available={fieldMap.sourceChildFieldSO}
+														 filter-title={sourceChildFilterTitle}
+														 users-and-queues={usersAndQueues}
+														 onresultrequeststringchanged={setNewFilterString}
+														 sobject-type={modelingRule.cblight__SourceRecordChildType__c}></c-cb-filter-manager>
+								</template>
+								<!-- Source Child Filter -->
+							</template>
+						</lightning-layout-item>
+
+						<template if:true={displayResultFields}>
+							<lightning-layout-item padding="around-none" size={column3Wide}>
+								<c-cb-sobject-selector
+										name="cblight__ResultRecordParentType__c"
+										onsobjchanged={handleSobjectChange}
+										label="Result Parent"
+										selected-item={modelingRule.cblight__ResultRecordParentType__c}>
+								</c-cb-sobject-selector>
+
+								<c-cb-sobject-selector
+										name="cblight__ResultRecordChildType__c"
+										onsobjchanged={handleSobjectChange}
+										label="Result Child"
+										show-empty-option="true"
+										selected-item={modelingRule.cblight__ResultRecordChildType__c}>
+								</c-cb-sobject-selector>
+
+								<lightning-input label="Description" value={modelingRule.cblight__Description__c}
+												 name="cblight__Description__c" onblur={handleModelingRuleChange}>
+								</lightning-input>
+							</lightning-layout-item>
+						</template>
+						<template if:true={displayResultFilters}>
+							<lightning-layout-item padding="around-none" size={column4Wide} class="slds-p-right_medium">
+								<template if:true={linesReadyToDisplay}>
+									<!-- Result Parent Filter -->
+									<c-cb-filter-manager base-request-string={modelingRule.cblight__ResultParentFilter__c}
+														 fields-available={fieldMap.resultParentFieldSO}
+														 filter-title={resultParentFilterTitle}
+														 users-and-queues={usersAndQueues}
+														 onresultrequeststringchanged={setNewFilterString}
+														 sobject-type={modelingRule.cblight__ResultRecordParentType__c}></c-cb-filter-manager>
+									<!-- Result Parent Filter -->
+									<!-- Result Child Filter -->
+									<template if:true={displayResultChildFilter}>
+										<c-cb-filter-manager
+												base-request-string={modelingRule.cblight__ResultChildFilter__c}
+												fields-available={fieldMap.resultChildFieldSO}
+												filter-title={resultChildFilterTitle}
+												users-and-queues={usersAndQueues}
+												onresultrequeststringchanged={setNewFilterString}
+												sobject-type={modelingRule.cblight__ResultRecordChildType__c}></c-cb-filter-manager>
+									</template>
+									<!-- Result Child Filter -->
+								</template>
+							</lightning-layout-item>
+						</template>
+
+
+					</lightning-layout>
+					<!-- SECOND ROW -->
+
+					<!-- MODELING RULE LINES -->
+
+					<template if:true={linesReadyToDisplay}>
+
+						<div class="slds-border_top slds-m-top_medium">
+
+							<lightning-layout>
+								<lightning-layout-item padding="around-none" size="10">
+									<div class="slds-text-heading_small slds-m-left_medium">Modeling Rule Lines:</div>
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="2">
+									<div if:true={showAddGenerateButtons} class="slds-float_right">
+										<lightning-button variant="brand" icon-name="utility:add" label="Add"
+														  onclick={addModelingLine}>
+										</lightning-button>
+										<lightning-button label="Generate"
+														  onclick={createPredefinedModelingLines}>
+										</lightning-button>
+									</div>
+								</lightning-layout-item>
+							</lightning-layout>
+
+							<lightning-layout style="background-color: #f3f7fe !important;">
+								<lightning-layout-item padding="around-none" size="3">
+									<div class="slds-p-left_x-large">MR Line Title</div>
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="1">
+									<div>Source from</div>
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="2">
+									<div>Source Field</div>
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="1">
+									<div>Target is</div>
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="2">
+									<div>Target Field</div>
+								</lightning-layout-item>
+								<lightning-layout-item padding="around-none" size="2">
+									<div>Default</div>
+								</lightning-layout-item>
+							</lightning-layout>
+
+							<div for:each={modelingRule.cblight__CBModelingLines__r} for:item="line" key={line.Id}>
+								<c-cb-modeling-rule-line line={line} modeling-rule={modelingRule} key={line.Id}
+														 users-and-queues={usersAndQueues}
+														 field-map={fieldMap}></c-cb-modeling-rule-line>
+							</div>
+							<div style="height: 100px !important;"></div>
+						</div>
+					</template>
+
+				</template>
+
+
+			</div>
+			<footer class="slds-modal__footer">
+				<template if:true={showContent}>
+					<lightning-button-group>
+						<lightning-button-icon icon-name="utility:question"
+											   title="Check the number of source records"
+											   onclick={getNumberOfSourceParentRecords}>
+						</lightning-button-icon>
+						<lightning-button variant="brand" icon-name="utility:save" label="Save"
+										  onclick={saveModelingRule}>
+						</lightning-button>
+						<lightning-button variant="bare" label="Cancel" onclick={closeModalWindow}>
+						</lightning-button>
+					</lightning-button-group>
+				</template>
+			</footer>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open"></div>
+	<!-- THE DIALOG WINDOW -->
+
+</template>

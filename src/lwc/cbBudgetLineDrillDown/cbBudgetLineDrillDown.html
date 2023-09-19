@@ -1,0 +1,54 @@
+<template>
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+	<template if:true={showContent}>
+		<div style="width: 100%; overflow-x: auto; max-height: 400px; overflow-y: auto;">
+			<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+				<thead>
+				<tr class="slds-line-height_reset border-top-none">
+					<th>
+						<div class="slds-truncate" title="Name">Name</div>
+					</th>
+					<template for:each={columnList} for:item="col">
+						<th key={col}>
+							{col}
+						</th>
+					</template>
+
+				</tr>
+				</thead>
+
+				<tbody>
+				<template for:each={drillDownList} for:item="link">
+					<tr class="slds-hint-parent" key={link.Id}>
+						<td data-label="Name" title="Redirect to the record">
+							<a href={link.link} tabindex="-1" target="_blank">{link.Name}</a>
+						</td>
+						<template for:each={link.values} for:item="value">
+							<td key={value}>
+								<template if:true={value.isText}>
+									{value.val}
+								</template>
+								<template if:true={value.isDate}>
+									<lightning-formatted-date-time value={value.val}></lightning-formatted-date-time>
+								</template>
+								<template if:true={value.isCurrency}>
+									<lightning-formatted-number value={value.val} format-style="currency"
+																currency-code="USD"></lightning-formatted-number>
+								</template>
+							</td>
+						</template>
+					</tr>
+				</template>
+
+				</tbody>
+
+			</table>
+		</div>
+
+	</template>
+
+
+</template>

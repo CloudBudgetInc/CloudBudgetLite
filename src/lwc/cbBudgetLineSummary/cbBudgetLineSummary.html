@@ -1,0 +1,162 @@
+<template>
+	<template lwc:if={overSizeMode}>
+		<div style="color: orange;" class="slds-align_absolute-center">
+			Budget Summary not available due to large amount of data. The maximum number of lines on the screen is 2000
+		</div>
+	</template>
+
+	<template if:false={overSizeMode}>
+		<!-- HEADER -->
+		<lightning-layout>
+			<lightning-layout-item size="1">
+				<template lwc:if={isOpen}>
+					<lightning-button-icon icon-name="utility:dash" variant="border-filled" style="margin-left: 2px;"
+										   onclick={toggleOpenSummary}
+										   size="x-small" title="Fold"></lightning-button-icon>
+				</template>
+				<template if:false={isOpen}>
+					<lightning-button-icon icon-name="utility:add" variant="border-filled" style="margin-left: 2px;"
+										   onclick={toggleOpenSummary}
+										   size="x-small" title="Unfold"></lightning-button-icon>
+				</template>
+				<template lwc:if={showTopdownToggle}>
+					<lightning-button-icon icon-name="utility:dock_panel" variant="border-filled"
+										   style="margin-left: 2px;"
+										   onclick={toggleTopdown}
+										   size="x-small" title="Toggle Topdown"></lightning-button-icon>
+				</template>
+			</lightning-layout-item>
+			<lightning-layout-item size="3">
+				<div class="moduleTitle">BUDGET SUMMARY</div>
+			</lightning-layout-item>
+			<lightning-layout-item size="8">
+				<template lwc:if={tableData}>
+					<div style="float: right;">
+						<c-cb-excel-backup summary-data={tableData} global-cluster={globalCluster}></c-cb-excel-backup>
+					</div>
+				</template>
+			</lightning-layout-item>
+		</lightning-layout>
+		<!-- HEADER -->
+
+		<template lwc:if={isOpen}>
+			<template for:each={tableData} for:item="row">
+				<div key={row.name} class={row.style}>
+					<template lwc:if={topdownOn}>
+						<div style="width: 100%; height: 1px; background-color: #92919b;"></div>
+					</template>
+
+					<!-- TOPDOWN PART -->
+					<template lwc:if={row.topDownAmounts}>
+
+						<lightning-layout key={row.name} class={row.style}>
+							<lightning-layout-item size="3">
+								<div style="float: right; padding-top: 5px;">TARGET :</div>
+							</lightning-layout-item>
+							<lightning-layout-item size="8">
+								<lightning-layout horizontal-align="spread">
+									<template for:each={row.topDownAmounts} for:item="a">
+										<lightning-layout-item key={a.Id} class="numberLayoutItem">
+											<div class={a.class}>
+												<lightning-input
+														type="number"
+														formatter="currency"
+														variant="label-hidden"
+														reaonly
+														step="0.01"
+														class="dec"
+														value={a.cblight__Value__c}
+												></lightning-input>
+												<div style="position: absolute;">
+													<lightning-helptext icon-name="utility:info_alt"
+																		content={a.helpText}></lightning-helptext>
+												</div>
+											</div>
+										</lightning-layout-item>
+
+									</template>
+								</lightning-layout>
+							</lightning-layout-item>
+							<lightning-layout-item size="1" class="totalColumn">
+								<div class={row.totalClass}>
+									<lightning-input
+											type="number"
+											formatter="currency"
+											variant="label-hidden"
+											redonly
+											step="0.01"
+											class="dec numberLayoutItem"
+											value={row.topDownTotal}
+									></lightning-input>
+									<div style="position: absolute;">
+										<lightning-helptext icon-name="utility:info_alt"
+															content={row.helpText}></lightning-helptext>
+									</div>
+								</div>
+							</lightning-layout-item>
+						</lightning-layout>
+					</template>
+					<!-- TOPDOWN PART -->
+					<!-- BOTTOM UP -->
+					<lightning-layout>
+						<lightning-layout-item size="3">
+							<div class="linkText" title="Click to navigate" onclick={openSelectedSection}
+								 data-label={row.fullKey}>
+								{row.name}
+							</div>
+						</lightning-layout-item>
+						<lightning-layout-item size="8">
+							<lightning-layout horizontal-align="spread">
+								<template for:each={row.cblight__CBAmounts__r} for:item="a">
+									<lightning-layout-item key={a.Id} class="numberLayoutItem">
+										<template lwc:if={row.CurrencyIsoCode}>
+											<c-cb-input-currency disabled="true" is-bold="true"
+															 currency-code={row.CurrencyIsoCode}
+															 val={a.cblight__Value__c}></c-cb-input-currency>
+										</template>
+										<template if:false={row.CurrencyIsoCode}>
+											<lightning-input
+												type="number"
+												formatter="currency"
+												variant="label-hidden"
+												disabled
+												step="0.01"
+												class="dec"
+												value={a.cblight__Value__c}
+										></lightning-input>
+										</template>
+									</lightning-layout-item>
+								</template>
+							</lightning-layout>
+						</lightning-layout-item>
+						<lightning-layout-item size="1" class="totalColumn">
+							<template lwc:if={row.CurrencyIsoCode}>
+								<c-cb-input-currency disabled="disabled" is-bold="true"
+												 currency-code={row.CurrencyIsoCode}
+												 val={row.yearlyTotal}></c-cb-input-currency>
+							</template>
+							<template if:false={row.CurrencyIsoCode}>
+								<lightning-input
+									type="number"
+									key={a.Id}
+									formatter="currency"
+									variant="label-hidden"
+									disabled
+									step="0.01"
+									class="dec numberLayoutItem"
+									value={row.yearlyTotal}
+							></lightning-input>
+							</template>
+						</lightning-layout-item>
+					</lightning-layout>
+					<!-- BOTTOM UP -->
+
+					<template lwc:if={topdownOn}>
+						<div style="width: 100%; height: 1px; background-color: #92919b;"></div>
+					</template>
+				</div>
+			</template>
+		</template>
+
+	</template>
+</template>

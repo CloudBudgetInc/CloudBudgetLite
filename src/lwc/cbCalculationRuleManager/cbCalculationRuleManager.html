@@ -1,0 +1,48 @@
+<template>
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+	<!-- HEADER -->
+	<lightning-card title="Calculation Rules" icon-name="custom:custom44">
+		<c-cb-folder-navigator type="Calculation Rule" onfolderselected={handleSelectedFolder}></c-cb-folder-navigator>
+		<template if:true={readyToRender}>
+			<lightning-button-group slot="actions">
+				<lightning-button-icon
+					icon-name="utility:refresh"
+					variant="brand"
+					alternative-text="Refresh the table"
+					onclick={doInit}
+				></lightning-button-icon>
+				<lightning-button label="Add" title="Add a new calculation rule" onclick={openCalcRule} icon-name="utility:add"></lightning-button>
+			</lightning-button-group>
+		</template>
+	</lightning-card>
+	<!-- HEADER -->
+	<template if:true={readyToRender}>
+
+		<!-- MAIN TABLE -->
+		<template for:each={calculationRules} for:item="cr">
+			<lightning-card title={cr.title} key={cr.Id} icon-name="custom:custom14">
+				<lightning-button label="Edit" icon-name="utility:edit" slot="actions" onclick={openCalcRule} value={cr.Id}></lightning-button>
+				<lightning-button
+					slot="actions"
+					value={cr.Id}
+					label=""
+					variant="destructive"
+					title="Delete calculation rule"
+					onclick={deleteCalcRule}
+					icon-name="utility:delete"
+				></lightning-button>
+				<div class="slds-m-left_medium">Description : {cr.cblight__Description__c}</div>
+			</lightning-card>
+		</template>
+		<!-- MAIN TABLE -->
+	</template>
+
+	<!-- CR DIALOG -->
+	<template if:true={showDialog}>
+		<c-cb-calculation-rule-dialog cr-id={selectedCR} selected-folder={selectedFolder}></c-cb-calculation-rule-dialog>
+	</template>
+	<!-- CR DIALOG -->
+</template>

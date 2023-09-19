@@ -1,0 +1,90 @@
+<template>
+
+	<lightning-button-icon icon-name="utility:jump_to_right" size="x-small" onclick={toggleDialogWindow}
+						   variant="brand" disabled={isStartBtnDisabled} title="Click to open Assistant"></lightning-button-icon>
+
+	<template if:true={showDialog}>
+		<div style="z-index: 1000">
+			<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+					 class="slds-modal slds-fade-in-open slds-modal_large ">
+				<div class="slds-modal__container">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+						<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+							<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+						</svg>
+						<span class="slds-assistive-text">Close</span>
+					</button>
+					<div class="slds-modal__header">
+						<h1 class="slds-modal__title slds-hyphenate">Complete Assistant</h1>
+					</div>
+					<div class="slds-modal__content slds-p-around_medium " style="text-align: left !important">
+						<lightning-layout>
+							<lightning-layout-item size="2">
+								<lightning-combobox
+										name="selectedMode"
+										label="Mode"
+										value={selectedMode}
+										placeholder="Select Mode"
+										options={mathModeSO}
+										onchange={handleChanges}></lightning-combobox>
+							</lightning-layout-item>
+							<lightning-layout-item size="2">
+								<lightning-input name="baseAmount" value={baseAmount} label="Base Amount" type="number"
+												 step="0.01" max-length="10"
+												 onchange={handleChanges}></lightning-input>
+							</lightning-layout-item>
+						</lightning-layout>
+
+						<div class="slds-text-heading_small slds-m-top_x-large slds-p-top_x-large">Example</div>
+						<lightning-layout horizontal-align="space">
+
+							<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered"
+								   aria-labelledby="element-with-table-label other-element-with-table-label">
+								<thead>
+								<tr style="background-color: #c0cbd0">
+									<template for:each={exampleAmounts} for:item="amount">
+										<td key={amount.Id} style="text-align: right !important;">
+											{amount.cblight__PeriodName__c}
+										</td>
+									</template>
+									<td>
+										<div style="font-weight: bold; text-align: right">
+											Total
+										</div>
+									</td>
+								</tr>
+								</thead>
+								<tbody>
+								<tr class="slds-hint-parent">
+									<template for:each={exampleAmounts} for:item="amount">
+										<th key={amount.Id} style="text-align: right !important;">
+											<lightning-input value={amount.cblight__Value__c} step="0.01" class="dec"
+															 variant="label-hidden"
+															 type="number" readonly></lightning-input>
+										</th>
+									</template>
+									<th>
+										<div style="font-weight: bold">
+											<lightning-input value={exampleTotal} step="0.01" class="dec"
+															 variant="label-hidden"
+															 type="number" readonly></lightning-input>
+										</div>
+									</th>
+								</tr>
+								</tbody>
+							</table>
+						</lightning-layout>
+					</div>
+					<div class="slds-modal__footer">
+						<lightning-button label="Close" onclick={toggleDialogWindow}></lightning-button>
+						<lightning-button label="Apply" onclick={applyAmounts} variant="brand"></lightning-button>
+					</div>
+				</div>
+			</section>
+			<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+		</div>
+
+	</template>
+
+
+</template>

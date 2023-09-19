@@ -1,0 +1,100 @@
+<template>
+	<lightning-card title={library.Name} icon-name="standard:account">
+
+		<lightning-badge label={library.cblight__Type__c} slot="actions" title="NFL Type"
+						 class="slds-badge_inverse slds-m-right_medium"></lightning-badge>
+		<lightning-badge label={library.cblight__LayerTitle__c} slot="actions" title="Layer Title"
+						 class="slds-badge_inverse slds-m-right_medium"></lightning-badge>
+		<lightning-button label="Save" icon-name="utility:save" onclick={saveNonFinancialLib} variant="success"
+						  slot="actions"></lightning-button>
+
+		<div>
+			<lightning-layout>
+				<lightning-layout-item size="2">
+					<lightning-input value={library.Name} label="Name" class="slds-m-left_large"
+									 onchange={handleLibChange} max-length="80"
+									 name="Name"></lightning-input>
+				</lightning-layout-item>
+				<lightning-layout-item size="3">
+					<lightning-input value={library.cblight__Description__c} onchange={handleLibChange}
+									 class="slds-m-left_small"
+									 name="cblight__Description__c" label="Description"></lightning-input>
+				</lightning-layout-item>
+
+				<lightning-layout-item size="2" class=single-value-box>
+					<lightning-layout class=single-value-inner>
+
+						<lightning-layout-item>
+
+							<template if:true={inputTypeRender.isItems}>
+								<lightning-input value={library.cblight__SingleValue__c} class="dec"
+												 onchange={setSingleValue}
+												 type="number" step="0.01" max-length="10"
+												 label="Single Value"></lightning-input>
+							</template>
+							<template if:true={inputTypeRender.isCurrency}>
+								<lightning-input value={library.cblight__SingleValue__c} class="dec"
+												 onchange={setSingleValue} max-length="10"
+												 formatter="currency" step="0.01" type="number"
+												 label="Single Value"></lightning-input>
+							</template>
+							<template if:true={inputTypeRender.isPercent}>
+								<lightning-input value={library.cblight__SingleValue__c} class="dec"
+												 onchange={setSingleValue}
+												 formatter="percent" step="0.0001" type="number"
+												 label="Single Value"></lightning-input>
+							</template>
+						</lightning-layout-item>
+
+						<lightning-layout-item class="single-value-apply-btn-wrapper">
+							<lightning-button label="Apply" icon-name="utility:mark_all_as_read"
+											  title="Fill in single data in each cell"
+											  onclick={populateItemsWithSingleValue}
+											  variant="neutral"></lightning-button>
+						</lightning-layout-item>
+
+					</lightning-layout>
+				</lightning-layout-item>
+			</lightning-layout>
+		</div>
+		<div class="slds-p-around_large">
+			<template for:each={BYLines} for:item="BYLine">
+				<div class="slds-m-top_large" style="font-weight: bold;" key={BYLine}>{BYLine.BY.Name}</div>
+				<lightning-layout key={BYLine} class="slds-p-right_small">
+					<template if:true={showCompleteAssistant}>
+						<div class="completeAssistant">
+							<c-cb-complete-assistant objects={BYLine.items}
+													 onapplycompleteamounts={applyCompleteAmounts}
+													 field="cblight__Value__c"></c-cb-complete-assistant>
+						</div>
+					</template>
+					<template for:each={BYLine.items} for:item="i">
+						<lightning-layout-item flexability="auto" key={i.cblight__Value__c}>
+							<template if:true={inputTypeRender.isItems}>
+								<lightning-input value={i.cblight__Value__c} class="dec" onchange={handleAmountChange}
+												 name={i.Id} type="number" step="0.01" max-length="10"
+												 label={i.cblight__PeriodName__c}></lightning-input>
+							</template>
+							<template if:true={inputTypeRender.isCurrency}>
+								<lightning-input value={i.cblight__Value__c} class="dec" onchange={handleAmountChange}
+												 name={i.Id} formatter="currency" step="0.01" type="number" max-length="10" 
+												 label={i.cblight__PeriodName__c}></lightning-input>
+							</template>
+							<template if:true={inputTypeRender.isPercent}>
+								<lightning-input value={i.cblight__Value__c} class="dec" onchange={handleAmountChange}
+												 name={i.Id} formatter="percent" step="0.0001" type="number"
+												 label={i.cblight__PeriodName__c}></lightning-input>
+							</template>
+						</lightning-layout-item>
+					</template>
+				</lightning-layout>
+			</template>
+		</div>
+
+
+	</lightning-card>
+
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+</template>

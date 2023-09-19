@@ -1,0 +1,99 @@
+<template>
+	<!-- THE MAIN TABLE -->
+
+	<lightning-layout>
+
+		<lightning-layout-item padding="around-none" size="3">
+			<lightning-layout>
+				<lightning-layout-item padding="around-none" size="1">
+					<lightning-badge class="" label={line.index}></lightning-badge>
+				</lightning-layout-item>
+				<lightning-layout-item padding="around-none" size="11">
+					<lightning-input label="MR Line Title" value={line.Name} variant="label-hidden" name="Name"
+									 onblur={handleLineChanges} max-length="80">
+					</lightning-input>
+				</lightning-layout-item>
+			</lightning-layout>
+		</lightning-layout-item>
+		<lightning-layout-item padding="around-none" size="1">
+			<lightning-combobox name="cblight__SourceFieldFrom__c" label="Source from" value={line.cblight__SourceFieldFrom__c}
+								variant="label-hidden"
+								options={selectedFromSO} onchange={handleLineChanges}>
+			</lightning-combobox>
+		</lightning-layout-item>
+		<lightning-layout-item padding="around-none" size="2">
+			<template if:true={showParentSource}> <!-- Show parent source sObject fields -->
+				<lightning-combobox name="cblight__SourceField__c" label="Source Field" value={line.cblight__SourceField__c}
+									variant="label-hidden"
+									options={sourceParentFieldSO} onchange={handleLineChanges}>
+				</lightning-combobox>
+			</template>
+			<template if:false={showParentSource}> <!-- Show child source sObject fields -->
+				<lightning-combobox name="cblight__SourceField__c" label="Source Field" value={line.cblight__SourceField__c}
+									variant="label-hidden"
+									options={sourceChildFieldSO} onchange={handleLineChanges}>
+				</lightning-combobox>
+			</template>
+		</lightning-layout-item>
+		<lightning-layout-item padding="around-none" size="1">
+			<lightning-combobox name="cblight__ResultFieldFrom__c" label="Target is" value={line.cblight__ResultFieldFrom__c}
+								variant="label-hidden"
+								options={selectedToSO} disabled={resultFromDisabled} onchange={handleLineChanges}>
+			</lightning-combobox>
+		</lightning-layout-item>
+		<lightning-layout-item padding="around-none" size="2">
+			<template if:true={showParentResult}> <!-- Show parent result sObject fields -->
+				<lightning-combobox name="cblight__ResultField__c" label="Target Field" value={line.cblight__ResultField__c}
+									variant="label-hidden"
+									options={resultParentFieldSO} onchange={handleLineChanges}>
+				</lightning-combobox>
+			</template>
+			<template if:false={showParentResult}> <!-- Show child result sObject fields -->
+				<lightning-combobox name="cblight__ResultField__c" label="Result Field" value={line.cblight__ResultField__c}
+									variant="label-hidden"
+									options={resultChildFieldSO} onchange={handleLineChanges}>
+				</lightning-combobox>
+			</template>
+			<div class="slds-m-left_small" style="color: red;">{line.error}</div>
+		</lightning-layout-item>
+
+		<lightning-layout-item padding="around-none" size="2"> <!-- DEFAULT -->
+			<lightning-layout>
+				<lightning-layout-item size="11">
+					<template if:false={showUserDropDownInDefaultSection}>
+						<lightning-record-edit-form name="default" variant="label-hidden"
+													object-api-name={resultSobjectTypeForDefault}>
+							<lightning-input-field class="helpText" field-name={line.cblight__ResultField__c} name={line.cblight__ResultField__c}
+												   value={line.cblight__Default__c} variant="label-hidden"
+												   onchange={handleDefaultChanges}>
+							</lightning-input-field>
+						</lightning-record-edit-form>
+					</template>
+					<template if:true={showUserDropDownInDefaultSection}>
+						<lightning-combobox name="cblight__Default__c" label="User or Queue" variant="label-hidden"
+											value={line.cblight__Default__c}
+											options={usersAndQueues}
+											onchange={handleDefaultChanges}>
+						</lightning-combobox>
+					</template>
+				</lightning-layout-item>
+				<lightning-layout-item size="1" class="slds-p-left_xxx-small">
+					<lightning-input type="checkbox" variant="label-hidden" name="cblight__SpecifyDefault__c" title="Check to apply value just for empty source"
+									 checked={line.cblight__SpecifyDefault__c}
+									 onchange={handleLineChanges}></lightning-input>
+				</lightning-layout-item>
+			</lightning-layout>
+		</lightning-layout-item>
+		<lightning-layout-item padding="around-none" size="1" class="slds-p-left_x-small">
+			<div>
+				<lightning-button variant="destructive" icon-name="utility:delete" label=""
+								  onclick={deleteModelingLine}></lightning-button>
+				<lightning-helptext content={line.cblight__Type__c}></lightning-helptext>
+			</div>
+		</lightning-layout-item>
+
+	</lightning-layout>
+
+
+	<!-- THE MAIN TABLE -->
+</template>

@@ -1,0 +1,106 @@
+<template>
+	<div class="fade-background">
+		<!-- DIALOG WINDOW -->
+
+		<section aria-labelledby="modal-heading-01" aria-modal="true"
+			class="slds-modal slds-fade-in-open slds-modal_medium" role="dialog" tabindex="-1">
+			<div class="slds-modal__container">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+					<span class="slds-assistive-text">Cancel and close</span>
+				</button>
+				<div class="slds-modal__header">
+					<h1 class="slds-modal__title slds-hyphenate" id="modal-heading-01">Revision List</h1>
+				</div>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+					<template if:true={showRevisions}>
+
+						<div class="table-header-frozen">
+							<table
+								class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+								<thead>
+									<tr class="tableColumnHead">
+										<th>
+											<div>Created Date</div>
+										</th>
+										<th>
+											<div>Field Name</div>
+										</th>
+										<th>
+											<div>Created By</div>
+										</th>
+										<th>
+											<div>Old Value</div>
+										</th>
+										<th>
+											<div>New Value</div>
+										</th>
+										<th>
+											<div>Action</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<template for:each={grouppedRevisions} for:item="rev">
+										<tr key={rev.Id}>
+											<td>
+												<div class="slds-truncate">
+													<lightning-formatted-date-time value={rev.CreatedDate}
+														year="numeric" month="numeric" day="numeric" hour="2-digit"
+														minute="2-digit" time-zone-name="short"
+														hour12="false"></lightning-formatted-date-time>
+												</div>
+											</td>
+											<td class="slds-border_left" title={rev.FieldLabel}>
+												<div class="slds-truncate">
+													{rev.FieldLabel}
+												</div>
+											</td>
+											<td class="slds-border_left" title={rev.FieldLabel}>
+												<div class="slds-truncate">
+													<!--{rev.CreatedById}-->
+													<lightning-record-view-form record-id={rev.CreatedById}
+														object-api-name="User">
+														<div>
+															<lightning-output-field field-name="Name"
+																variant="label-hidden">
+															</lightning-output-field>
+														</div>
+													</lightning-record-view-form>
+												</div>
+											</td>
+											<td title={rev.OldValue}>
+												<div class="slds-truncate">
+													{rev.OldValue}
+												</div>
+											</td>
+											<td title={rev.NewValue}>
+												<div class="slds-truncate">
+													{rev.NewValue}
+												</div>
+											</td>
+											<td>
+												<lightning-button label="Restore" onclick={restoreValue}
+													value={rev.Id}></lightning-button>
+											</td>
+
+										</tr>
+									</template>
+
+								</tbody>
+							</table>
+						</div>
+					</template>
+				</div>
+				<div class="slds-modal__footer">
+					<lightning-button label="Close" onclick={toggleRevisionDialog}></lightning-button>
+				</div>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+		<!-- DIALOG WINDOW -->
+
+		<!-- SPINNER -->
+		<c-cb-spinner show={showSpinner}></c-cb-spinner>
+		<!-- SPINNER -->
+	</div>
+</template>

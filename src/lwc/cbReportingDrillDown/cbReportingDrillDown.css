@@ -1,0 +1,10 @@
+@import 'c/cbStyle';
+
+.totalLineDec {
+  font-weight: bold !important;
+  text-align: right !important;
+}
+
+.dec {
+  text-align: right !important;
+}

@@ -1,0 +1,6 @@
+<template>
+	<li class=""><p style="color: #92919b; font-size: smaller; margin-left: 10px;">Recently Opened</p></li>
+	<template for:each={recentRecords} for:item="record">
+		<lightning-menu-item key={record} value={record.Id} label={record.Name} onclick={open}></lightning-menu-item>
+	</template>
+</template>

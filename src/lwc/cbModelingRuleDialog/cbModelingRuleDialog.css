@@ -1,0 +1,17 @@
+@import 'c/cbStyle';
+.slds-modal__content {
+  overflow: auto;
+}
+
+.shadow {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 4px;
+}
+
+.keys {
+  border: 1px solid;
+  border-radius: .25rem;
+  border-color: rgb(201, 201, 201);
+  padding: 6px 16px;
+  overflow: auto;
+}

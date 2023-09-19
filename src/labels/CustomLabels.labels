@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>cb_are_you_sure</fullName>
+        <categories>Text</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_are_you_sure</shortDescription>
+        <value>Are you sure?</value>
+    </labels>
+    <labels>
+        <fullName>cb_budget_year</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_budget_year</shortDescription>
+        <value>Budget Year</value>
+    </labels>
+    <labels>
+        <fullName>cb_budget_year_name</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_budget_year_name</shortDescription>
+        <value>Budget Year name</value>
+    </labels>
+    <labels>
+        <fullName>cb_by_details</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_by_details</shortDescription>
+        <value>BY Details</value>
+    </labels>
+    <labels>
+        <fullName>cb_by_from</fullName>
+        <categories>Text</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_by_from</shortDescription>
+        <value>BY from</value>
+    </labels>
+    <labels>
+        <fullName>cb_by_period_creating_error</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_by-period_creating_error</shortDescription>
+        <value>BY and Period Creating error</value>
+    </labels>
+    <labels>
+        <fullName>cb_by_short</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_by_short</shortDescription>
+        <value>BY</value>
+    </labels>
+    <labels>
+        <fullName>cb_cancel</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>cb_close</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_close</shortDescription>
+        <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>cb_create</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_create</shortDescription>
+        <value>Create</value>
+    </labels>
+    <labels>
+        <fullName>cb_creating</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_creating</shortDescription>
+        <value>Creating</value>
+    </labels>
+    <labels>
+        <fullName>cb_end_and_start_dates_error</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_end_and_start_dates_error</shortDescription>
+        <value>End Date should be less than Start Date. Set Start date before End date</value>
+    </labels>
+    <labels>
+        <fullName>cb_end_date</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_end_date</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>cb_get_by_error</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_get_by_list_error</shortDescription>
+        <value>Getting Budget Year list Error:</value>
+    </labels>
+    <labels>
+        <fullName>cb_get_periods_list_error</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_get_periods_list_error</shortDescription>
+        <value>Getting Period list Error:</value>
+    </labels>
+    <labels>
+        <fullName>cb_input_all_fileds</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_input_all_fileds</shortDescription>
+        <value>&quot;Please, input data in all input fields&quot;</value>
+    </labels>
+    <labels>
+        <fullName>cb_month</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_month</shortDescription>
+        <value>Month</value>
+    </labels>
+    <labels>
+        <fullName>cb_name</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_name</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>cb_new_cbbudgetyear_invalid_dates</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Creating error! Start and End Date are already exist! Please change start date!</shortDescription>
+        <value>Creating error! Start and End Date are already exist! Please change start date!</value>
+    </labels>
+    <labels>
+        <fullName>cb_new_cbperiod_invalid_dates</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error trying to create new CBPeriod due to the already existing periods.</shortDescription>
+        <value>Dates are intersecting with already existing records.</value>
+    </labels>
+    <labels>
+        <fullName>cb_ondelete_cbbudgetyear_has_related_records</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_ondelete_cbbudgetyear_has_related_records</shortDescription>
+        <value>You do not have permission to delete the {0} CB Budget Year. Delete the records related to the CB Budget Year.</value>
+    </labels>
+    <labels>
+        <fullName>cb_ondelete_cbperiod_has_related_records</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_ondelete_cbperiod_has_related_records</shortDescription>
+        <value>You do not have permission to delete the {0} CB Period. Delete the records related to the CB Period.</value>
+    </labels>
+    <labels>
+        <fullName>cb_period_details</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_period_details</shortDescription>
+        <value>Period Details</value>
+    </labels>
+    <labels>
+        <fullName>cb_period_details_updated</fullName>
+        <categories>Saved</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_period_details_updated</shortDescription>
+        <value>Periods details updated</value>
+    </labels>
+    <labels>
+        <fullName>cb_period_name</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_period_name</shortDescription>
+        <value>Period Name</value>
+    </labels>
+    <labels>
+        <fullName>cb_period_setup</fullName>
+        <categories>Title</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_period_setup</shortDescription>
+        <value>Period Setup</value>
+    </labels>
+    <labels>
+        <fullName>cb_period_type</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_period_type</shortDescription>
+        <value>Period Type</value>
+    </labels>
+    <labels>
+        <fullName>cb_period_type_options</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_period_type_options</shortDescription>
+        <value>Period Type</value>
+    </labels>
+    <labels>
+        <fullName>cb_periods</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_periods</shortDescription>
+        <value>Periods</value>
+    </labels>
+    <labels>
+        <fullName>cb_periods_and_by_created</fullName>
+        <categories>Saved</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_periods_and_by_created</shortDescription>
+        <value>BY and Periods are created</value>
+    </labels>
+    <labels>
+        <fullName>cb_periods_format</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_periods_format</shortDescription>
+        <value>Periods Format</value>
+    </labels>
+    <labels>
+        <fullName>cb_quarter</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_quarter</shortDescription>
+        <value>Quarter</value>
+    </labels>
+    <labels>
+        <fullName>cb_save</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>cb_start_date</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_start_date</shortDescription>
+        <value>Start date</value>
+    </labels>
+    <labels>
+        <fullName>cb_start_date_exists_error</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_start_date_exists_error</shortDescription>
+        <value>&quot;Updating error! Start Date is already exist! Please change start date!&quot;</value>
+    </labels>
+    <labels>
+        <fullName>cb_start_month</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_start_month</shortDescription>
+        <value>Start Month</value>
+    </labels>
+    <labels>
+        <fullName>cb_start_year</fullName>
+        <categories>Header</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>cb_start_year</shortDescription>
+        <value>Start Year</value>
+    </labels>
+    <labels>
+        <fullName>cb_totally</fullName>
+        <categories>Text</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_totally</shortDescription>
+        <value>totally</value>
+    </labels>
+    <labels>
+        <fullName>cb_year_periods_error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_year_periods_error</shortDescription>
+        <value>BY and Period Creating error</value>
+    </labels>
+    <labels>
+        <fullName>cb_you_are_creating</fullName>
+        <categories>Text</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>cb_you_are_creating</shortDescription>
+        <value>You are creating</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_crossobject_fieldsets_not_allowed_error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error when selecting a cross-object fieldsset is not allowed and attempted.</shortDescription>
+        <value>Cross-object fields not allowed and field &quot;{0}&quot; is a cross-object field.</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_fieldset_wrong_sobject_error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error when selecting a field set for a different sobject type.</shortDescription>
+        <value>Field set &quot;{0}&quot; is not for SObject type &quot;{1}&quot;</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_recursive_subquery_error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Presented when attempting to nest subqueries.</shortDescription>
+        <value>Invalid call to subselectQuery.  You may not add a subselect query to a subselect query.</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_subquery_invalid_relationship</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Presented when attempting to create a subquery from an invalid relationship.</shortDescription>
+        <value>Invalid call to subselectQuery.  Invalid relationship for table.</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_field_not_insertable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_field_not_insertable</shortDescription>
+        <value>You do not have permission to insert field {1} on {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_field_not_readable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_field_not_readable</shortDescription>
+        <value>You do not have permission to read the field {1} on {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_field_not_updateable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_field_not_updateable</shortDescription>
+        <value>You do not have permission to update the field {1} on {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_deletable</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_deletable</shortDescription>
+        <value>You do not have permission to delete {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_insertable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_insertable</shortDescription>
+        <value>You do not have permission to insert {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_readable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_readable</shortDescription>
+        <value>You do not have permission to read {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_updateable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_updateable</shortDescription>
+        <value>You do not have permission to update {0}</value>
+    </labels>
+</CustomLabels>

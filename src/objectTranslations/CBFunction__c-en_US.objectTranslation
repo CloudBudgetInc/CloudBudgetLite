@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Function</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Functions</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Account --></label>
+        <name>CBAccount__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Division --></label>
+        <name>CBDivision__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Owner --></label>
+        <name>CBOwner__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 1 --></label>
+        <name>CBVariable1__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 2 --></label>
+        <name>CBVariable2__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 3 --></label>
+        <name>CBVariable3__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 4 --></label>
+        <name>CBVariable4__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- CB Variable 5 --></label>
+        <name>CBVariable5__c</name>
+        <relationshipLabel><!-- CB Functions --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Details --></label>
+        <name>Details__c</name>
+    </fields>
+    <fields>
+        <label><!-- Index --></label>
+        <name>Index__c</name>
+    </fields>
+    <fields>
+        <label><!-- NFL1 --></label>
+        <name>NFL1__c</name>
+    </fields>
+    <fields>
+        <label><!-- NFL2 --></label>
+        <name>NFL2__c</name>
+    </fields>
+    <fields>
+        <label><!-- NFL3 --></label>
+        <name>NFL3__c</name>
+    </fields>
+    <fields>
+        <label><!-- NFL4 --></label>
+        <name>NFL4__c</name>
+    </fields>
+    <fields>
+        <label><!-- NFL5 --></label>
+        <name>NFL5__c</name>
+    </fields>
+    <fields>
+        <label><!-- NFL Formula --></label>
+        <name>NFLFormula__c</name>
+    </fields>
+    <fields>
+        <label><!-- Title --></label>
+        <name>Title__c</name>
+    </fields>
+    <fields>
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>BLM</masterLabel>
+            <translation><!-- BLM --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NFL</masterLabel>
+            <translation><!-- NFL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Variable</masterLabel>
+            <translation><!-- Variable --></translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>CB Function Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

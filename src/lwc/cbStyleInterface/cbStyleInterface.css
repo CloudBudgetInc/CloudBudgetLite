@@ -1,0 +1,14 @@
+/* Input css */
+.lgc-bg {
+	background-color: rgb(242, 242, 242);
+}
+
+.lgc-bg-inverse {
+	background-color: rgb(22, 50, 92);
+}
+lightning-button.button {
+    --sds-c-button-text-color: #000000;
+}
+.slds-modal__content{
+	overflow: initial;
+}

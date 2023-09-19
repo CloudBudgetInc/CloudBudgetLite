@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>CB Report Configuration</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>CB Report Configurations</value>
+    </caseValues>
+    <fields>
+        <label><!-- CB Report --></label>
+        <name>CBReport__c</name>
+        <relationshipLabel><!-- CB Report Configurations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Display Units --></label>
+        <name>DisplayUnits__c</name>
+        <picklistValues>
+            <masterLabel>Millions</masterLabel>
+            <translation><!-- Millions --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Thousands</masterLabel>
+            <translation><!-- Thousands --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Whole Units</masterLabel>
+            <translation><!-- Whole Units --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Filter --></label>
+        <name>Filter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Grouping --></label>
+        <name>Grouping__c</name>
+    </fields>
+    <fields>
+        <label><!-- Subtotal Number --></label>
+        <name>SubtotalNumber__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

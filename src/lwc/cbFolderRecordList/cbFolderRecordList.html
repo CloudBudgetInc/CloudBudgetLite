@@ -1,0 +1,13 @@
+<template>
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+	<div class="header">Records in folder:</div>
+	<ul class="record-list">
+		<template for:each={recordList} for:item="recordItem">
+			<li key={recordItem.Id} class="record-item">
+				<span>{recordItem.index}</span><span>{recordItem.Name}</span>
+			</li>
+		</template>
+	</ul>
+</template>

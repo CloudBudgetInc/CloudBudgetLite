@@ -1,0 +1,44 @@
+<template>
+	<template if:true={isComponentVisible}>
+		<h3 class=header>Attachment</h3>
+		<div class=uploader-body>
+
+			<div class=input-wrapper>
+				<lightning-input variant="label-hidden" label="" name="file uploader" onchange={handleGetFile}
+								 type="file"
+								 multiple></lightning-input>
+			</div>
+
+			<div class="table-wrapper">
+				<template if:true={relatedFiles}>
+					<table class="slds-table slds-table_cell-buffer">
+						<tbody>
+						<template for:each={relatedFiles} for:item="file">
+							<tr class="tab-row slds-hint-parent" key={file}>
+								<td>
+									<div class="file-name-cell">
+										<a class="slds-truncate" title={file.Title} data-id={file.ContentDocumentId}
+										   onclick={previewHandler}>{file.Title}</a>
+									</div>
+								</td>
+								<td>
+									<lightning-button-icon icon-name="utility:delete" alternative-text="Delete"
+														   title="Delete" size="x-small"
+														   value={file.ContentDocumentId} onclick={deleteFile}>
+									</lightning-button-icon>
+								</td>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+
+				</template>
+
+			</div>
+		</div>
+	</template>
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+</template>
