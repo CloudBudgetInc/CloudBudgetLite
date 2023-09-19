@@ -205,7 +205,6 @@ public with sharing class CBAdminControlPanelPageController {
 		} catch (Exception e) {
 			return null;
 		}
-
 	}
 
 	/**
