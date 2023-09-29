@@ -98,5 +98,6 @@
     <tabs>Budget_Lines</tabs>
     <tabs>CBInvoice__c</tabs>
     <tabs>CBReport__c</tabs>
+    <tabs>standard-Dashboard</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

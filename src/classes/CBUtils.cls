@@ -190,6 +190,9 @@ public with sharing class CBUtils {
 
 	public CBUtils addFilterStr(String keyField, String parentField) {
 		String val = this.params.get(keyField);
+		keyField = refineStr(keyField);
+		parentField = refineStr(parentField);
+		val = refineStr(val);
 		if (String.isBlank(val) || (val == 'null')) {
 			return this;
 		}

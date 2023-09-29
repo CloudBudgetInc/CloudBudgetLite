@@ -98,9 +98,7 @@ public with sharing class CBModelingRuleService {
 	 * @return number of records in the database
 	 */
 	public static Integer getNumberOfRecords(String sObjectType, String filter) {
-		String s = 'SELECT COUNT() FROM ' + sObjectType;
-		String w = filter == null || filter.equals('') ? '' : ' WHERE ' + filter;
-		return Database.countQuery(s + w);
+		return CBUtils.getNumberOfRecords(sObjectType, filter);
 	}
 
 	public static String getSubQuery(String parentRecordType, String childRecordType) {

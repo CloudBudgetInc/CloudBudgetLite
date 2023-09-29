@@ -9,7 +9,7 @@
 		<lightning-button label="Help and Support" slot="actions" onclick={openWelcome}></lightning-button>
 
 		<template if:true={showWelcomeMat}>
-			<c-cb-welcome name='main'></c-cb-welcome>
+			<c-cb-welcome name='main' ></c-cb-welcome>
 		</template>
 
 		<!-- INIT WIZARD REPORT -->
@@ -116,8 +116,7 @@
 
 				<template if:true={showFilter}>
 					<lightning-layout-item padding="around-medium" size="2">
-						<lightning-combobox name="divisionName" label="Name Field"
-											value={mapping.cblight__SourceName__c}
+						<lightning-combobox name="divisionName" label="Name Field" value={mapping.cblight__SourceName__c}
 											options={sobjectFieldsSO} onchange={handleDivisionChange}>
 						</lightning-combobox>
 					</lightning-layout-item>
@@ -250,8 +249,7 @@
 			<lightning-layout>
 
 				<lightning-layout-item padding="around-medium" size="2">
-					<lightning-combobox name="variable1" data-id="cblight__SourceSObject__c"
-										label="Select Source Record"
+					<lightning-combobox name="variable1" data-id="cblight__SourceSObject__c" label="Select Source Record"
 										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
 										onchange={handleVariableChange}>
 					</lightning-combobox>
@@ -259,8 +257,7 @@
 
 				<template if:true={showFilter}>
 					<lightning-layout-item padding="around-medium" size="2">
-						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
-											label="Name Field"
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c" label="Name Field"
 											value={mapping.cblight__SourceName__c}
 											options={sobjectFieldsSO} onchange={handleVariableChange}>
 						</lightning-combobox>
@@ -292,8 +289,7 @@
 			<lightning-layout>
 
 				<lightning-layout-item padding="around-medium" size="2">
-					<lightning-combobox name="variable2" data-id="cblight__SourceSObject__c"
-										label="Select Source Record"
+					<lightning-combobox name="variable2" data-id="cblight__SourceSObject__c" label="Select Source Record"
 										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
 										onchange={handleVariableChange}>
 					</lightning-combobox>
@@ -301,8 +297,7 @@
 
 				<template if:true={showFilter}>
 					<lightning-layout-item padding="around-medium" size="2">
-						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
-											label="Name Field"
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c" label="Name Field"
 											value={mapping.cblight__SourceName__c}
 											options={sobjectFieldsSO} onchange={handleVariableChange}>
 						</lightning-combobox>
@@ -334,8 +329,7 @@
 			<lightning-layout>
 
 				<lightning-layout-item padding="around-medium" size="2">
-					<lightning-combobox name="variable3" data-id="cblight__SourceSObject__c"
-										label="Select Source Record"
+					<lightning-combobox name="variable3" data-id="cblight__SourceSObject__c" label="Select Source Record"
 										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
 										onchange={handleVariableChange}>
 					</lightning-combobox>
@@ -343,8 +337,7 @@
 
 				<template if:true={showFilter}>
 					<lightning-layout-item padding="around-medium" size="2">
-						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
-											label="Name Field"
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c" label="Name Field"
 											value={mapping.cblight__SourceName__c}
 											options={sobjectFieldsSO} onchange={handleVariableChange}>
 						</lightning-combobox>
@@ -376,8 +369,7 @@
 			<lightning-layout>
 
 				<lightning-layout-item padding="around-medium" size="2">
-					<lightning-combobox name="variable4" data-id="cblight__SourceSObject__c"
-										label="Select Source Record"
+					<lightning-combobox name="variable4" data-id="cblight__SourceSObject__c" label="Select Source Record"
 										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
 										onchange={handleVariableChange}>
 					</lightning-combobox>
@@ -385,8 +377,7 @@
 
 				<template if:true={showFilter}>
 					<lightning-layout-item padding="around-medium" size="2">
-						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
-											label="Name Field"
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c" label="Name Field"
 											value={mapping.cblight__SourceName__c}
 											options={sobjectFieldsSO} onchange={handleVariableChange}>
 						</lightning-combobox>
@@ -418,8 +409,7 @@
 			<lightning-layout>
 
 				<lightning-layout-item padding="around-medium" size="2">
-					<lightning-combobox name="variable5" data-id="cblight__SourceSObject__c"
-										label="Select Source Record"
+					<lightning-combobox name="variable5" data-id="cblight__SourceSObject__c" label="Select Source Record"
 										value={mapping.cblight__SourceSObject__c} options={availableSObjectSO}
 										onchange={handleVariableChange}>
 					</lightning-combobox>
@@ -427,8 +417,7 @@
 
 				<template if:true={showFilter}>
 					<lightning-layout-item padding="around-medium" size="2">
-						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c"
-											label="Name Field"
+						<lightning-combobox name="cblight__SourceName__c" data-id="cblight__SourceName__c" label="Name Field"
 											value={mapping.cblight__SourceName__c}
 											options={sobjectFieldsSO} onchange={handleVariableChange}>
 						</lightning-combobox>
@@ -454,11 +443,9 @@
 
 		<!-- FOOTER -->
 		<div slot="footer">
-			<lightning-button label="Previous Step" icon-name="utility:jump_to_left" onclick={previousStep}
-							  disabled={stepRender.accounts}>
+			<lightning-button label="Previous Step" icon-name="utility:jump_to_left" onclick={previousStep} disabled={stepRender.accounts}>
 			</lightning-button>
-			<lightning-button label="Next Step" icon-name="utility:jump_to_right" onclick={nextStep}
-							  disabled={stepRender.variables5}>
+			<lightning-button label="Next Step" icon-name="utility:jump_to_right" onclick={nextStep} disabled={stepRender.variables5}>
 			</lightning-button>
 		</div>
 		<!-- FOOTER -->

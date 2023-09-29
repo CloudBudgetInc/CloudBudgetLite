@@ -76,16 +76,27 @@ public with sharing class CBTaskDispatcherPageController {
 
 	@AuraEnabled
 	public static void saveTaskQueueAndTasksServer(CBTaskQueue__c tq, List<CBTask__c> tasks) {
-		upsert tq;
+		fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(new List<Schema.SObjectType>{
+			CBTaskQueue__c.SObjectType, CBTask__c.SObjectType
+		});
+		uow.registerUpsert(tq);
 		for (CBTask__c t : tasks) {
-			t.CBTaskQueue__c = tq.Id;
+			if (t.Id == null) {
+				uow.registerNew(t, CBTask__c.CBTaskQueue__c, tq);
+			} else {
+				uow.registerDirty(t, CBTask__c.CBTaskQueue__c, tq);
+			}
 		}
-		upsert tasks;
+		uow.commitWork();
 	}
 
 	@AuraEnabled
 	public static void deleteTaskQueueServer(String tqId) {
-		Database.delete(tqId);
+		fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(new List<Schema.SObjectType>{
+			CBTaskQueue__c.SObjectType
+		});
+		uow.registerDeleted(new CBTaskQueueSelector().getTaskQueueRecordById((Id) tqId));
+		uow.commitWork();
 	}
 
 	@AuraEnabled

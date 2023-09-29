@@ -171,14 +171,14 @@
     </fields>
     <fields>
         <fullName>CBAccount__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <deleteConstraint>Restrict</deleteConstraint>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>CB Account</label>
         <referenceTo>CBAccount__c</referenceTo>
         <relationshipLabel>CB Invoices</relationshipLabel>
         <relationshipName>CB_Invoices</relationshipName>
-        <required>false</required>
+        <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
@@ -196,14 +196,14 @@
     </fields>
     <fields>
         <fullName>CBDivision__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <deleteConstraint>Restrict</deleteConstraint>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>CB Division</label>
         <referenceTo>CBDivision__c</referenceTo>
         <relationshipLabel>CB Invoices</relationshipLabel>
         <relationshipName>CB_Invoices</relationshipName>
-        <required>false</required>
+        <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
@@ -220,14 +220,14 @@
     </fields>
     <fields>
         <fullName>CBPeriod__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <deleteConstraint>Restrict</deleteConstraint>
         <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>CB Period</label>
         <referenceTo>CBPeriod__c</referenceTo>
         <relationshipLabel>CB Invoices</relationshipLabel>
         <relationshipName>CB_Invoices</relationshipName>
-        <required>false</required>
+        <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>

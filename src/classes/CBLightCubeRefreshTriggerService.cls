@@ -57,7 +57,7 @@ public with sharing class CBLightCubeRefreshTriggerService {
 	}
 
 	public static void generateCubesFromCBInvoices() {
-		for (CBInvoice__c invoice : [SELECT Id, CBPeriod__c, CBDivision__c, CBAccount__c, CBVariable1__c, CBVariable2__c, Total__c FROM CBInvoice__c]) {
+		for (CBInvoice__c invoice : [SELECT Id, CBPeriod__c, CBDivision__c, CBAccount__c, CBVariable1__c, CBVariable2__c, Total__c FROM CBInvoice__c WITH SECURITY_ENFORCED]) {
 			String key = getCubeKeyFromInvoice(invoice);
 			CBCube__c cbCube = cubeMap.get(key);
 			if (cbCube == null) {

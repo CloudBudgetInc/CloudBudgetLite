@@ -40,7 +40,7 @@
                 </groupingSortProperties>
                 <header>Plan vs Actuals by Divisions</header>
                 <legendPosition>Bottom</legendPosition>
-                <report>unfiled$public/CB_Cubes_EGB</report>
+                <report>CloudBudget/CB_Cubes_EGB</report>
                 <showPercentage>false</showPercentage>
                 <showValues>true</showValues>
                 <sortBy>RowLabelAscending</sortBy>
@@ -81,7 +81,7 @@
                 </groupingSortProperties>
                 <header>Plan by divisions</header>
                 <legendPosition>Right</legendPosition>
-                <report>unfiled$public/CB_Cubes_EGB</report>
+                <report>CloudBudget/CB_Cubes_EGB</report>
                 <showPercentage>false</showPercentage>
                 <showValues>true</showValues>
                 <sortBy>RowLabelAscending</sortBy>
@@ -118,7 +118,7 @@
                 <header>Plan by Accounts</header>
                 <legendPosition>Right</legendPosition>
                 <maxValuesDisplayed>6</maxValuesDisplayed>
-                <report>unfiled$public/CB_Cubes_EGB</report>
+                <report>CloudBudget/CB_Cubes_EGB</report>
                 <showPercentage>true</showPercentage>
                 <showTotal>true</showTotal>
                 <showValues>true</showValues>
@@ -160,7 +160,7 @@
                 </groupingSortProperties>
                 <header>CB Reporting Data</header>
                 <legendPosition>Right</legendPosition>
-                <report>unfiled$public/CB_Cubes_EGB</report>
+                <report>CloudBudget/CB_Cubes_EGB</report>
                 <showPercentage>false</showPercentage>
                 <showValues>false</showValues>
                 <sortBy>RowLabelAscending</sortBy>
@@ -176,7 +176,7 @@
     <isGridLayout>true</isGridLayout>
     <runningUser>ajrcblight@cloudbudget.com</runningUser>
     <textColor>#000000</textColor>
-    <title>CloudBudget</title>
+    <title>CloudBudget Lite</title>
     <titleColor>#000000</titleColor>
     <titleSize>12</titleSize>
 </Dashboard>
