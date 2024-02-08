@@ -28,12 +28,12 @@
 						</div>-->
 						<h2 class="slds-text-heading_small">Budget Line: <span class="slds-coordinates__title">{budgetLine.Name}</span>
 						</h2>
-						<span class="warning-message">{budgetLine.cblight__WarningMessage__c}</span>
+						<!--<span class="warning-message">{budgetLine.cblight__WarningMessage__c}</span>
 						<template lwc:if={budgetLine.cblight__ParentBudgetLine__c}>
 							<a class="slds-text-heading_small" onclick={redirectToParent}>Redirect to parent</a>
-						</template>
+						</template>-->
 					</lightning-layout-item>
-
+					<!--
 					<template lwc:if={showBudgetLineContent}>
 						<lightning-layout-item size="4" class="slds-text-title_bold">
 							<div class="badgeContainer">
@@ -93,6 +93,7 @@
 							</div>
 						</lightning-layout-item>
 					</template>
+					-->
 				</lightning-layout>
 
 				<lightning-icon class="slds-modal__close" icon-name="utility:close" onclick={closeBudgetLineModal}
@@ -1072,8 +1073,8 @@
 			<footer class="slds-modal__footer">
 				<lightning-layout>
 					<lightning-layout-item size="1">
-						<lightning-button icon-name="utility:loop" label="Revisions"
-										  onclick={openRevisionDialog}></lightning-button>
+						<!--<lightning-button icon-name="utility:loop" label="Revisions"
+										  onclick={openRevisionDialog}></lightning-button>-->
 					</lightning-layout-item>
 					<lightning-layout-item size="6">
 						<template lwc:if={budgetLine.cblight__isAllocation__c}>

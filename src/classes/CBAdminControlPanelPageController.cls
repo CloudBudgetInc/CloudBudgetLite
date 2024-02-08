@@ -181,31 +181,26 @@ public with sharing class CBAdminControlPanelPageController {
 	 */
 	@AuraEnabled
 	public static Map<String, String> getHomeChartDefaultParamsServer() {
-		try {
-			if ([SELECT COUNT() FROM CBCube__c WITH SECURITY_ENFORCED LIMIT 1] == 0) CBLightCubeRefreshTriggerService.refreshAllCBCubes();
-			Map<String, String> params = new Map<String, String>();
-			String byName = String.valueOf(System.today().year());
-			params.put('cblight__CBBudgetYear__c', [SELECT Id FROM cblight__CBBudgetYear__c WHERE Name = :byName WITH SECURITY_ENFORCED][0].Id);
-			List<cblight__CBScenario__c> scenarios = [SELECT Id FROM cblight__CBScenario__c WITH SECURITY_ENFORCED ORDER BY Name LIMIT 1];
-			if (scenarios.size() > 0) {
-				params.put('cblight__CBScenario__c', scenarios[0].Id);
-			}
 
-			String plusType = '';
-			String minusType = '';
-			for (cblight__CBAccountType__c accType : [SELECT Name, cblight__Sign__c FROM cblight__CBAccountType__c WITH SECURITY_ENFORCED]) {
-				if (accType.Sign__c == '+') plusType += plusType.length() > 1 ? ', ' + accType.Name : accType.Name;
-				if (accType.Sign__c == '-') minusType += minusType.length() > 1 ? ', ' + accType.Name : accType.Name;
-			}
-			params.put('plusType', plusType);
-			params.put('minusType', minusType);
-			params.put('cblight__CBAccountSign__c', '+');
-
-			return params;
-		} catch (Exception e) {
-			return null;
+		if ([SELECT COUNT() FROM CBCube__c WITH SECURITY_ENFORCED LIMIT 1] == 0) CBLightCubeRefreshTriggerService.refreshAllCBCubes();
+		Map<String, String> params = new Map<String, String>();
+		params.put('cblight__CBBudgetYear__c', [SELECT Id FROM cblight__CBBudgetYear__c WITH SECURITY_ENFORCED ORDER BY Name LIMIT 1][0].Id);
+		List<cblight__CBScenario__c> scenarios = [SELECT Id FROM cblight__CBScenario__c WITH SECURITY_ENFORCED ORDER BY Name LIMIT 1];
+		if (scenarios.size() > 0) {
+			params.put('cblight__CBScenario__c', scenarios[0].Id);
 		}
 
+		String plusType = '';
+		String minusType = '';
+		for (cblight__CBAccountType__c accType : [SELECT Name, cblight__Sign__c FROM cblight__CBAccountType__c WITH SECURITY_ENFORCED]) {
+			if (accType.Sign__c == '+') plusType += plusType.length() > 1 ? ', ' + accType.Name : accType.Name;
+			if (accType.Sign__c == '-') minusType += minusType.length() > 1 ? ', ' + accType.Name : accType.Name;
+		}
+		params.put('plusType', plusType);
+		params.put('minusType', minusType);
+		params.put('cblight__CBAccountSign__c', '+');
+
+		return params;
 	}
 
 	/**

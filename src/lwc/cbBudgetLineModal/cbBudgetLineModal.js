@@ -802,7 +802,7 @@ export default class CbBudgetLineModal extends NavigationMixin(LightningElement)
 	constructor() {
 		super();
 		this.addEventListener('restoreData', this.restoreData); // Listener from the Revision component
-		this.addEventListener('closerevisionmodal', this.closeRevisionDialog); // Listener from the Revision component
+		//this.addEventListener('closerevisionmodal', this.closeRevisionDialog); // Listener from the Revision component
 		this.addEventListener('applyVariableFunction', this.applyVariableFunction); // Listener from the Variable Function component
 		this.addEventListener('applyNFLFunction', this.applyNFLFunction); // Listener from the NFL Function component
 		this.addEventListener('saveFunction', this.saveFunction); // Listener from the Function component
@@ -825,14 +825,14 @@ export default class CbBudgetLineModal extends NavigationMixin(LightningElement)
 		}
 	}
 
-	openRevisionDialog() {
+	/*openRevisionDialog() {
 		this.showRevisionDialog = true;
 	}
 
 
 	closeRevisionDialog() {
 		this.showRevisionDialog = false;
-	}
+	}*/
 
 
 }

@@ -35,7 +35,7 @@ public with sharing class CBBudgetLinePageController {
 			'onlyParents' => 'Source Only',
 			'onlyChildren' => 'Sublines Only'
 	};
-	private static Integer BUDGET_LINES_LITE_LIMIT = 10;
+	private static Integer BUDGET_LINES_LITE_LIMIT = 500;
 
 	@AuraEnabled
 	public static Boolean limitIsReachedServer() {

@@ -76,7 +76,6 @@ export default class CbAdminControlPanel extends NavigationMixin(LightningElemen
 			}
 			const arBaseBudget = await getBaseBudgetForChartServer({params});
 			const arInvoices = await getInvoiceDataForChartServer({params});
-
 			this.generateDataForLineChart(arBaseBudget, arInvoices);
 			this.generateDataForBarChart(arBaseBudget, arInvoices);
 

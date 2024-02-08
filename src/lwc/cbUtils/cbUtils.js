@@ -1,5 +1,9 @@
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
 import getCustomPermissionsServer from "@salesforce/apex/CBCustomPermissionService.getCustomPermissionsServer";
+import getIdToNamesAndFieldLabelsMap
+	from '@salesforce/apex/CBFilterManagerPageController.getIdToNamesAndFieldLabelsMapServer';
+import LightningConfirm from 'lightning/confirm';
+import LightningPrompt from 'lightning/prompt';
 
 const FAKE_STR = `fake-id`;
 let timerStartValue = 0;
@@ -236,15 +240,90 @@ const _setCell = (cell, value, fill, font, numFmt, alignment, border) => {
 	cell.border = border;
 };
 
+/**
+ * Method to popup a SF confirm window
+ * @param message "Are you sure you want to ...."
+ * @param label header may be undefined
+ * @param theme  success || info || warning || error
+ */
+const _confirm = async (message, label, theme) => {
+	const config = {
+		message,
+		label,
+		variant: label ? 'header' : 'headerless',
+		theme: theme ? theme : 'info'
+	};
+	return await LightningConfirm.open(config);
+};
+
+/**
+ * Method to popup a SF prompt window
+ * @param message "Type a new name"
+ * @param defaultValue "Something default"
+ * @param label header may be undefined
+ * @param theme  success || info || warning || error
+ */
+const _prompt = async (message, defaultValue, label, theme) => {
+	const config = {
+		message,
+		defaultValue,
+		label,
+		variant: label ? 'header' : 'headerless',
+		theme: theme ? theme : 'info'
+	};
+	return await LightningPrompt.open(config);
+};
+
+/**
+	 * Method assigns formatted string to {formattedRequestString}
+	 * Checking if a string is an ID inside the server's getIdToNamesMap method
+	 * @param str Filter string
+	 */
+const _formatRequestString = async (str, sobjectType) => {
+	let result = {showFormattedString:false, formattedRequestString:''};
+	try {
+		if (!_isInvalid(str)) {
+			let Ids = str.match(new RegExp('\'(.*?)\'', 'g'));
+			if (!Ids || Ids.length === 0) {
+				result.formattedRequestString = str;
+				localStorage.removeItem('formattedRequestString');
+				localStorage.setItem('formattedRequestString', str);
+				result.showFormattedString = true;
+				return result;
+			}
+			Ids.forEach((id, i) => Ids[i] = id.replaceAll('\'', ''));
+			let resultMap = await getIdToNamesAndFieldLabelsMap({Ids, sObjectName: sobjectType})
+			.catch((error) => alert("Filter Manager : Format Request String Callback Error: " + JSON.stringify(error)));
+				
+			for (let key in resultMap) {
+				str = str.replaceAll(key, resultMap[key]);
+			}
+			localStorage.removeItem('formattedRequestString');
+			localStorage.setItem('formattedRequestString', str);
+			result.formattedRequestString = str;
+			result.showFormattedString = true;
+
+		} else {
+			result.formattedRequestString = '';
+			result.showFormattedString = false;
+		}
+	} catch (e) {
+		alert('Filter Manager : Format Request String Error: ' + e);
+	}
+	return result;
+}
+
 export {
 	_generateFakeId,
 	_isFakeId,
 	_deleteFakeId,
 	_applyDecStyle,
 	_cl,
+	_confirm,
 	_message,
 	_isInvalid,
 	_isInvalidNumber,
+	_prompt,
 	_reduceErrors,
 	_getCopy,
 	_parseServerError,
@@ -252,4 +331,5 @@ export {
 	_selectWholeValue,
 	_setCell, // exceljs function
 	_getCustomPermissions, // async
+	_formatRequestString // async
 };

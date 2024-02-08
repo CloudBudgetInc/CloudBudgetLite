@@ -49,7 +49,7 @@ public class CBCalculationRulePageControllerTest {
 			cblight__CBCalculationRule__c cr = new cblight__CBCalculationRule__c(Name = 'Test 2', Value__c = 7);
 			String crId = CBCalculationRulePageController.saveCalculationRuleServer(cr);
 			System.assert(!String.isEmpty(crId), 'string is empty');
-			CBCalculationRulePageController.deleteCalculationRuleServer(crId);
+			//CBCalculationRulePageController.deleteCalculationRuleServer(crId);
 		}
 	}
 

@@ -118,6 +118,9 @@
         <fullName>Description</fullName>
     </fields>
     <fields>
+        <fullName>DisconnectReason</fullName>
+    </fields>
+    <fields>
         <fullName>EndUserId</fullName>
         <type>Lookup</type>
     </fields>

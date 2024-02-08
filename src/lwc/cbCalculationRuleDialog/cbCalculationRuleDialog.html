@@ -50,19 +50,6 @@
 												 name="cblight__Description__c" variant="label-hidden"
 												 onchange={handleRuleChanging}></lightning-input>
 							</lightning-layout-item>
-							<lightning-layout-item size="2">
-								<lightning-record-edit-form object-api-name={calculationRuleApiName}>
-									<label>Calculation Rule Folder</label>
-									<lightning-input-field
-											variant="label-hidden"
-											field-name={folderField}
-											value={calculationRule.cblight__CBFolder__c}
-											name="cblight__CBFolder__c"
-											onchange={handleRuleChanging}>
-									</lightning-input-field>
-
-								</lightning-record-edit-form>
-							</lightning-layout-item>
 
 
 						</lightning-layout>
@@ -70,8 +57,6 @@
 					<hr>
 
 					<lightning-card title='Source Budget Line'>
-						<lightning-button label="Check Filters" slot="actions" icon-name="utility:question"
-										  onclick={checkBudgetLines}></lightning-button>
 						<lightning-layout>
 							<lightning-layout-item size="6">
 								<c-cb-filter-manager
@@ -96,14 +81,7 @@
 					<hr>
 
 					<lightning-card title='Dependency'>
-						<template lwc:if={isContractMode}>
-							<c-cb-allocation-term cr-id={calculationRule.Id}></c-cb-allocation-term>
-						</template>
-						<template lwc:else>
-							<template if:true={calculationRule.Id}>
-								<lightning-button label='Allocation Terms' slot="actions"
-												  onclick={setAllocationMode}></lightning-button>
-							</template>
+
 							<lightning-layout class="slds-m-left_small">
 								<lightning-layout-item>
 									<label>Var</label>
@@ -139,26 +117,8 @@
 									</lightning-button-menu>
 
 								</lightning-layout-item>
-								<lightning-layout-item>
-									<label>Period Shift</label>
-									<lightning-input value={calculationRule.cblight__PeriodShift__c} label="Period Shift"
-													 name="cblight__PeriodShift__c" variant="label-hidden" class="dec"
-													 onchange={handleRuleChanging}></lightning-input>
-								</lightning-layout-item>
-								<lightning-layout-item>
-									<lightning-record-edit-form object-api-name="cblight__CBCalculationRule__c">
-										<label>NF Library</label>
-										<lightning-input-field
-												variant="label-hidden"
-												field-name="cblight__NFL1__c"
-												name="cblight__NFL1__c"
-												value={calculationRule.cblight__NFL1__c}
-												onchange={handleRuleChanging}>
-										</lightning-input-field>
-									</lightning-record-edit-form>
-								</lightning-layout-item>
 							</lightning-layout>
-						</template>
+
 					</lightning-card>
 					<hr>
 
@@ -463,9 +423,6 @@
 				</div>
 				<div class="slds-modal__footer">
 					<lightning-button lable="Close" onclick={closeDialog} label="Close">
-					</lightning-button>
-					<lightning-button label="Clone" icon-name="utility:copy"
-									  onclick={cloneCalculationRule}>
 					</lightning-button>
 					<lightning-button variant="brand" label="Save" icon-name="utility:save"
 									  onclick={saveCalculationRule}>

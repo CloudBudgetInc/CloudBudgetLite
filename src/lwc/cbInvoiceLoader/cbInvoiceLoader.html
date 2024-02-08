@@ -1,0 +1,38 @@
+<template>
+
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+	<lightning-card title="Budget Report Department Line Loader">
+
+		<lightning-layout class="slds-p-around_small">
+
+			<lightning-layout-item>
+				<div class="slds-p-top_large slds-p-left_small">
+					<lightning-button label="Download Invoices" icon-name="utility:download"
+									  style="vertical-align: bottom;"
+									  onclick={downloadInvoicesFile}></lightning-button>
+				</div>
+			</lightning-layout-item>
+			<lightning-layout-item>
+				<lightning-input accept=".xlsx" label="" multiple name="file uploader"
+								 onchange={handleFilesUploading}
+								 type="file"></lightning-input>
+				<template lwc:if={showSaveButton}>
+					<lightning-button label="Save" variant="brand"
+									  onclick={saveInvoices}></lightning-button>
+				</template>
+			</lightning-layout-item>
+			<lightning-layout-item>
+				<div class="slds-m-top_large">
+					<lightning-button label="Delete" variant="destructive"
+									  onclick={deleteInvoices}></lightning-button>
+				</div>
+			</lightning-layout-item>
+
+		</lightning-layout>
+
+
+	</lightning-card>
+</template>

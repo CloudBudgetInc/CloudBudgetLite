@@ -173,17 +173,20 @@ public with sharing class CBTaskDispatcherService {
 	 */
 	public static void resetTaskQueue(String queueId) {
 		CBTaskQueue__c tq = new CBTaskQueueSelector().getTaskQueueWithTaskChildren('Id =  \'' + queueId + '\'');
+		if (tq == null) return;
 		fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(
 				new List<SObjectType>{
 						CBTaskQueue__c.SObjectType, CBTask__c.SObjectType
 				}
 		);
-		for (CBTask__c t : tq.CB_Tasks__r) {
-			t.Status__c = IDLE;
-		}
 		tq.Status__c = IDLE;
 		uow.registerDirty(tq);
-		uow.registerDirty(tq.CB_Tasks__r);
+		if (tq.CB_Tasks__r != null) {
+			for (CBTask__c t : tq.CB_Tasks__r) {
+				t.Status__c = IDLE;
+			}
+			uow.registerDirty(tq.CB_Tasks__r);
+		}
 		uow.commitWork();
 	}
 }

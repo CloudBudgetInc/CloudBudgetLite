@@ -1,0 +1,25 @@
+/src/layouts/CartDeliveryGroupMethod-Cart Delivery Group Method Layout.layout
+/src/objects/BuyerGroup.object
+/src/objects/CartDeliveryGroupMethod.object
+/src/objects/FlowOrchestrationStageInstance.object
+/src/objects/FlowOrchestrationStepInstance.object
+/src/objects/InventoryItemReservation.object
+/src/objects/InventoryReservation.object
+/src/objects/OpportunityRelatedDeleteLog.object
+/src/objects/ProductCatalog.object
+/src/objects/ProductCategory.object
+/src/objects/ProductCategoryProduct.object
+/src/objects/PromotionSegmentBuyerGroup.object
+/src/objects/TableauHostMapping.object
+/src/objects/UserPrioritizedRecord.object
+/src/objects/WebStoreBuyerGroup.object
+/src/objects/WebStoreCatalog.object
+/src/objects/WebStoreInventorySource.object
+/src/sharingRules/BuyerGroup.sharingRules
+/src/sharingRules/CommerceJobStatus.sharingRules
+/src/sharingRules/InventoryReservation.sharingRules
+/src/sharingRules/ProductCatalog.sharingRules
+/src/sharingRules/TableauHostMapping.sharingRules
+/src/sharingRules/UserPrioritizedRecord.sharingRules
+/src/sharingRules/VoiceChnlInteractionEvent.sharingRules
+/src/profiles/B2B Reordering Portal Buyer Profile.profile

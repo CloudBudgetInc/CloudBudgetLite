@@ -1,5 +1,5 @@
 import {api, LightningElement, track} from "lwc";
-import { _isInvalid, _message, _parseServerError } from "c/cbUtils";
+import {_isInvalid, _message, _parseServerError} from "c/cbUtils";
 import getIdToNamesMapServer from "@salesforce/apex/CBBudgetLinePageController.getIdToNamesMapServer";
 import getSingleScenarioServer from "@salesforce/apex/CBBudgetLinePageController.getSingleScenarioServer";
 
@@ -7,7 +7,7 @@ export default class CbPageInfo extends LightningElement {
 	pageObjectInner = {};
 	@track config = null;
 	@track displayedList = []; // displayed list
-	@track displayedListWithConfig = []; 
+	@track displayedListWithConfig = [];
 	@track styleClassConst = 'slds-p-around_xxx-small slds-text-align_center blockTransparency ';
 	@track styleClassAdd = '';
 	@track styleClass = '';
@@ -67,7 +67,7 @@ export default class CbPageInfo extends LightningElement {
 				if (key === 'cblight__CBScenario__c' && !_isInvalid(objKey)) {
 					scenarioId = objKey;
 				}
-			})
+			});
 			if (!scenarioId) {
 				this.styleClassAdd = 'infoStyle';
 				this.styleClass = this.styleClassConst + this.styleClassAdd;
@@ -86,22 +86,15 @@ export default class CbPageInfo extends LightningElement {
 	getCorrectLabels(obj) {
 		try {
 			if (!obj) return;
+			console.log('OBJ: ' + JSON.stringify(obj));
 			let orgVariable = JSON.parse(localStorage.getItem("orgVariable"));
-			if(!orgVariable.cblight__AllocationIsUsing__c) {
-				const index = obj.map(e => e.key).indexOf('allocationMode');
-				obj.splice(index, 1);
-			};
-			if(!orgVariable.cblight__BottomUpMode__c && !orgVariable.cblight__TopdownModeIsUsing__c) {
-				const index = obj.map(e => e.key).indexOf('approach');
-				obj.splice(index, 1);
-			};
-			obj.forEach((item) => {
+			obj.forEach(item => {
 				let orgLabel = this.fieldsNeedToBeAddedLabels[item.key];
 				if (orgLabel) item.key = orgVariable[orgLabel];
 			});
 			this.checkObjValues(obj);
 		} catch (e) {
-			_message("error", `Page Info : Get Correct Lables Error: " + ${e}`);
+			_message("error", `Page Info : Get Correct Labels Error: " + ${e}`);
 		}
 	}
 
@@ -174,7 +167,7 @@ export default class CbPageInfo extends LightningElement {
 			if (!id) return;
 			getSingleScenarioServer({rId: id})
 				.then((scenario) => {
-					if(!scenario.cblight__CBStyle__r) {
+					if (!scenario.cblight__CBStyle__r) {
 						this.styleClassAdd = 'infoStyle';
 					} else {
 						this.styleClassAdd = scenario.cblight__CBStyle__r.Name.replace(/ /g, "");
@@ -192,9 +185,9 @@ export default class CbPageInfo extends LightningElement {
 	 */
 	scrollUp() {
 		const scrollOptions = {
-		  left: 0,
-		  top: 0,
-		  behavior: 'smooth'
+			left: 0,
+			top: 0,
+			behavior: 'smooth'
 		}
 		window.scrollTo(scrollOptions);
 	}

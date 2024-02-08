@@ -74,6 +74,10 @@ public with sharing class CBCalculationRulePageController {
 	 */
 	@AuraEnabled
 	public static String saveCalculationRuleServer(cblight__CBCalculationRule__c cr) {
+		Integer numberOfRules = [SELECT COUNT() FROM cblight__CBCalculationRule__c LIMIT 10];
+		if (cr.Id == null && numberOfRules > 0) {
+			throw new CBException(null, 'The limit for the Light version is one rule');
+		}
 		fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(
 				new List<SObjectType>{
 						cblight__CBCalculationRule__c.SObjectType
@@ -83,8 +87,19 @@ public with sharing class CBCalculationRulePageController {
 		uow.commitWork();
 		CBCalculationRuleService.updateCRTaskQueue();
 		CBCalculationRuleService.generateNeededLayers();
+		runRecalculation();
 		return cr.Id;
 	}
+
+	private static void runRecalculation() {
+		try {
+			CBTaskQueue__c tq = [SELECT Id FROM CBTaskQueue__c WHERE Name = 'Calculation Rule Process'][0];
+			CBTaskDispatcherService.runQueue(tq.Id);
+		} catch (Exception e) {
+
+		}
+	}
+
 
 	/**
 	 * @param crId calculation rule Id need to be deleted

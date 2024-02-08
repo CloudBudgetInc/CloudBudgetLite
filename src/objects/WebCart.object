@@ -144,6 +144,10 @@
         <trackHistory>false</trackHistory>
     </fields>
     <fields>
+        <fullName>TotalProductListAmount</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
         <fullName>TotalProductTaxAmount</fullName>
         <trackHistory>false</trackHistory>
     </fields>

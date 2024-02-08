@@ -1,4 +1,4 @@
-/** 
+/**
 Copyright (c) 2022, CloudBudget, Inc.
 All rights reserved.
 Redistribution and use in source and binary forms, with or without modification,
@@ -30,6 +30,14 @@ One selector for any type of Variables
 public with sharing class CBVariableSelector extends fflib_SObjectSelector {
 
 	private Integer index = -1;
+
+	public CBVariableSelector() {
+
+	}
+
+	public CBVariableSelector(Integer i) {
+		index = i;
+	}
 
 	/**
 	 * @param i index of Variable (form 1 to 5)

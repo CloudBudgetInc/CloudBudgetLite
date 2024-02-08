@@ -6,8 +6,12 @@
 			<lightning-layout-item padding="around-none" size="3">
 				<lightning-layout>
 					<lightning-layout-item padding="around-none" size="12">
-						<!--<div class="slds-m-left_small lineHeight">{line.idx}.{line.Name}</div>-->
-						<a class="slds-m-left_small lineHeight" data-id={line.Id} onclick={openLine} >{line.idx}.{line.Name}</a>
+						<template lwc:if={line.cblight__CBCalculationRule__c}>
+							<p class="slds-m-left_small lineHeight">{line.idx}.{line.Name}</p>
+						</template>
+						<template lwc:else>
+							<a class="slds-m-left_small lineHeight" data-id={line.Id} onclick={openLine}>{line.idx}.{line.Name}</a>
+						</template>
 					</lightning-layout-item>
 					<!--<lightning-layout-item padding="around-none" size="4">
 						<lightning-badge label={line.cblight__Status__c}></lightning-badge>
