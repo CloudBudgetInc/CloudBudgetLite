@@ -63,7 +63,7 @@ global without sharing class CBPostInstallService implements InstallHandler {
 	global void onInstall(InstallContext context) {
 		if (context.previousVersion() == null) {
 			generateData();
-			sendEmailToAdmin('CloudBudget Lite was installed to ' + context.organizationId());
+			sendEmailToAdmin('CloudBudget Express was installed to ' + context.organizationId());
 		}
 	}
 
@@ -81,7 +81,7 @@ global without sharing class CBPostInstallService implements InstallHandler {
 			setReport();
 			setWelcomes();
 		} catch (Exception e) {
-			sendEmailToAdmin('CloudBudget Lite installation failure ' + e.getMessage() + ' stack trace ' + e.getStackTraceString());
+			sendEmailToAdmin('CloudBudget Express installation failure ' + e.getMessage() + ' stack trace ' + e.getStackTraceString());
 		}
 	}
 

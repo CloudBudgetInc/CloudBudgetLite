@@ -28,7 +28,7 @@
     <formFactors>Large</formFactors>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
-    <label>CloudBudget Lite</label>
+    <label>CloudBudget Express</label>
     <navType>Standard</navType>
     <profileActionOverrides>
         <actionName>View</actionName>
