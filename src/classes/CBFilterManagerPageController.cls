@@ -36,9 +36,11 @@ public with sharing class CBFilterManagerPageController {
 	@AuraEnabled
 	public static Map<String, String> getIdToNamesAndFieldLabelsMapServer(List<String> Ids, String sObjectName) {
 		Map<String, String> resultMap = new Map<String, String>();
+		System.debug(Ids);
 		try {
 			if (!Ids.isEmpty()) {
 				resultMap.putAll(getIdToNamesMapServer(Ids));
+				System.debug(resultMap);
 			}
 			if (sObjectName != null) {
 				resultMap.putAll(CBUtils.getFieldLabelsForSObject(sObjectName));
@@ -74,7 +76,35 @@ public with sharing class CBFilterManagerPageController {
 	@AuraEnabled
 	public static Map<String, String> getIdToNamesMapServer(List<String> Ids) {
 		Set<String> sIds = new Set<String>(Ids);
-		Map<String, String> resultMap = new Map<String, String>();
+        Map<String, String> resultMap = new Map<String, String>();
+		Map<String, Set<String>> objNameToRecordIds = new Map<String, Set<String>>();
+		for (String sId : sIds) {
+			if (sId instanceof Id) {
+				String objName = ((Id) sId).getSobjectType().getDescribe().getName();
+				if (objNameToRecordIds.containsKey(objName)) {
+					if (objNameToRecordIds.get(objName) != null) {
+						objNameToRecordIds.get(objName).add(sId);
+					} else {
+						objNameToRecordIds.put(objName, new Set<String>{
+								sId
+						});
+					}
+				} else {
+					objNameToRecordIds.put(objName, new Set<String>{
+							sId
+					});
+				}
+			}
+		}
+		Integer checkLimit = 1;
+		for (String objName : objNameToRecordIds.keySet()) {
+			for (List<SObject> records : Database.query('SELECT Id, Name FROM ' + objName + ' WHERE Id IN ' + CBUtils.getFormattedINQuery(objNameToRecordIds.get(objName)))) {
+				for (SObject r : records) {
+					resultMap.put((String) r.get('Id'), (String) r.get('Name'));
+				}
+			}
+			if (checkLimit == 100) break;
+		}
 		return resultMap;
 	}
 }

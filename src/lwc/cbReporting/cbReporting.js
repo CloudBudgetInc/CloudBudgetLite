@@ -211,14 +211,14 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 			return null;
 		}
 		this.showSpinner = true;
-		let report = { Name: this.report.Name + " Clonned",	cblight__Description__c: this.report.cblight__Description__c, 
+		let report = { Name: this.report.Name + " Cloned",	cblight__Description__c: this.report.cblight__Description__c, 
 			cblight__Mode__c: this.report.cblight__Mode__c, cblight__needOnlyTotal__c : this.report.cblight__needOnlyTotal__c,
 			cblight__needQuarterTotals__c: this.report.cblight__needQuarterTotals__c};
 		report.Name = report.Name.slice(0, 80);
 		saveReportServer({ report })
 			.then(async (result) => {
 				this.recordId = result.Id;
-				_message("success", "Report Clonned");
+				_message("success", "Report Cloned");
 				if (this.report.cblight__CBReportConfigurations__r && this.report.cblight__CBReportConfigurations__r.length > 0) {
 					await this.cloneAllConfigurations();
 				}
@@ -718,8 +718,11 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	showCellDrillDown(event) {
 		try {
 			let DDKeys = event.currentTarget.dataset.item.split('&'); // first argument is row index, second is cell index
-			const reportLine = this.reportLines[DDKeys[0]];
-			const cell = reportLine.reportCells[DDKeys[1]];
+			let reportLine = this.reportLines[DDKeys[0]];
+			let cell = this.reportLines[DDKeys[0]].reportCells.find(cell => {
+				let parts = cell.drillDownKey.split('&');
+				return parts[1] === DDKeys[1];
+			});
 
 			if (cell.isTotal) {
 				_message('info', 'Drilldown cannot be generated for totals.');

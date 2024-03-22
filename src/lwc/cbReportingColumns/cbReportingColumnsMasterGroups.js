@@ -60,7 +60,7 @@ const addQuarterColumns = (masterColumns, allColumns, needQuarters) => {
 				const formula = [];
 				oneQuarterColumns.forEach((c, i) => {
 					if (c.Id === mCol.Id || c.cblight__MasterColumn__c === mCol.Id) {
-						formula.push(`#${c.cblight__OrderNumber__c}`);
+						formula.push(`#${c.cblight__OrderNumber__c + qIdx * masterColumns.length}`);
 					}
 				});
 				newQuarterColumn = _getCopy(mCol, true);
@@ -89,8 +89,7 @@ const addTotalColumns = (masterColumns, allColumns, needQuarters) => {
 		masterColumns.forEach(mCol => {
 			let formula = [];
 			allColumns.forEach((c, i) => {
-				console.log('c.cblight__MasterColumn__c = ' + c.cblight__MasterColumn__c + ' AND mCol.Id= ' + mCol.Id);
-				if (c.Id === mCol.Id || c.cblight__MasterColumn__c === mCol.Id) {
+				if ((c.Id === mCol.Id || c.cblight__MasterColumn__c === mCol.Id)&& !c.isQuarter) {
 					/*if ((needQuarters && c.isQuarter) || !needQuarters) {
 						formula.push(`#${i + 1}`);
 					}*/

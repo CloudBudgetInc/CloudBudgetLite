@@ -232,7 +232,7 @@ global without sharing class CBPostInstallService implements InstallHandler {
 
 	public void setWelcomes() {
 		CBWelcome__c mainWelcome = new CBWelcome__c(Name = 'main', cblight__Header__c = 'CloudBudget3.0', cblight__Type__c = 'Lead',
-				cblight__Description__c = 'CloudBudget Lite serves as our complimentary offering, featuring a streamlined set of functions. ' +
+				cblight__Description__c = 'CloudBudget Express serves as our complimentary offering, featuring a streamlined set of functions. ' +
 						'To access the comprehensive, full-featured version showcased in the right-hand panel, kindly reach out to CloudBudget3.0 ',
 				cblight__Content__c = '<div class="slds-m-top_large"><a href=\'https://cloudbudget.com/\'>CloudBudget, LLC.</a></div>' +
 						'<div class="slds-m-top_small">600 Copperline Drive, #202</div>' +
@@ -325,7 +325,7 @@ global without sharing class CBPostInstallService implements InstallHandler {
 			Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
 			mail.setToAddresses(toAddresses);
 			mail.setSenderDisplayName('CloudBudget');
-			mail.setSubject('CloudBudget Lite Installation');
+			mail.setSubject('CloudBudget Express Installation');
 			mail.setPlainTextBody(message);
 			Messaging.sendEmail(new Messaging.Email[]{
 					mail
