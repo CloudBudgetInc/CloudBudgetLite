@@ -170,6 +170,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 			await this.removeHiddenColumns();
 			await this.setStylesToAnalyticsColumns();
 			await this.setStylesToAnalyticsColumnsGradient();
+			await this.applyStyles();
 		} catch (e) {
 			_message('error', 'Reporting : Get Report Data Callback Function Error : ' + e);
 			_parseServerError("Reporting : Get Report Data Callback Error: ", e);
@@ -742,8 +743,21 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	 * Styles application method.
 	 */
 	applyStyles() {
-
-	}
+        try {
+            let styles = JSON.parse(localStorage.getItem("cbstyles"));
+            if (!styles) return "";
+            let styleArray = styles;
+            let styleCSS = document.createElement('style');
+            styleCSS.type = 'text/css';
+            styleCSS.innerHTML = styleArray.reduce((str, style) => {
+                str = str + '.' + style.Name.replace(/ /g, "") + ' ' + style.cb5__CSS__c + ' ';
+                return str;
+            }, '');
+            document.getElementsByTagName('head')[0].appendChild(styleCSS);
+        } catch (e) {
+            _message('error', 'Reporting : Apply Style: ' + e);
+        }
+    }
 
 	/**
 	 * Analytics columns styles application method
