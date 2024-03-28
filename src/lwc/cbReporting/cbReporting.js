@@ -750,7 +750,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
             let styleCSS = document.createElement('style');
             styleCSS.type = 'text/css';
             styleCSS.innerHTML = styleArray.reduce((str, style) => {
-                str = str + '.' + style.Name.replace(/ /g, "") + ' ' + style.cb5__CSS__c + ' ';
+                str = str + '.' + style.Name.replace(/ /g, "") + ' ' + style.cblight__CSS__c + ' ';
                 return str;
             }, '');
             document.getElementsByTagName('head')[0].appendChild(styleCSS);
