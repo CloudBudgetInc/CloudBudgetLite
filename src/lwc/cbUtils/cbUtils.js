@@ -294,7 +294,6 @@ const _formatRequestString = async (str, sobjectType) => {
 			Ids.forEach((id, i) => Ids[i] = id.replaceAll('\'', ''));
 			let resultMap = await getIdToNamesAndFieldLabelsMap({Ids, sObjectName: sobjectType})
 			.catch((error) => alert("Filter Manager : Format Request String Callback Error: " + JSON.stringify(error)));
-				
 			for (let key in resultMap) {
 				str = str.replaceAll(key, resultMap[key]);
 			}
