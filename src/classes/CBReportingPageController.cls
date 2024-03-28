@@ -121,7 +121,7 @@ public with sharing class CBReportingPageController {
 	 */
 	@AuraEnabled
 	public static List<CBCube__c> getReportDataServer(String configurationId) {
-		CBLightCubeRefreshTriggerService.refreshAllCBCubes();
+		/* CBLightCubeRefreshTriggerService.refreshAllCBCubes(); */
 		CBReportConfiguration__c configuration = new CBReportConfigurationSelector().getReportConfigurationById(configurationId);
 		if (CBMultiCurrencyService.multiCurrencyEnabled) CUBE_ADDITIONAL_FIELDS.add('CurrencyIsoCode');
 		List<CBCube__c> result = new CBCubeSelector()
