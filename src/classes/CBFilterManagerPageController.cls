@@ -36,11 +36,9 @@ public with sharing class CBFilterManagerPageController {
 	@AuraEnabled
 	public static Map<String, String> getIdToNamesAndFieldLabelsMapServer(List<String> Ids, String sObjectName) {
 		Map<String, String> resultMap = new Map<String, String>();
-		System.debug(Ids);
 		try {
 			if (!Ids.isEmpty()) {
 				resultMap.putAll(getIdToNamesMapServer(Ids));
-				System.debug(resultMap);
 			}
 			if (sObjectName != null) {
 				resultMap.putAll(CBUtils.getFieldLabelsForSObject(sObjectName));
