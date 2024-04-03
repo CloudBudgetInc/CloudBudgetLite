@@ -75,11 +75,11 @@ public with sharing class CBLightCubeRefreshTriggerService {
 		return invoice.CBPeriod__c + '' + invoice.CBDivision__c + invoice.CBAccount__c + invoice.CBVariable1__c + invoice.CBVariable2__c;
 	}
 	private static CBCube__c getNewCBCubeFromBL(CBBudgetLine__c bl, CBAmount__c amount) {
-		return new CBCube__c(Name = 'CBLight Cube', CBPeriod__c = amount.CBPeriod__c, CBDivision__c = bl.CBDivision__c, Budget__c = 0, Actual__c = 0,
+		return new CBCube__c(Name = 'CB Express', CBPeriod__c = amount.CBPeriod__c, CBDivision__c = bl.CBDivision__c, Budget__c = 0, Actual__c = 0,
 				CBVariable1__c = bl.CBVariable1__c, CBVariable2__c = bl.CBVariable2__c, CBAccount__c = bl.CBAccount__c);
 	}
 	private static CBCube__c getNewCBCubeFromInvoice(CBInvoice__c invoice) {
-		return new CBCube__c(Name = 'CBLight Cube', CBPeriod__c = invoice.CBPeriod__c, CBDivision__c = invoice.CBDivision__c, Budget__c = 0, Actual__c = 0,
+		return new CBCube__c(Name = 'CB Express', CBPeriod__c = invoice.CBPeriod__c, CBDivision__c = invoice.CBDivision__c, Budget__c = 0, Actual__c = 0,
 				CBVariable1__c = invoice.CBVariable1__c, CBVariable2__c = invoice.CBVariable2__c, CBAccount__c = invoice.CBAccount__c);
 	}
 }

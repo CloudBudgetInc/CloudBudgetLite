@@ -54,7 +54,7 @@ export default class CBBudgetLines extends LightningElement {
 	addNewBudgetLine() {
 		try {
 			if (localStorage.getItem('newLinesDisabled') === 'true') {
-				_message('info', 'You reached the limit on the number of budget lines for the CloudBudget Lite version. ' +
+				_message('info', 'You reached the limit on the number of budget lines for the CloudBudget Express version. ' +
 					'Please contact CloudBudget to get the unlimited version');
 				return;
 			}
