@@ -89,13 +89,8 @@ const addTotalColumns = (masterColumns, allColumns, needQuarters) => {
 		masterColumns.forEach(mCol => {
 			let formula = [];
 			allColumns.forEach((c, i) => {
-				if ((c.Id === mCol.Id || c.cblight__MasterColumn__c === mCol.Id)&& !c.isQuarter) {
-					/*if ((needQuarters && c.isQuarter) || !needQuarters) {
-						formula.push(`#${i + 1}`);
-					}*/
-
+				if ((c.Id === mCol.Id || c.cblight__MasterColumn__c === mCol.Id) && !c.isQuarter) {
 					formula.push(`#${i + 1}`);
-
 				}
 			});
 			let newTotalColumn = _getCopy(mCol, true);

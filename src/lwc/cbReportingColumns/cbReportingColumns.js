@@ -3,8 +3,9 @@ import getReportColumnsServer from "@salesforce/apex/CBReportColumnPageControlle
 import getStaticDataServer from "@salesforce/apex/CBReportColumnPageController.getStaticDataServer";
 import saveColumnsServer from "@salesforce/apex/CBReportColumnPageController.saveColumnsServer";
 import deleteColumnServer from "@salesforce/apex/CBReportColumnPageController.deleteColumnServer";
-import {_cl, _deleteFakeId, _message, _generateFakeId, _getCopy, _isInvalid, _isFakeId, _validateFormula, _parseServerError} from 'c/cbUtils';
+import {_cl, _deleteFakeId, _message, _generateFakeId, _getCopy, _isInvalid, _isFakeId, _validateFormula, _parseServerError, _confirm} from 'c/cbUtils';
 import {enumerateColumns, getClonedMasterGroup} from './cbReportingColumnsMasterGroups';
+
 
 
 export default class CbReportingColumns extends LightningElement {
@@ -14,6 +15,7 @@ export default class CbReportingColumns extends LightningElement {
 	@track columns;
 	@track staticDate = {};
 	@track modeSO = [{label: 'Auto', value: 'Auto'}, {label: 'Manual', value: 'Manual'}];
+	@track subtotalModeSO = [{label: 'Top', value: 'Top'}, {label: 'Bottom', value: 'Bottom'}, {label: 'Bottom With Header', value: 'BottomWithHeader'}];
 	@track trueFalseSO = [{label: 'Yes', value: true}, {label: 'No', value: false}];
 	@api report;
 	@api styles;
@@ -54,6 +56,7 @@ export default class CbReportingColumns extends LightningElement {
 		this.showSpinner = true;
 		await getReportColumnsServer({reportId: this.report.Id})
 			.then(result => {
+				enumerateColumns(result);
 				this.columns = result;
 				this.columns.forEach(c => this.validateFormula(c));
 			})
@@ -72,6 +75,18 @@ export default class CbReportingColumns extends LightningElement {
 			this.report = reportCopy;
 		} catch (e) {
 			_message('error', e, "Change Mode Error: ");
+		}
+	}
+	/**
+	 * top, bottom or bottom with header subtotals
+	 */
+	changeSubtotalMode(event) {
+		try {
+			const reportCopy = _getCopy(this.report);
+			reportCopy.cblight__SubtotalMode__c = event.target.value;
+			this.report = reportCopy;
+		} catch (e) {
+			_message('error', e, "Change Subtotal Mode Error: ");
 		}
 	}
 
@@ -122,6 +137,7 @@ export default class CbReportingColumns extends LightningElement {
 		const report = {
 			Id: this.report.Id,
 			cblight__Mode__c: this.report.cblight__Mode__c,
+			cblight__SubtotalMode__c: this.report.cblight__SubtotalMode__c,
 			cblight__needQuarterTotals__c: this.report.cblight__needQuarterTotals__c,
 			cblight__needOnlyTotal__c: this.report.cblight__needOnlyTotal__c,
 			cblight__oneColumnMode__c: this.report.cblight__oneColumnMode__c
@@ -160,14 +176,12 @@ export default class CbReportingColumns extends LightningElement {
 	 * Close column dialog window. Send an event to parent component
 	 */
 	closeReportColumns() {
-		console.log('Event ready');
 		this.showDialog = false;
 		this.dispatchEvent(new CustomEvent('closeReportColumns', {
 			bubbles: true,
 			composed: true,
 			detail: this.line
 		}));
-		console.log('Event sent');
 	}
 
 	updateFullReport() {
@@ -252,25 +266,29 @@ export default class CbReportingColumns extends LightningElement {
 		}
 	}
 
+	deleteColumnHandler(event) {
+		const value = event.target.value; 
+		this.deleteColumn(value);
+	}
 	/**
 	 * It is the handler foe
 	 */
-	deleteColumn(event) {
+	async deleteColumn(value) {
+		const conf = await _confirm('Are you sure you want to delete this column?', 'Confirm');
+		if (!conf) return null;
 		try {
 			this.showSpinner = true;
-			const columnId = event.target.value;
+			const columnId = value;
 			let columnsCopy = _getCopy(this.columns);
 			columnsCopy = columnsCopy.filter(c => c.Id !== columnId);
 			enumerateColumns(columnsCopy);
 			this.columns = columnsCopy;
-			if (_isFakeId(columnId)) {
-				_message('success', 'Deleted', 'Success');
-			} else {
-				deleteColumnServer({columnIds: [columnId]})
-					.then(() => _message('success', 'Deleted', 'Success'))
-					.catch(e => _parseServerError("Report Columns : Delete Columns Server Error: ", e))
-					.finally(() => this.showSpinner = false);
+			if (!_isFakeId(columnId)) {
+				await deleteColumnServer({columnIds: [columnId]})
+				.catch(e => _parseServerError("Report Columns : Delete Columns Server Error: ", e));
 			}
+			_message('success', 'Deleted', 'Success');
+			this.showSpinner = false;
 		} catch (e) {
 			alert('Delete Column Error: ' + e);
 		}

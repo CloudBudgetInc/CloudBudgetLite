@@ -311,6 +311,7 @@ const addGlobalTotalToReportLines = (reportLines) => {
  */
 const getUnitFormattedAndIndexedReportLines = (reportLines, reportColumns) => {
 	try {
+		_cl(JSON.stringify(context.configuration));
 		const floatPointOption = context.configuration.cblight__FloatPointCell__c;
 		let numberFormatSettings;
 
@@ -330,7 +331,6 @@ const getUnitFormattedAndIndexedReportLines = (reportLines, reportColumns) => {
 				percent: {minimumFractionDigits: 0, maximumFractionDigits: 0},
 			};
 		}
-
 		const currencyFormat = new Intl.NumberFormat('en-US', {
 			style: 'currency',
 			currency: context.currencyCode,

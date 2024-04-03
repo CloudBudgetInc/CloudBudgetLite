@@ -116,6 +116,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		this.reportLines = this.reportGroupColumns = this.reportColumns = [];
 		await getReportWithConfigurationsAndColumnsServer({reportId: this.recordId})
 			.then(async reportStructure => {
+				_cl(JSON.stringify(reportStructure));
 				await this.manageReportStructure(reportStructure);
 			})
 			.catch(e => _message('error', "Reporting : Get Report Error: ", e))
@@ -309,6 +310,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	setConfigurationById(configId) {
 		try {
 			let config = this.report.cblight__CBReportConfigurations__r.find(({Id}) => Id === configId);
+			_cl(config, 'red');
 			if (config.cblight__Grouping__c && typeof config.cblight__Grouping__c != "object") {
 				config.cblight__Grouping__c = JSON.parse(config.cblight__Grouping__c);
 			}
@@ -522,7 +524,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		if (!soItem) return null;
 		soItem.label = this.configuration.Name;
 		this.configurationSO = _getCopy(this.configurationSO);
-
+		_cl(JSON.stringify(configuration));
 		await saveConfigurationServer({configuration})
 			.then(savedConfiguration => {
 				savedConfiguration.cblight__Grouping__c = JSON.parse(savedConfiguration.cblight__Grouping__c);
