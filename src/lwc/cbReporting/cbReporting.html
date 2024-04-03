@@ -83,7 +83,6 @@
 
 
 			<div id="containerDiv" onmousemove={handleMouseMove} onmouseup={handleMouseUp}
-				 ondblclick={handleDBClickResizable}
 				 class="slds-table_header-fixed_container slds-border_right slds-border_left tableScroll slds-m-top_xx-small"
 				 onscroll={tableOuterDivScrolled}>
 				<div id="tableViewInnerDiv" class="slds-scrollable_y tableViewInnerDiv">
@@ -109,7 +108,7 @@
 												 ondrop={dropElement}
 												 ondragstart={dragStart}
 												 ondragover={dragOver}>
-												<span class="slds-truncate slds-p-around_x-small slds-is-absolute groupColumnBorder">{column.label}</span>
+												<span class="slds-truncate slds-p-around_x-small slds-is-absolute groupColumnBorder ReportFrozenColumnsGradient">Title</span>
 											</div>
 											<div class="slds-resizable">
 												<span class="slds-resizable__handle" onmousedown={handleMouseDown}>
@@ -130,7 +129,7 @@
 												 ondrop={dropElement}
 												 ondragstart={dragStart}
 												 ondragover={dragOver}>
-												<span class="slds-truncate slds-p-around_x-small slds-is-absolute groupColumnBorder">{column.label}</span>
+												<span class="slds-truncate slds-p-around_x-small slds-is-absolute groupColumnBorder ReportFrozenColumnsGradient">{column.label}</span>
 											</div>
 											<div class="slds-resizable">
 												<span class="slds-resizable__handle" onmousedown={handleMouseDown}>
@@ -193,7 +192,7 @@
 				<div class="slds-modal__content slds-p-around_large">
 					<template lwc:if={showConfigContext}>
 						<lightning-layout class="slds-p-left_small slds-m-bottom_small">
-							<lightning-layout-item size="3" class="slds-m-right_small">
+							<lightning-layout-item size="2" class="slds-m-right_small">
 								<lightning-combobox name="handleChangeConfig" label="Configuration"
 													value={configuration.Id}
 													options={configurationSO} onchange={handleConfiguratorEvents}
@@ -201,7 +200,7 @@
 								</lightning-combobox>
 							</lightning-layout-item>
 
-							<lightning-layout-item size="4" class="slds-m-right_small">
+							<lightning-layout-item size="3" class="slds-m-right_small">
 								<lightning-input value={configuration.Name} label="Name" max-length="80"
 												 onchange={handleConfiguratorEvents} name="Name">
 								</lightning-input>
@@ -221,6 +220,13 @@
 													options={displayUnitSO} onchange={handleConfiguratorEvents}>
 								</lightning-combobox>
 							</lightning-layout-item>
+
+							<lightning-layout-item size="2" class="slds-m-left_small">
+								<lightning-combobox label="Float point cell" name="cblight__FloatPointCell__c"
+													value={configuration.cblight__FloatPointCell__c}
+													options={displayFloatCell} onchange={handleConfiguratorEvents}>
+								</lightning-combobox>
+							</lightning-layout-item>
 						</lightning-layout>
 
 						<div class="slds-m-bottom_small slds-m-right_large">
@@ -232,18 +238,19 @@
 												 sobject-type="cblight__CBCube__c">
 							</c-cb-filter-manager>
 						</div>
-
-						<div class="slds-p-left_small slds-p-right_small">
-							<lightning-dual-listbox
-									label="Group Data By"
-									source-label="Available Fields"
-									selected-label="Selected Fields"
-									options={cubeFieldsSO}
-									value={configuration.cblight__Grouping__c}
-									onchange={handleConfiguratorEvents}
-									name="cblight__Grouping__c"
-							></lightning-dual-listbox>
-						</div>
+						<template lwc:if={showDualListBox}>
+							<div class="slds-p-left_small slds-p-right_small">
+								<lightning-dual-listbox
+										label="Group Data By"
+										source-label="Available Fields"
+										selected-label="Selected Fields"
+										options={cubeFieldsSO}
+										value={configuration.cblight__Grouping__c}
+										onchange={handleConfiguratorEvents}
+										name="cblight__Grouping__c"
+								></lightning-dual-listbox>
+							</div>
+						</template>
 					</template>
 				</div>
 				<footer class="slds-modal__footer">

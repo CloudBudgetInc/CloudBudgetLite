@@ -26,11 +26,18 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 @isTest
 public class CBMulticurrencyServiceTest {
 
-	@isTest
-	public static void testMultiCurrencyService() {
-		Object o = CBMultiCurrencyService.multiCurrencyEnabled;
-		o = CBMultiCurrencyService.getCurrencySOServer();
-		List<sObject> orgCurrencies = CBMultiCurrencyService.orgCurrencies;
-		System.assert(true, 'test failed');
-	}
+    @isTest
+    public static void testMultiCurrencyService() {
+        Object o = CBMultiCurrencyService.multiCurrencyEnabled;
+        o = CBMultiCurrencyService.getCurrencySOServer();
+        List<sObject> orgCurrencies = CBMultiCurrencyService.orgCurrencies;
+        System.assert(true, 'test failed');
+        CBDataFactoryTest.createPeriods(12);
+        CBLayer__c currencyLayer = new CBLayer__c(Name = 'Currency');
+        insert currencyLayer;
+        CBNonFinancialLibrary__c pln = new CBNonFinancialLibrary__c(Layer__c = currencyLayer.Id, Name = 'PLN');
+        insert pln;
+        List<CBNonFinancialItem__c> items = new List<CBNonFinancialItem__c>();
+        o = CBMultiCurrencyService.getCurrencyMonthlyRatesServer();
+    }
 }

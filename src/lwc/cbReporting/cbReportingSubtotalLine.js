@@ -1,89 +1,117 @@
+import {_message} from "c/cbUtils";
+
+let reportLines;
+let subRowConfigs;
+
+/*
+JSON EXAMPLE '[
+{
+"after": "02:Expense  Total",
+"legend": ["01:Income  Total", "02:Expense  Total"],
+"formula": "#0 / #1 * -1",
+"title": "Gross Margin",
+"unit": "%",
+"styleClass": "TotalLineLvlGlobal"
+}
+]'
+*/
+
 /**
- * This lib is for custom report row
- * TODO Redo this code baser on CBRow__c objects
- *
+ * Method uses a JSON string from a report configuration to add a new substring to the report
  */
-const task = {
-	after: '02:Expense  Total',
-	legend: ['01:Income  Total', '02:Expense  Total'],
-	formula: '#0 + #1',
-	title: 'Gross Profit',
-	styleClass: "TotalLineLvlGlobal"
+const addCustomSubtotalLines = (rLines, subRows) => {
+	if (!subRows) return rLines;
+	subRowConfigs = JSON.parse(subRows);
+	reportLines = rLines;
+	subRowConfigs.forEach(subRowConfig => addSubtotalLine(subRowConfig));
+	return reportLines;
 };
 
-
-
-const addSubtotalLine = (reportLines) => {
+/**
+ * For each JSON object report can get a new subtotal line
+ */
+const addSubtotalLine = (subRowConfig) => {
 	try {
-		reportLines.forEach(rl => console.log(JSON.stringify(rl)));
-		let subLine = JSON.parse(JSON.stringify(reportLines[0]));//
-		subLine.class = task.styleClass;
-		subLine.reportCells.forEach(c => {
+		let subLine = JSON.parse(JSON.stringify(reportLines[0]));// new subline needed to insert
+		subLine.class = subRowConfig.styleClass; // set style
+		subLine.reportCells.forEach(c => { // nullify amounts
 			c.value = 0;
-			c.class = task.styleClass;
+			c.class = subRowConfig.styleClass;
+			c.unit = subRowConfig.unit;
 		});
+		subLine.isTotal = true;
 		subLine.labels[1] = ''; // TODO erase
-		subLine.labels[0] = task.title;
-		let reportLineObject = foundFormulaReportLines(reportLines);
-		subLine = populateSubLine(subLine, reportLineObject);
-		if (!subLine) return reportLines;
-
-		return putSubLineIntoThePlace(reportLines, subLine);
+		subLine.labels[0] = subRowConfig.title;
+		let reportLineObject = findFormulaReportLines(subRowConfig); // find those two source lines
+		subLine = populateSubLine(subLine, reportLineObject, subRowConfig); // populate amounts to subtotal line
+		if (!subLine) return null;
+		putSubLineIntoThePlace(subLine, subRowConfig);
 	} catch (e) {
+		_message('error', 'Add Subtotal Line Error ' + e);
 		return reportLines;
 	}
 };
 
-const populateSubLine = (subLine, reportLineObject) => {
+/**
+ * Method returns {} with two source report lines, where key is the RL label
+ */
+const findFormulaReportLines = (subRowConfig) => {
 	try {
-		let source0 = reportLineObject[task.legend[0]];
-		let source1 = reportLineObject[task.legend[1]];
-		if (!source0 || !source1) return null;
-		const fromCurrencyFormat = (value) => value.replace(/[^\d.-]/g, '');
-		subLine.reportCells.forEach((c, i) => {
-			let formulaEval = task.formula;
-			let val0 = source0.reportCells[i].value;
-			let val1 = source1.reportCells[i].value;
-			val0 = fromCurrencyFormat(val0);
-			val1 = fromCurrencyFormat(val1);
-			formulaEval = formulaEval.replace('#0', val0).replace('#1', val1);
-			let result = eval(formulaEval);
-			subLine.reportCells[i].value = parseFloat(result);
+		let reportLineObject = {};
+		reportLines.forEach(rl => {
+			const rlLabel = rl.labels[0];
+			if (!subRowConfig.legend.includes(rlLabel)) return;
+			reportLineObject[rlLabel] = rl;
 		});
-		return subLine;
+		return reportLineObject;
 	} catch (e) {
-		alert('Populate Subline Error: ' + e);
+		_message('error', 'Find Formula Report Lines Error ' + e);
 	}
 };
 
-const putSubLineIntoThePlace = (reportLines, subLine) => {
+/**
+ * The method populates values of subline
+ */
+const populateSubLine = (subLine, reportLineObject, subRowConfig) => {
+	try {
+		let source0 = reportLineObject[subRowConfig.legend[0]]; // first source report line
+		let source1 = reportLineObject[subRowConfig.legend[1]]; // second source report line
+		if (!source0 || !source1) return null;
+
+		subLine.reportCells.forEach((c, i) => {
+			try {
+				let formulaEval = subRowConfig.formula;
+				let val0 = source0.reportCells[i].value; // first source report line value
+				let val1 = source1.reportCells[i].value; // second source report line value
+				formulaEval = formulaEval.replace('#0', val0).replace('#1', val1);
+				let result = eval(formulaEval);
+				subLine.reportCells[i].value = parseFloat(result);
+			} catch (e) {
+				_message('error', 'Report Cell Calculation Error ' + e);
+			}
+		});
+		return subLine;
+	} catch (e) {
+		_message('error', 'Populate Sublines Error: ' + e);
+	}
+};
+
+/**
+ *The method inserts a new subtotal line to the list of report lines
+ */
+const putSubLineIntoThePlace = (subLine, subRowConfig) => {
 	try {
 		let updatedReportLines = [];
 		reportLines.forEach(rl => {
 			updatedReportLines.push(rl);
-			if (rl.labels[0] === task.after) {
+			if (rl.labels[0] === subRowConfig.after) {
 				updatedReportLines.push(subLine);
 			}
 		});
-		return updatedReportLines;
+		reportLines = updatedReportLines;
 	} catch (e) {
-		alert('Put Subline Error: ' + e);
+		_message('error', 'Put Subline Error: ' + e);
 	}
 };
 
-
-const foundFormulaReportLines = (reportLines) => {
-	try {
-		let reportLineObject = {};
-		reportLines.forEach(rl => {
-			if (task.legend.includes(rl.labels[0])) {
-				reportLineObject[rl.labels[0]] = rl;
-			}
-		});
-		return reportLineObject;
-	} catch (e) {
-		alert('foundFormulaReportLines Error ' + e);
-	}
-};
-
-export {addSubtotalLine};
+export {addCustomSubtotalLines};

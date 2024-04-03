@@ -1,24 +1,32 @@
+import {_cl, _generateFakeId} from 'c/cbUtils';
 /**
  * Library for calculation YTD values
  */
 const getReportLinesWithYTDValues = (reportLines, reportColumns) => {
+
 	if (!reportColumns.some(col => col.needYTD)) {
 		console.log('No YTD needed');
 		return reportLines; // if nobody needs YTD
 	}
 	const lastAmountMap = {};
 	const calculateReportLineYTD = (rl) => {
-		for (let i = 0; i < rl.reportCells.length; i++) {
-			const col = reportColumns[i];
-			if (!col.needYTD) {
-				continue;
+		if (!rl.isHeader) {
+			rl.Id = _generateFakeId();
+			for (let i = 0; i < rl.reportCells.length; i++) {
+				const col = reportColumns[i];
+				const cell = rl.reportCells[i];
+				const curAmount = cell.value;
+				const columnType =  cell.field;
+				const accumulatedAmount = lastAmountMap[rl.Id + columnType] || 0;
+				lastAmountMap[rl.Id + columnType] = accumulatedAmount + curAmount;
+				
+				if (!col.needYTD) {
+					continue;
+				}
+				cell.value = col.class == 'QuarterColumn' || col.class == 'TotalColumn' ? cell.value : lastAmountMap[rl.Id + columnType];
 			}
-			const cell = rl.reportCells[i];
-			const curAmount = cell.value;
-			const masterColumnId = col.masterColumnId || col.columnId;
-			const accumulatedAmount = lastAmountMap[masterColumnId] || 0;
-			cell.value = lastAmountMap[masterColumnId] = accumulatedAmount + curAmount;
 		}
+		
 	};
 	reportLines.forEach(calculateReportLineYTD);
 	return reportLines;

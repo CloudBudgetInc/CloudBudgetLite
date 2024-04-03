@@ -159,7 +159,7 @@ export default class cbReportingExcel extends LightningElement {
 					styleMap[globalIndex].bgColor = this.getStyleBackgroundColor(column.class.replaceAll(' ', ''));
 					styleMap[globalIndex].bold = this.getFontWeight(column.class.replaceAll(' ', '')) === "bold";
 				}
-				const colTitle = column.title + " " + column.periodName;
+				const colTitle = column.periodName ? `${column.title} ${column.periodName}` : column.title;
 				_setCell(firstRow.getCell(globalIndex++), colTitle, this.frozenFill, { bold: true }, null, {horizontal: 'right'}, this.BORDER);
 			});
 			this.styleMap = styleMap;
