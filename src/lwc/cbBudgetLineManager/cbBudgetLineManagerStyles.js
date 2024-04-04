@@ -39,6 +39,7 @@ const setStylesForClusters = async () => {
  */
 const applyStyles = (stylesList) => {
 	try {
+		_cl(JSON.stringify(stylesList));
 		let styleArray = stylesList;
 		let styleCSS = document.createElement("style");
 		styleCSS.type = "text/css";
