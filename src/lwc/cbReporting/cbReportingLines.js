@@ -311,7 +311,6 @@ const addGlobalTotalToReportLines = (reportLines) => {
  */
 const getUnitFormattedAndIndexedReportLines = (reportLines, reportColumns) => {
 	try {
-		_cl(JSON.stringify(context.configuration));
 		const floatPointOption = context.configuration.cblight__FloatPointCell__c;
 		let numberFormatSettings;
 

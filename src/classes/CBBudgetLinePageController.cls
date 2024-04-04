@@ -284,6 +284,14 @@ public with sharing class CBBudgetLinePageController {
     }
 
     /**
+	 * @return List<CBStyle__c>: List of the Styles
+	 */
+	@AuraEnabled
+	public static List<CBStyle__c> getStylesRecordsServer() {
+		return new CBStyleSelector().getStylesRecordsByFilter(null);
+	}
+
+    /**
      * @return List<List<Object>>: List of the Styles
      */
     @AuraEnabled

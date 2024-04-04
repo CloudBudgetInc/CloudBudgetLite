@@ -17,7 +17,7 @@ import {_deleteFakeId, _generateFakeId, _getCopy, _isFakeId, _isInvalid, _messag
 import {generateReportColumns} from './cbReportingColumns';
 import {manageMultiCurrency} from './cbReportingMultiCurrency';
 import {generateReportLines} from './cbReportingLines';
-import getStylesRecordsServer from "@salesforce/apex/CBBudgetLinePageController.getStylesRecordsServer";
+import getStylesAndAccountTypeByFilter from "@salesforce/apex/CBBudgetLinePageController.getStylesAndAccountTypeByFilter";
 
 export default class CbReporting extends  NavigationMixin(LightningElement) {
 	@api  recordId;
@@ -116,7 +116,6 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		this.reportLines = this.reportGroupColumns = this.reportColumns = [];
 		await getReportWithConfigurationsAndColumnsServer({reportId: this.recordId})
 			.then(async reportStructure => {
-				_cl(JSON.stringify(reportStructure));
 				await this.manageReportStructure(reportStructure);
 			})
 			.catch(e => _message('error', "Reporting : Get Report Error: ", e))
@@ -310,7 +309,6 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	setConfigurationById(configId) {
 		try {
 			let config = this.report.cblight__CBReportConfigurations__r.find(({Id}) => Id === configId);
-			_cl(config, 'red');
 			if (config.cblight__Grouping__c && typeof config.cblight__Grouping__c != "object") {
 				config.cblight__Grouping__c = JSON.parse(config.cblight__Grouping__c);
 			}
@@ -524,7 +522,6 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		if (!soItem) return null;
 		soItem.label = this.configuration.Name;
 		this.configurationSO = _getCopy(this.configurationSO);
-		_cl(JSON.stringify(configuration));
 		await saveConfigurationServer({configuration})
 			.then(savedConfiguration => {
 				savedConfiguration.cblight__Grouping__c = JSON.parse(savedConfiguration.cblight__Grouping__c);
@@ -850,7 +847,7 @@ try {
 	 * Method get styles from server, set local storage cbstyles and converting Report Frozen Columns style for Reporting
 	 */
 	setStylesToAnalyticsColumnsGradient = async () => {
-		await getStylesRecordsServer()
+		await getStylesAndAccountTypeByFilter()
 			.then(styles => {
 				if (!styles) return null;
 				localStorage.removeItem('cbstyles');
