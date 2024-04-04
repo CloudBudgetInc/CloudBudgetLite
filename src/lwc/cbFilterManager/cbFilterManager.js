@@ -1,6 +1,6 @@
 import {api, LightningElement, track} from "lwc";
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
-import {_generateFakeId, _isInvalid, _cl} from 'c/cbUtils';
+import {_generateFakeId, _isInvalid, _cl, _formatRequestString} from 'c/cbUtils';
 import getIdToNamesAndFieldLabelsMap
 	from '@salesforce/apex/CBFilterManagerPageController.getIdToNamesAndFieldLabelsMapServer';
 import getAllSObjectFormulaFieldsList
@@ -70,37 +70,12 @@ export default class CbFilterManager extends LightningElement {
 	 * Checking if a string is an ID inside the server's getIdToNamesMap method
 	 * @param str Filter string
 	 */
-	formatRequestString(str) {
-		try {
-			if (!_isInvalid(str)) {
-				let Ids = str.match(new RegExp('\'(.*?)\'', 'g'));
-				if (!Ids || Ids.length === 0) {
-					this.formattedRequestString = str;
-					localStorage.removeItem('formattedRequestString');
-					localStorage.setItem('formattedRequestString', str);
-					this.showFormattedString = true;
-					return null;
-				}
-				Ids.forEach((id, i) => Ids[i] = id.replaceAll('\'', ''));
-				getIdToNamesAndFieldLabelsMap({Ids, sObjectName: this.sobjectType})
-					.then((resultMap) => {
-						for (let key in resultMap) {
-							str = str.replaceAll(key, resultMap[key]);
-						}
-						localStorage.removeItem('formattedRequestString');
-						localStorage.setItem('formattedRequestString', str);
-						this.formattedRequestString = str;
-						this.showFormattedString = true;
-					})
-					.catch((error) => alert("Filter Manager : Format Request String Callback Error: " + JSON.stringify(error)));
-			} else {
-				this.formattedRequestString = '';
-				this.showFormattedString = false;
-			}
-		} catch (e) {
-			alert('Filter Manager : Format Request String Error: ' + e);
-		}
+	async formatRequestString(str) {
+		const result = await _formatRequestString(str, this.sobjectType);
+		this.formattedRequestString = result.formattedRequestString;
+		this.showFormattedString = result.showFormattedString;
 	}
+
 
 	//////// FILTER LINES /////////
 	/**

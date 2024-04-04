@@ -780,7 +780,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	 * Styles application method.
 	 */
 	applyStyles() {
-		try {
+try {
 			let styles = JSON.parse(localStorage.getItem("cbstyles"));
 			if (!styles) return "";
 			let styleArray = styles;

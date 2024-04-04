@@ -176,7 +176,7 @@
     <isGridLayout>true</isGridLayout>
     <runningUser>ajrcblight@cloudbudget.com</runningUser>
     <textColor>#000000</textColor>
-    <title>CloudBudget Lite</title>
+    <title>CloudBudget Express</title>
     <titleColor>#000000</titleColor>
     <titleSize>12</titleSize>
 </Dashboard>
