@@ -17,7 +17,7 @@ import {_deleteFakeId, _generateFakeId, _getCopy, _isFakeId, _isInvalid, _messag
 import {generateReportColumns} from './cbReportingColumns';
 import {manageMultiCurrency} from './cbReportingMultiCurrency';
 import {generateReportLines} from './cbReportingLines';
-import getStylesRecordsServer from "@salesforce/apex/CBBudgetLinePageController.getStylesRecordsServer";
+import getStylesAndAccountTypeByFilter from "@salesforce/apex/CBBudgetLinePageController.getStylesAndAccountTypeByFilter";
 
 export default class CbReporting extends  NavigationMixin(LightningElement) {
 	@api  recordId;
@@ -30,6 +30,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	@track showDrillDown = false;
 	@track showExcelButton = false;
 	@track showConfigContext = false;
+	@track showDualListBox = false;
 	@track report = {}; 	// CBReport
 	@track reportData = []; // CBCube list
 	@track cubeFieldsSO = [];
@@ -42,11 +43,17 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		{'label': 'Thousands', 'value': 'Thousands'},
 		{'label': 'Millions', 'value': 'Millions'}
 	];
+	@track displayFloatCell = [
+		{'label': '1.00', 'value': '1.00'},
+		{'label': '1.0', 'value': '1.0'},
+		{'label': '1', 'value': '1'}
+	];
 	@track DDParams = '';
 	@track currencyCode = 'USD';
 	@track BYIsQuarter = false;
 	@track staticData = {}; // periodMap object is key - budget year, value: list of periods
 	isConfigurationChanged = false;
+	SPACE = '  ';
 
 
 	////// REPORT TABLE DATA /////
@@ -121,7 +128,6 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		getStaticDataServer()
 			.then(staticData => {
 				this.staticData = staticData;
-				this.applyStyles();
 			})
 			.catch(e => _message('error', "Reporting : Get Static Data Error: ", e))
 	}
@@ -198,7 +204,12 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	saveReport() {
 		this.showSpinner = true;
 		this.editReportMode = false;
-		let report = {Id: this.report.Id, Name: this.report.Name, cblight__Description__c: this.report.cblight__Description__c};
+		let report = {
+			Id: this.report.Id, 
+			Name: this.report.Name, 
+			cblight__Description__c: this.report.cblight__Description__c, 
+			cblight__SubtotalMode__c: this.report.cblight__SubtotalMode__c ? this.report.cblight__SubtotalMode__c : 'Top' 
+		};
 		saveReportServer({report})
 			.catch(e => _parseServerError("Reporting : Save Report Error: ", e))
 			.finally(() => this.showSpinner = false)
@@ -211,10 +222,13 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		if (!confirm("Do you want to clone current report with configurations and columns?")) {
 			return null;
 		}
+		this.showDualListBox = false;
 		this.showSpinner = true;
 		let report = { Name: this.report.Name + " Cloned",	cblight__Description__c: this.report.cblight__Description__c, 
-			cblight__Mode__c: this.report.cblight__Mode__c, cblight__needOnlyTotal__c : this.report.cblight__needOnlyTotal__c,
-			cblight__needQuarterTotals__c: this.report.cblight__needQuarterTotals__c};
+			cblight__Mode__c: this.report.cblight__Mode__c, cblight__needOnlyTotal__c : this.report.cblight__needOnlyTotal__c, 
+			cblight__needQuarterTotals__c: this.report.cblight__needQuarterTotals__c, 
+			cblight__SubtotalMode__c: this.report.cblight__SubtotalMode__c ? this.report.cblight__SubtotalMode__c : 'Top' 
+		};
 		report.Name = report.Name.slice(0, 80);
 		saveReportServer({ report })
 			.then(async (result) => {
@@ -275,7 +289,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	}
 	
 	/**
-	 * Method navigates to the clonned CB Report
+	 * Method navigates to the cloned CB Report
 	 */
 	navigateToRecordPage() {
 		this[NavigationMixin.Navigate]({
@@ -314,18 +328,22 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 			if (eventName === 'handleChangeConfig') {
 				if (this.isConfigurationChanged && !confirm(this.getConfirmMessage('ifNotSaved'))) {
 					this.showConfigContext = false;
+					this.showDualListBox = false;
 					setTimeout(() => {
 						this.showConfigContext = true;
+						this.showDualListBox = true;
 					}, 10);
 					return null;
 				}
 				this.isConfigurationChanged = false;
 				this.showConfigContext = false;
+				this.showDualListBox = false;
 
 				setTimeout(() => {
 					this.setConfigurationById(eventValue);
 					this.setSubtotals();
 					this.showConfigContext = true;
+					this.showDualListBox = true;
 				}, 10);
 
 			} else {
@@ -337,27 +355,36 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 					return null;
 				}
 
+				if (eventName === 'cblight__FloatPointCell__c') {
+					this.configuration[eventName] = event.target.value;
+					this.configuration = _getCopy(this.configuration);
+					return null;
+				}
 				if (eventName === 'cblight__SubtotalNumber__c') {
 					eventValue = parseInt(eventValue);
 				}
-				if (event && event.detail.result) { // TODO add to the filter component name field returning
+				if (event && event.detail && event.detail.title === 'Data Filter') { // TODO add to the filter component name field returning
 					eventName = 'cblight__Filter__c';
 					eventValue = event.detail.result;
 				}
-
+				if (!eventName) {
+					throw new Error("Event Name was not set ");
+				}
 				let copy = _getCopy(this.configuration);
 				copy[eventName] = eventValue;
 				this.configuration = copy;
 
 				if (eventName === 'cblight__Grouping__c') {
+					this.showDualListBox = false;
 					this.setSubtotals();
 					const groupSize = this.configuration.cblight__Grouping__c.length;
 					const num = groupSize > 1 ? groupSize - 1 : 0;
 					this.handleConfiguratorEvents(null, {name: 'cblight__SubtotalNumber__c', value: num});
 				}
 			}
+			this.showDualListBox = true;
 		} catch (e) {
-			_message('error', `handleConfiguratorEvents: ${eventName} error: ` + e, 'Reporting:');
+			_message('error', `handleConfiguratorEvents: ${eventName ? eventName : 'Event'} error: ` + e, 'Reporting:');
 		}
 	};
 
@@ -495,7 +522,6 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 		if (!soItem) return null;
 		soItem.label = this.configuration.Name;
 		this.configurationSO = _getCopy(this.configurationSO);
-
 		await saveConfigurationServer({configuration})
 			.then(savedConfiguration => {
 				savedConfiguration.cblight__Grouping__c = JSON.parse(savedConfiguration.cblight__Grouping__c);
@@ -530,6 +556,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 			}
 			if (!confirm(this.getConfirmMessage('confirmAction', 'delete'))) return null;
 			this.showConfigContext = false;
+			this.showDualListBox = false;
 			this.isConfigurationChanged = false;
 
 			const configurationId = this.configuration.Id;
@@ -552,6 +579,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 				deleteReportConfigByConfigSOServer({configuration: configToDelete}).then(() => {
 					_message('info', 'Configuration deleted');
 					this.showConfigContext = true;
+					this.showDualListBox = true;
 				});
 			}
 		} catch (e) {
@@ -567,6 +595,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	displayReportConfiguration() {
 		this.showReportConfiguration = true;
 		this.showConfigContext = true;
+		this.showDualListBox = true;
 		this.setSubtotals();
 		this.showSpinner = false;
 	}
@@ -627,6 +656,9 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	 */
 	manageReportStructure = async (result) => {
 		try {
+			if (!result.cblight__SubtotalMode__c) {
+				result.cblight__SubtotalMode__c = 'Top';
+			}
 			let configs = result.cblight__CBReportConfigurations__r;
 			if (!configs || configs.length === 0) {
 				_message('warning', 'Please create a report configuration', 'Guideline');
@@ -719,14 +751,16 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	showCellDrillDown(event) {
 		try {
 			let DDKeys = event.currentTarget.dataset.item.split('&'); // first argument is row index, second is cell index
+
 			let reportLine = this.reportLines[DDKeys[0]];
+
 			let cell = this.reportLines[DDKeys[0]].reportCells.find(cell => {
 				let parts = cell.drillDownKey.split('&');
 				return parts[1] === DDKeys[1];
 			});
-
+			
 			if (cell.isTotal) {
-				_message('info', 'Drilldown cannot be generated for totals.');
+				_message('info', 'Drilldown cannot be generated for totals or headers.');
 				return;
 			}
 			const headerDetails = this.reportGroupColumns.map((groupName, idx) => `${groupName.label} : ${reportLine.labels[idx]}`);
@@ -743,21 +777,21 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	 * Styles application method.
 	 */
 	applyStyles() {
-        try {
-            let styles = JSON.parse(localStorage.getItem("cbstyles"));
-            if (!styles) return "";
-            let styleArray = styles;
-            let styleCSS = document.createElement('style');
-            styleCSS.type = 'text/css';
-            styleCSS.innerHTML = styleArray.reduce((str, style) => {
-                str = str + '.' + style.Name.replace(/ /g, "") + ' ' + style.cblight__CSS__c + ' ';
-                return str;
-            }, '');
-            document.getElementsByTagName('head')[0].appendChild(styleCSS);
-        } catch (e) {
-            _message('error', 'Reporting : Apply Style: ' + e);
-        }
-    }
+try {
+			let styles = JSON.parse(localStorage.getItem("cbstyles"));
+			if (!styles) return "";
+			let styleArray = styles;
+			let styleCSS = document.createElement('style');
+			styleCSS.type = 'text/css';
+			styleCSS.innerHTML = styleArray.reduce((str, style) => {
+				str = str + '.' + style.Name.replace(/ /g, "") + ' ' + style.cblight__CSS__c + ' ';
+				return str;
+			}, '');
+			document.getElementsByTagName('head')[0].appendChild(styleCSS);
+		} catch (e) {
+			_message('error', 'Reporting : Apply Style: ' + e);
+		}
+	}
 
 	/**
 	 * Analytics columns styles application method
@@ -765,29 +799,35 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	setStylesToAnalyticsColumns() {
 		this.reportLines.forEach(line => {
 			let analyticsColumns = [];
-			
+	
 			if (this.report.cblight__oneColumnMode__c) {
 				const lastIndex = line.labels.length - 1;
 				const lastLabel = line.labels[lastIndex];
 
 				if(line.isTotal) {
-					line.labels.forEach((label) => {
+					line.labels.forEach((label, index) => {
 						const trimmedLabel = label.trim();
-						
 						if (trimmedLabel.length > 0) {
 							const totalAlreadyAdded = analyticsColumns.some(column => column.label === trimmedLabel);
 							if (!totalAlreadyAdded) {
+
+								const spaceCount = index;
+								const space = this.SPACE.repeat(spaceCount);
+		
 								analyticsColumns.push({
-									label: trimmedLabel,
-									class: `frozen-col slds-truncate ${line.class}`
+									label: `${space}${trimmedLabel}`,
+									class: `frozen-col slds-truncate ReportFrozenColumnsGradient`
 								});
 							}
 						}
 					});
 				} else {
+					
+					const spaceCount = line.labels.length - 1; 
+					const space = this.SPACE.repeat(spaceCount);
 					if (lastLabel.length > 0) {
 						analyticsColumns.push({
-							label: lastLabel,
+							label: `${space}${lastLabel}`,
 							class: `frozen-col slds-truncate ReportFrozenColumnsGradient`
 						});
 					} 
@@ -807,17 +847,17 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	 * Method get styles from server, set local storage cbstyles and converting Report Frozen Columns style for Reporting
 	 */
 	setStylesToAnalyticsColumnsGradient = async () => {
-		await getStylesRecordsServer()
+		await getStylesAndAccountTypeByFilter()
 			.then(styles => {
 				if (!styles) return null;
 				localStorage.removeItem('cbstyles');
-				localStorage.setItem('cbstyles', JSON.stringify(styles));
-				let style = styles.find(style => style.Name === 'Report Frozen Columns');
+				localStorage.setItem('cbstyles', JSON.stringify(styles[0]));
+				let style = styles[0].find(style => style.Name === 'Report Frozen Columns');
 				if (!style) return null;
 				const brightness = 1.01;
 				const color = this.getLighterRGBAFromHex(style.cblight__BackgroundColor__c, brightness);
 				const linearColor = this.linearGradient(style.cblight__BackgroundColor__c, color);
-				this.applyStylesGradient(styles, linearColor);
+				this.applyStylesGradient(styles[0], linearColor);
 			})
 			.catch(e => _parseServerError('Reporting : get Styles Records Server Error', e));
 	};
@@ -967,9 +1007,10 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 	/**
 	 * Auto resize columns on double click
 	 */
-	handleDBClickResizable() {
+	/* handleDBClickResizable() {
 		let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
 		let tableBodyRows = this.template.querySelectorAll("table tbody tr");
+		if(!tableThs || !tableBodyRows) return null;
 		tableThs.forEach((th, ind) => {
 			th.style.width = this._initWidths[ind];
 			th.querySelector(".slds-cell-fixed").style.width = this._initWidths[ind];
@@ -980,7 +1021,7 @@ export default class CbReporting extends  NavigationMixin(LightningElement) {
 				rowTds[ind].style.width = this._initWidths[ind];
 			});
 		});
-	}
+	} */
 
 	paddingDiff(col) {
 		if (this.getStyleVal(col, 'box-sizing') === 'border-box') return 0;

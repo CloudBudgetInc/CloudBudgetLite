@@ -2423,6 +2423,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>CBReportConfiguration__c.FloatPointCell__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>CBReportConfiguration__c.Grouping__c</field>
         <readable>true</readable>
     </fieldPermissions>

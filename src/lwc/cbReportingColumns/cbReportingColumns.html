@@ -35,6 +35,14 @@
 						</lightning-layout-item>
 
 						<lightning-layout-item size="1">
+							<lightning-combobox label="Subtotals Mode"
+												value={report.cblight__SubtotalMode__c}
+												options={subtotalModeSO} validity=""
+												onchange={changeSubtotalMode}>
+							</lightning-combobox>
+						</lightning-layout-item>
+
+						<lightning-layout-item size="1">
 							<lightning-combobox label="Quarters?"
 												value={report.cblight__needQuarterTotals__c}
 												options={trueFalseSO} validity=""
@@ -200,10 +208,9 @@
 										<lightning-button-icon icon-name="utility:delete" alternative-text="Delete"
 															   value={column.Id}
 															   class="slds-m-left_xx-small"
-															   onclick={deleteColumn}
+															   onclick={deleteColumnHandler}
 															   title="Delete"></lightning-button-icon>
-									</td>
-
+									</td>									
 								</tr>
 							</template>
 

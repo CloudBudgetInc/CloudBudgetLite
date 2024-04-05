@@ -27,29 +27,30 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public with sharing class CBReportConfigurationSelector extends fflib_SObjectSelector {
 
-	public List<Schema.SObjectField> getSObjectFieldList() {
-		return new List<Schema.SObjectField>{
-				CBReportConfiguration__c.Id,
-				CBReportConfiguration__c.Name,
-				CBReportConfiguration__c.Description__c,
-				CBReportConfiguration__c.DisplayUnits__c,
-				CBReportConfiguration__c.Filter__c,
-				CBReportConfiguration__c.CBReport__c,
-				CBReportConfiguration__c.SubtotalNumber__c,
-				CBReportConfiguration__c.Grouping__c // list of CBCube fields split by a coma
-		};
-	}
+    public List<Schema.SObjectField> getSObjectFieldList() {
+        return new List<Schema.SObjectField>{
+                CBReportConfiguration__c.Id,
+                CBReportConfiguration__c.Name,
+                CBReportConfiguration__c.Description__c,
+                CBReportConfiguration__c.DisplayUnits__c,
+                CBReportConfiguration__c.Filter__c,
+                CBReportConfiguration__c.CBReport__c,
+                CBReportConfiguration__c.SubtotalNumber__c,
+                CBReportConfiguration__c.cblight__FloatPointCell__c,
+                CBReportConfiguration__c.Grouping__c // list of CBCube fields split by a coma
+        };
+    }
 
-	public Schema.SObjectType getSObjectType() {
-		return CBReportConfiguration__c.sObjectType;
-	}
+    public Schema.SObjectType getSObjectType() {
+        return CBReportConfiguration__c.sObjectType;
+    }
 
-	public CBReportConfiguration__c getReportConfigurationById(String confId) {
-		if (confId == null) return null;
-		fflib_QueryFactory query = newQueryFactory();
-		query.setCondition('Id = \'' + confId + '\'');
-		query.setLimit(1);
-		return Database.query(query.toSOQL());
-	}
+    public CBReportConfiguration__c getReportConfigurationById(String confId) {
+        if (confId == null) return null;
+        fflib_QueryFactory query = newQueryFactory();
+        query.setCondition('Id = \'' + confId + '\'');
+        query.setLimit(1);
+        return Database.query(query.toSOQL());
+    }
 
 }

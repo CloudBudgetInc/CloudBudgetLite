@@ -1,13 +1,18 @@
 import {getReportLinesWithYTDValues} from './cbReportingYTD';
-import {_getCopy, _message} from "c/cbUtils";
+import {addCustomSubtotalLines} from './cbReportingSubtotalLine';
+import {_cl, _getCopy, _message} from "c/cbUtils";
 
 let context; // this of the parent component
 const NA_TITLE = 'N/A';
 const POSITIVE_SIGN = '+';
+let showTopTotal = false;
+let showBottomTotal = true;
+let showHeader = false;
 
 const generateReportLines = (_this) => {
 	try {
 		context = _this;
+		detectSubtotalMode();
 		if (context.reportColumns === null || context.reportColumns.length === 0) {
 			return null;
 		}
@@ -19,12 +24,34 @@ const generateReportLines = (_this) => {
 		reportLines = getReportLinesWithYTDValues(reportLines, context.reportColumns);
 		reportLines = addGlobalTotalToReportLines(reportLines);
 		reportLines = getTotalOnlyReportLines(reportLines, context.report);
+		reportLines = addCustomSubtotalLines(reportLines, context.configuration.cblight__SubRows__c);
 		reportLines = updateDisplayUnits(reportLines);
 		reportLines = getUnitFormattedAndIndexedReportLines(reportLines, context.reportColumns);
 		reportLines = updateReportLinesDrillDownKeys(reportLines);
 		context.reportLines = reportLines;
 	} catch (e) {
 		_message('error', `Reporting : Generate Report Lines Error: ${e}`);
+	}
+};
+
+const detectSubtotalMode = () => {
+	switch (context.report.cblight__SubtotalMode__c) {
+		case 'Top':
+			showTopTotal = true;
+			showHeader = false;
+			showBottomTotal = false;
+			break;
+		case 'Bottom':
+			showTopTotal = false;
+			showHeader = false;
+			showBottomTotal = true;
+			break;
+		case 'BottomWithHeader':
+			showTopTotal = false;
+			showHeader = true;
+			showBottomTotal = true;
+			break;
+		default:
 	}
 };
 
@@ -132,12 +159,13 @@ const calculateReportLine = (reportCells) => {
 const getFormulaValue = (formula, reportCells) => {
 	try {
 		let mathString = '';
-		formula.split(' ').forEach(k => {
+		const pattern = /([()+\-*/]|\d+\.\d+|\d+|#\d+)/g;
+		formula.match(pattern).forEach((k) => {
 			if (k.startsWith('#')) {
 				k = k.replace('#', '');
 				mathString += reportCells[--k].value;
 			} else {
-				mathString += k;
+				mathString += ` ${k} `;
 			}
 		});
 		let result = eval(mathString);
@@ -173,44 +201,35 @@ const sortReportLines = (reportLines, grouping) => {
 const getGroupedReportLines = (reportLines, configuration) => {
 	try {
 		let grouping = configuration.cblight__Grouping__c;
-		let lvlDown = [];
 		let groupingLength = grouping.length;
 		let subtotalNumber = configuration.cblight__SubtotalNumber__c;
-		if (subtotalNumber > groupingLength) subtotalNumber = groupingLength;
-		for (let i = subtotalNumber - 1; i >= 0; i--) lvlDown.push(i);
-		lvlDown.forEach(lvl => {
+		if (subtotalNumber > groupingLength) {
+			subtotalNumber = groupingLength;
+		}
+		for (let lvl = subtotalNumber - 1; lvl >= 0; lvl--) {
 			let updatedReportLines = [];
+			let tempSection = [];
 			let currentKey = getKey(reportLines[0], lvl);
-			let totalLine = getNewTotalLine(reportLines[0], lvl, groupingLength);
-			reportLines.forEach((rl, idx) => {
-				if (rl.isTotal) {
-					updatedReportLines.push(rl);
-					if (reportLines.length - 1 === idx) {
-						updatedReportLines.push(totalLine);
-					}
-					return null;
-				}
+			reportLines.forEach((rl) => {
 				let rKey = getKey(rl, lvl);
-				if (rKey !== currentKey) { // a new type line found
-					updatedReportLines.push(totalLine);
-					totalLine = getNewTotalLine(rl, lvl, groupingLength);
+				if (rKey !== currentKey) {
+					updatedReportLines = [...updatedReportLines, ...new SubSection(tempSection, lvl).reportLines]; //closed section is added
+					tempSection = [];
 					currentKey = rKey;
 				}
-				sumReportLines(totalLine, rl);
-				updatedReportLines.push(rl);
-				if (reportLines.length - 1 === idx) {
-					updatedReportLines.push(totalLine);
-				}
+				tempSection.push(rl);
 			});
+			updatedReportLines = [...updatedReportLines, ...new SubSection(tempSection, lvl).reportLines]; //last section always added
 			reportLines = updatedReportLines;
-		});
+		}
 
 		return reportLines;
 	} catch (e) {
 		_message('error', `Reporting : Get Grouped Report Lines Error : ${e}`);
 	}
-
 };
+
+
 const getKey = (rl, lvl) => rl.keys.slice(0, lvl + 1).join('');
 
 /**
@@ -235,6 +254,29 @@ const getNewTotalLine = (reportLine, lvl) => {
 	return totalRL;
 };
 /**
+ * The method returns a new header line needed level
+ * @param reportLine as for a template
+ * @param lvl (0 || 1 || 2 || 3) level of grouping
+ * @returns {any}
+ */
+const getNewHeaderLine = (reportLine, lvl) => {
+	const headerRL = _getCopy(reportLine);
+	const totalLineClass = `TotalLineLvl${lvl}`;
+	headerRL.reportCells.forEach(cell => {
+		cell.value = null;
+		// cell.class = totalLineClass;
+		cell.isTotal = true;
+		cell.isHeader = true;
+	});
+	headerRL.isTotal = true;
+	headerRL.isHeader = true;
+	headerRL.class = totalLineClass;
+	let totalLabels = [];
+	headerRL.labels.forEach((l, idx) => totalLabels.push(idx === lvl ? `${l} ` : ''));
+	headerRL.labels = totalLabels;
+	return headerRL;
+};
+/**
  * Private method to calculate two report lines
  * @param totalRL result line
  * @param simpleRL simple line
@@ -250,8 +292,8 @@ const sumReportLines = (totalRL, simpleRL) => {
  * The method calculates lines and adds a global total to the end of list
  */
 const addGlobalTotalToReportLines = (reportLines) => {
-	let firstLine = reportLines[0];
-	let globalTotalLine = getNewTotalLine(firstLine, 'Global');
+	let globalTotalLine = getNewTotalLine(reportLines[0], 'Global');
+	globalTotalLine.isHeader = false;
 	globalTotalLine.labels.forEach(l => l = '');
 	globalTotalLine.labels[0] = 'TOTAL';
 	reportLines.forEach(rl => {
@@ -269,28 +311,54 @@ const addGlobalTotalToReportLines = (reportLines) => {
  */
 const getUnitFormattedAndIndexedReportLines = (reportLines, reportColumns) => {
 	try {
+		const floatPointOption = context.configuration.cblight__FloatPointCell__c;
+		let numberFormatSettings;
+
+		if (floatPointOption === '1.00') {
+			numberFormatSettings = {
+				currency: {minimumFractionDigits: 2, maximumFractionDigits: 2},
+				percent: {minimumFractionDigits: 2, maximumFractionDigits: 2},
+			};
+		} else if (floatPointOption === '1.0') {
+			numberFormatSettings = {
+				currency: {minimumFractionDigits: 1, maximumFractionDigits: 1},
+				percent: {minimumFractionDigits: 1, maximumFractionDigits: 1},
+			};
+		} else if (floatPointOption === '1') {
+			numberFormatSettings = {
+				currency: {minimumFractionDigits: 0, maximumFractionDigits: 0},
+				percent: {minimumFractionDigits: 0, maximumFractionDigits: 0},
+			};
+		}
 		const currencyFormat = new Intl.NumberFormat('en-US', {
 			style: 'currency',
 			currency: context.currencyCode,
+			...numberFormatSettings.currency,
 		});
-		const percentFormat = new Intl.NumberFormat("en-US", {
+
+		const percentFormat = new Intl.NumberFormat('en-US', {
 			style: 'percent',
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2
+			...numberFormatSettings.percent,
 		});
+
 		const du = context.configuration.cblight__DisplayUnits__c;
 		const displayUnits = !du || du === 'Whole Units' ? '' : (du === 'Thousands' ? 'K' : 'M');
 		reportLines.forEach((rl, idx) => {
-			rl.reportCells.forEach((cell, i) => {
-				if (cell.unit === '$') {
-					cell.value = currencyFormat.format(+cell.value);
-					cell.value += displayUnits;
-				} else if (cell.unit === '%') {
-					cell.value = percentFormat.format(+cell.value);
-				}
-				cell.isHidden = reportColumns[i].isHidden;
-			});
+			if (!rl.isFormatted && !rl.isHeader) {
+				rl.reportCells.forEach((cell, i) => {
+					if (cell.unit === '$') {
+						cell.value = currencyFormat.format(+cell.value);
+						cell.value += displayUnits;
+					} else if (cell.unit === '%') {
+						cell.value = percentFormat.format(+cell.value);
+					}
+					cell.isHidden = reportColumns[i].isHidden;
+				});
+			} else {
+				_cl('skipped rl: ' + JSON.stringify(rl));
+			}
 			rl.idx = idx + 1;
+			rl.isFormatted = true;
 		});
 		return reportLines;
 	} catch (e) {
@@ -305,7 +373,8 @@ const getUnitFormattedAndIndexedReportLines = (reportLines, reportColumns) => {
  */
 const getTotalOnlyReportLines = (reportLines, report) => {
 	if (!report.cblight__needOnlyTotal__c) return reportLines;
-	return reportLines.filter(rl => rl.isTotal);
+	let totals = reportLines.filter(rl => rl.isTotal && !rl.isHeader);
+	return totals;
 };
 /////////////// TOTAL ONLY //////////////
 /**
@@ -342,6 +411,53 @@ const updateDisplayUnits = reportLines => {
 };
 
 //////////// CLASSES /////////////////////////
+/**
+ * SubSection of the report with totals on both sides
+ */
+class SubSection {
+	reportLines = [];
+
+	constructor(reportLines, lvl) {
+		if (reportLines) {
+			this.reportLines = reportLines;
+			this.lvl = lvl;
+			this.prepareHeaderAndTotalLine();
+			this.calculateTotals();
+			this.addTotalsToSection();
+		}
+	}
+
+	prepareHeaderAndTotalLine() {
+		for (let i = 0; i < this.reportLines.length; i++) {
+			if (!this.reportLines[i].isTotal) {
+				this.totalLine = getNewTotalLine(this.reportLines[i], this.lvl);
+				this.headerLine = getNewHeaderLine(this.reportLines[i], this.lvl);
+				break;
+			}
+		}
+	}
+
+	calculateTotals() {
+		this.reportLines.forEach((rl) => {
+			if (!rl.isTotal) {
+				sumReportLines(this.totalLine, rl);
+			}
+		});
+	}
+
+	addTotalsToSection() {
+		if (showHeader) {
+			this.reportLines.unshift(this.headerLine);
+		}
+		if (showTopTotal) {
+			this.reportLines.unshift(this.totalLine);
+		}
+		if (showBottomTotal) {
+			this.reportLines.push(this.totalLine);
+		}
+	}
+}
+
 /**
  * ReportLine class
  */
